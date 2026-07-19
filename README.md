@@ -17,10 +17,10 @@ controllable AI tools in one workspace. It is intended for developers who want
 more context around their shell without adopting a heavyweight, closed AI IDE.
 
 > [!NOTE]
-> Lithe is an early public preview. Source builds are available today; official
-> installers and an automatic update channel are not yet published. macOS is
-> the currently verified desktop platform, while Linux and Windows remain
-> supported targets and are covered by CI.
+> Lithe is an early public preview. Version 0.1.0 provides a Developer ID-signed
+> Apple Silicon macOS package on the [Releases page](https://github.com/ssdiwu/lithe/releases/latest),
+> but it is not yet Apple-notarized. Linux and Windows remain supported targets
+> and are covered by CI. Lithe has no automatic update channel.
 
 Lithe is derived from [Terax](https://github.com/crynta/terax-ai) and preserves
 its Git history and Apache-2.0 attribution. It is independently maintained with
@@ -63,8 +63,10 @@ Create a production bundle with:
 pnpm tauri build
 ```
 
-Lithe does not publish installers yet. Only install a locally built package
-when you trust the checkout and signing identity that produced it.
+The [v0.1.0 release](https://github.com/ssdiwu/lithe/releases/tag/v0.1.0)
+includes a Developer ID-signed Apple Silicon macOS package and checksums. It is
+not yet Apple-notarized, so Gatekeeper may require **Control-click → Open**.
+Only install packages from a source and signing identity you trust.
 
 ## Configure AI
 
@@ -116,8 +118,8 @@ see [`SECURITY.md`](SECURITY.md).
 ## Releases and updates
 
 Lithe deliberately has no automatic updater. The current release workflow
-creates draft GitHub releases from version tags and requires Lithe-owned signing
-credentials. See the [maintainer release guide](docs/contributing/releasing.md).
+is manually dispatched for an existing version tag and requires Lithe-owned
+signing credentials. See the [maintainer release guide](docs/contributing/releasing.md).
 
 ## License and attribution
 

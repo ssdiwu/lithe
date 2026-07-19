@@ -1,15 +1,24 @@
 name: Release
 
 on:
-  push:
-    tags:
-      - "v*"
   workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing version tag to build (for example v0.1.1)"
+        required: true
+        type: string
+      prerelease:
+        description: "Mark the draft release as a prerelease"
+        required: true
+        default: true
+        type: boolean
 
 jobs:
   publish-tauri:
     permissions:
       contents: write
+    env:
+      RELEASE_TAG: ${{ inputs.tag }}
     strategy:
       fail-fast: false
       matrix:
@@ -30,6 +39,8 @@ jobs:
     runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.tag }}
 
       - name: Install Linux build dependencies
         if: matrix.platform == 'ubuntu-22.04'
@@ -66,7 +77,7 @@ jobs:
         if: startsWith(matrix.platform, 'macos')
         shell: bash
         env:
-          KEY_CONTENT: ${{ secrets.APPLE_API_KEY_PATH }}
+          KEY_CONTENT: ${{ secrets.APPLE_API_KEY_CONTENT }}
         run: |
           mkdir -p "$HOME/private_keys"
           printf '%s' "$KEY_CONTENT" > "$HOME/private_keys/AuthKey.p8"
@@ -84,11 +95,11 @@ jobs:
           APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
           APPLE_API_KEY: ${{ secrets.APPLE_API_KEY }}
         with:
-          tagName: ${{ github.ref_name }}
-          releaseName: "Lithe ${{ github.ref_name }}"
+          tagName: ${{ inputs.tag }}
+          releaseName: "Lithe ${{ inputs.tag }}"
           releaseBody: "See the assets to download and install. Lithe does not update from Terax releases."
           releaseDraft: true
-          prerelease: false
+          prerelease: ${{ inputs.prerelease }}
           args: ${{ matrix.args }}
 
       # Strip the bundled libwayland-* libs from the AppImage so it loads the
@@ -101,7 +112,7 @@ jobs:
       # AppImage excludelist for this exact reason. The re-signed AppImage and
       # repacked AppImage is uploaded in place of the original asset.
       - name: Fix AppImage wayland libs
-        if: matrix.platform == 'ubuntu-22.04' && startsWith(github.ref, 'refs/tags/')
+        if: matrix.platform == 'ubuntu-22.04'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -148,6 +159,6 @@ jobs:
 
           cp "$WORK/$BASENAME" "$APPIMAGE"
 
-          TAG="${GITHUB_REF_NAME}"
+          TAG="${RELEASE_TAG}"
           gh release upload "$TAG" "$APPIMAGE" \
             --clobber --repo "$GITHUB_REPOSITORY"

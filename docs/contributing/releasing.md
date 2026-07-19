@@ -17,15 +17,25 @@ updates.
 
 ## GitHub workflow
 
-Tags matching `v*` trigger `.github/workflows/release.yml`. The workflow builds
-macOS arm64 and x86_64 packages, Linux packages, and Windows packages through
-`tauri-apps/tauri-action`. It creates a **draft** GitHub release so maintainers
-can inspect every artifact before publication.
+After a version tag is pushed, a maintainer can manually dispatch
+`.github/workflows/release.yml` and provide that existing tag. A tag push does
+not start packaging on its own. This prevents a newly created fork or an
+unconfigured repository from publishing incomplete artifacts.
+
+The workflow builds macOS arm64 and x86_64 packages, Linux packages, and
+Windows packages through `tauri-apps/tauri-action`. It creates a **draft**
+GitHub release so maintainers can inspect every artifact before publication.
 
 The macOS jobs require repository secrets for the Lithe-owned Developer ID
 certificate and App Store Connect API credentials. Secret values must stay in
 GitHub Actions secrets and must never be committed. A successful signature is
 not the same as notarization: verify both before publishing a macOS asset.
+
+The App Store Connect key file content belongs in
+`APPLE_API_KEY_CONTENT`; `APPLE_API_KEY` is the key ID and
+`APPLE_API_ISSUER` is the issuer ID. The workflow writes the key content to a
+temporary runner path and exposes that path to Tauri as
+`APPLE_API_KEY_PATH`.
 
 ## Update boundary
 

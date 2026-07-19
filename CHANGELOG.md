@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-07-20
+
 ### Added
 
 - Added an extensible localization layer with English fallback, system
@@ -55,3 +57,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - Removed the Terax release updater and automation that downloaded or tracked
   upstream Terax release artifacts.
+
+[Unreleased]: https://github.com/ssdiwu/lithe/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/ssdiwu/lithe/releases/tag/v0.1.0
