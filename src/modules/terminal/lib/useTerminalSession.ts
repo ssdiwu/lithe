@@ -1,3 +1,4 @@
+import i18n from "@/i18n";
 import { ensureMonoFontsLoaded } from "@/lib/fonts";
 import { usePreferencesStore } from "@/modules/settings/preferences";
 import { invoke } from "@tauri-apps/api/core";
@@ -38,6 +39,7 @@ import {
   getSlotForLeaf,
   isLeafAltScreen,
   parkLeafSlot,
+  pasteIntoLeaf,
   poolSize,
   poolSlotStats,
   refreshLeafSlot,
@@ -78,6 +80,8 @@ type Session = {
   // Set by the block shell-input; called to pull focus back when the xterm
   // grid steals it at the prompt (e.g. on a click), so typing stays in the bar.
   inputFocus: (() => void) | null;
+  // Inserts text at the live cursor of the block shell editor.
+  inputInsert: ((text: string) => void) | null;
   // Per-leaf unsent shell-input text; the single workspace bar swaps it on focus change.
   inputDraft: string;
   // Live "input has text" flag from the block shell-input (gates the watermark).
@@ -220,6 +224,24 @@ export function setLeafInputFocus(
   if (s) s.inputFocus = fn;
 }
 
+export function setLeafInputInsert(
+  leafId: number,
+  fn: ((text: string) => void) | null,
+): void {
+  const s = sessions.get(leafId);
+  if (s) s.inputInsert = fn;
+}
+
+export function insertTextIntoLeaf(leafId: number, text: string): boolean {
+  const s = sessions.get(leafId);
+  if (s?.blocks && s.blockMode === "prompt" && s.inputInsert) {
+    s.inputInsert(text);
+    s.inputFocus?.();
+    return true;
+  }
+  return pasteIntoLeaf(leafId, text);
+}
+
 export function focusLeafInput(leafId: number): void {
   sessions.get(leafId)?.inputFocus?.();
 }
@@ -331,7 +353,7 @@ async function leafHasForegroundJob(leafId: number): Promise<boolean> {
   try {
     return await invoke<boolean>("pty_has_foreground_job", { id: s.pty.id });
   } catch (e) {
-    console.error("[terax] pty_has_foreground_job failed for leaf", leafId, e);
+    console.error("[lithe] pty_has_foreground_job failed for leaf", leafId, e);
     return false;
   }
 }
@@ -394,7 +416,7 @@ configureRendererPool({
         pty
           .resize(cols, rows + 1)
           .then(() => pty.resize(cols, rows))
-          .catch((e) => console.warn("[terax] kickPty failed:", e));
+          .catch((e) => console.warn("[lithe] kickPty failed:", e));
       },
     };
   },
@@ -460,6 +482,7 @@ function ensureSession(
     blockListeners: new Set(),
     blockDecorations: null,
     inputFocus: null,
+    inputInsert: null,
     inputDraft: "",
     inputActive: false,
     everSubmitted: false,
@@ -498,7 +521,7 @@ async function openPtyWithRetry(
   try {
     return await openPtyForSession(leafId, s, cwd);
   } catch (e) {
-    console.error("[terax] openPty failed, retrying once:", e);
+    console.error("[lithe] openPty failed, retrying once:", e);
     await new Promise((r) => setTimeout(r, SPAWN_RETRY_DELAY_MS));
     if (s.disposed) throw e;
     return openPtyForSession(leafId, s, cwd);
@@ -509,7 +532,7 @@ async function openPtyWithRetry(
 // (or respawns the last one, which would loop). Show the error in the pane
 // and let Enter retry instead of leaving a dead black grid.
 function surfaceSpawnFailure(leafId: number, s: Session, e: unknown): void {
-  console.error("[terax] shell spawn failed:", e);
+  console.error("[lithe] shell spawn failed:", e);
   s.shellExited = true;
   s.spawnFailed = true;
   const detail = String(e)
@@ -518,7 +541,12 @@ function surfaceSpawnFailure(leafId: number, s: Session, e: unknown): void {
   deliverPtyBytes(
     leafId,
     new TextEncoder().encode(
-      `\r\n\x1b[31m[terax] failed to start shell: ${detail}\x1b[0m\r\n\x1b[2mpress Enter to retry\x1b[0m\r\n`,
+      `\r\n\x1b[31m${i18n.t("terminal:spawnFailed", {
+        defaultValue: "[Lithe] failed to start shell: {{detail}}",
+        detail,
+      })}\x1b[0m\r\n\x1b[2m${i18n.t("terminal:pressEnterRetry", {
+        defaultValue: "press Enter to retry",
+      })}\x1b[0m\r\n`,
     ),
   );
 }
@@ -779,7 +807,7 @@ export async function leafHasForegroundProcess(
     return result;
   } catch (e) {
     console.error(
-      "[terax] pty_has_foreground_process failed for leaf",
+      "[lithe] pty_has_foreground_process failed for leaf",
       leafId,
       e,
     );
@@ -1117,6 +1145,6 @@ export function terminalDebugStats() {
 }
 
 if (import.meta.env?.DEV && typeof window !== "undefined") {
-  (window as unknown as { __teraxTerm?: unknown }).__teraxTerm =
+  (window as unknown as { __litheTerm?: unknown }).__litheTerm =
     terminalDebugStats;
 }

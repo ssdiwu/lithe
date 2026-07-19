@@ -4,6 +4,7 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import { Toaster } from "@/components/ui/sonner";
+import i18n from "@/i18n";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { consumeLaunchFiles, getLaunchDir } from "@/lib/launchDir";
 import { quoteShellArg } from "@/lib/shellQuote";
@@ -85,12 +86,13 @@ import {
   type PaneBounds,
   type TerminalPaneHandle,
   useTerminalFileDrop,
+  whenSessionReady,
   writeToSession,
 } from "@/modules/terminal";
 import { ThemeProvider, useThemeFileEditing } from "@/modules/theme";
-import { UpdaterDialog } from "@/modules/updater";
 import { useWorkspaceEnvStore, type WorkspaceEnv } from "@/modules/workspace";
 import { listen } from "@tauri-apps/api/event";
+import { invoke } from "@tauri-apps/api/core";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import type { SearchAddon } from "@xterm/addon-search";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -461,7 +463,7 @@ export default function App() {
       // Dispatch a window event the composer listens for. Same pattern as
       // selections — keeps file-explorer decoupled from the AI module.
       window.dispatchEvent(
-        new CustomEvent<string>("terax:ai-attach-file", { detail: path }),
+        new CustomEvent<string>("lithe:ai-attach-file", { detail: path }),
       );
       openPanel();
       focusInput(null);
@@ -507,6 +509,17 @@ export default function App() {
   const openNewBlockTab = useCallback(() => {
     newBlockTab(inheritedCwdForNewTab());
   }, [newBlockTab, inheritedCwdForNewTab]);
+
+  const openPiAgent = useCallback(() => {
+    const { leafId } = newAgentTab(inheritedCwdForNewTab(), "Pi");
+    const hooksReady = invoke("agent_enable_hooks", { agent: "pi" }).catch(
+      () => {},
+    );
+    void (async () => {
+      await Promise.all([whenSessionReady(leafId), hooksReady]);
+      writeToSession(leafId, "pi\r");
+    })();
+  }, [inheritedCwdForNewTab, newAgentTab]);
 
   const sendCd = useCallback(
     (path: string) => {
@@ -554,7 +567,7 @@ export default function App() {
       for (const path of paths) handleOpenFile(path, true);
     };
     (async () => {
-      unlisten = await listen<string[]>("terax:open-file", (e) => {
+      unlisten = await listen<string[]>("lithe:open-file", (e) => {
         openAll(e.payload);
       });
       openAll(await consumeLaunchFiles());
@@ -976,7 +989,7 @@ export default function App() {
   const handleNewSpace = useCallback(() => {
     const { spaces, create, setActive } = useSpaces.getState();
     const meta = create({
-      name: `Space ${spaces.length + 1}`,
+      name: i18n.t("spaces:defaultName", { count: spaces.length + 1 }),
       root: activeCwd ?? home ?? null,
       env: workspaceEnv,
     });
@@ -1078,6 +1091,7 @@ export default function App() {
             toggleSidebar,
             toggleAi: togglePanelAndFocus,
             askAiSelection: askFromSelection,
+            openPiAgent,
             openSettings: () => void openSettingsWindow(),
             openKeyboardShortcuts: () => void openSettingsWindow("shortcuts"),
             spaces: useSpaces.getState().spaces,
@@ -1105,6 +1119,7 @@ export default function App() {
       toggleSidebar,
       togglePanelAndFocus,
       askFromSelection,
+      openPiAgent,
       activeSpaceId,
       handleNewSpace,
     ],
@@ -1206,7 +1221,7 @@ export default function App() {
                 <div className="flex h-full min-h-0 flex-col border-r border-border/60 bg-card">
                   <div
                     key={sidebarView}
-                    className="min-h-0 flex-1 terax-panel-in"
+                    className="min-h-0 flex-1 lithe-panel-in"
                   >
                     {sidebarView === "explorer" ? (
                       <FileExplorer
@@ -1348,8 +1363,6 @@ export default function App() {
             rootPath={explorerRoot ?? home}
             onCreated={(path) => openFileTab(path)}
           />
-
-          <UpdaterDialog />
 
           <CloseDialogs
             tabs={tabs}

@@ -66,6 +66,7 @@ export type ShellEditorHandle = {
   focus(): void;
   getValue(): string;
   setValue(text: string): void;
+  insertText(text: string): void;
   clear(): void;
   setEditable(editable: boolean): void;
   retheme(fontFamily: string, fontSize: number): void;
@@ -454,6 +455,15 @@ export function createShellEditor(opts: ShellEditorOptions): ShellEditorHandle {
         changes: { from: 0, to: view.state.doc.length, insert: text },
         selection: { anchor: text.length },
       }),
+    insertText: (text) => {
+      const selection = view.state.selection.main;
+      view.dispatch({
+        changes: { from: selection.from, to: selection.to, insert: text },
+        selection: { anchor: selection.from + text.length },
+        scrollIntoView: true,
+      });
+      view.focus();
+    },
     clear: () => clear(view),
     setEditable: (editable) =>
       view.dispatch({

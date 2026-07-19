@@ -1,36 +1,42 @@
 import type { UIMessage } from "@ai-sdk/react";
-import type { CustomEndpoint } from "../config";
+import type { CustomEndpoint, OllamaCloudModel } from "../config";
 import { runAgentStream, type AgentUsageDelta } from "./agent";
 import type { ProviderKeys, CustomEndpointKeys } from "./keyring";
 import { formatAiError } from "./errors";
 import { native } from "./native";
 import type { ToolContext } from "../tools/tools";
 
-const TERAX_MD_MAX_BYTES = 32 * 1024;
+const PROJECT_MEMORY_MAX_BYTES = 32 * 1024;
+const PROJECT_MEMORY_FILES = ["LITHE.md", "TERAX.md"] as const;
 type MemoryCacheEntry = { content: string | null; mtime: number };
 const projectMemoryCache = new Map<string, MemoryCacheEntry>();
 
-async function readTeraxMd(workspaceRoot: string | null): Promise<string | null> {
+async function readProjectMemory(
+  workspaceRoot: string | null,
+): Promise<string | null> {
   if (!workspaceRoot) return null;
-  const path = `${workspaceRoot.replace(/\/$/, "")}/TERAX.md`;
   const cached = projectMemoryCache.get(workspaceRoot);
   if (cached && Date.now() - cached.mtime < 30_000) return cached.content;
-  try {
-    const r = await native.readFile(path);
-    if (r.kind !== "text") {
-      projectMemoryCache.set(workspaceRoot, { content: null, mtime: Date.now() });
-      return null;
+  for (const filename of PROJECT_MEMORY_FILES) {
+    const path = `${workspaceRoot.replace(/\/$/, "")}/${filename}`;
+    try {
+      const result = await native.readFile(path);
+      if (result.kind !== "text") continue;
+      const content =
+        result.content.length > PROJECT_MEMORY_MAX_BYTES
+          ? result.content.slice(0, PROJECT_MEMORY_MAX_BYTES)
+          : result.content;
+      projectMemoryCache.set(workspaceRoot, {
+        content,
+        mtime: Date.now(),
+      });
+      return content;
+    } catch {
+      // Try the legacy project-memory filename next.
     }
-    const content =
-      r.content.length > TERAX_MD_MAX_BYTES
-        ? r.content.slice(0, TERAX_MD_MAX_BYTES)
-        : r.content;
-    projectMemoryCache.set(workspaceRoot, { content, mtime: Date.now() });
-    return content;
-  } catch {
-    projectMemoryCache.set(workspaceRoot, { content: null, mtime: Date.now() });
-    return null;
   }
+  projectMemoryCache.set(workspaceRoot, { content: null, mtime: Date.now() });
+  return null;
 }
 
 type LiveSnapshot = {
@@ -58,6 +64,7 @@ type Deps = {
   getOpenaiCompatibleContextLimit?: () => number | undefined;
   getOpenrouterModelId?: () => string | undefined;
   getCustomEndpoints?: () => readonly CustomEndpoint[];
+  getOllamaCloudModels?: () => readonly OllamaCloudModel[];
   getCustomEndpointKeys?: () => CustomEndpointKeys;
   onStep?: (step: string | null) => void;
   onUsage?: (delta: AgentUsageDelta) => void;
@@ -75,7 +82,7 @@ type SendOptions = {
 export function createContextAwareTransport(deps: Deps) {
   const run = async (options: SendOptions) => {
     const live = deps.getLive();
-    const projectMemory = await readTeraxMd(live.workspaceRoot);
+    const projectMemory = await readProjectMemory(live.workspaceRoot);
     const envBlock = formatEnvBlock(live);
     const messagesForRun = envBlock
       ? injectEnvIntoLastUser(options.messages, envBlock)
@@ -101,6 +108,7 @@ export function createContextAwareTransport(deps: Deps) {
       openaiCompatibleContextLimit: deps.getOpenaiCompatibleContextLimit?.(),
       openrouterModelId: deps.getOpenrouterModelId?.(),
       customEndpoints: deps.getCustomEndpoints?.(),
+      ollamaCloudModels: deps.getOllamaCloudModels?.(),
       customEndpointKeys: deps.getCustomEndpointKeys?.(),
       planMode: deps.getPlanMode?.(),
       projectMemory,

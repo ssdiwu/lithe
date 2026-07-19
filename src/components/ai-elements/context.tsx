@@ -7,6 +7,7 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import { Progress } from "@/components/ui/progress";
+import { useTranslation } from "@/i18n";
 import { cn } from "@/lib/utils";
 import type { LanguageModelUsage } from "ai";
 import type { ComponentProps } from "react";
@@ -57,6 +58,7 @@ export const Context = ({
 };
 
 const ContextIcon = () => {
+  const { t } = useTranslation("ai");
   const { usedTokens, maxTokens } = useContextValue();
   const circumference = 2 * Math.PI * ICON_RADIUS;
   const usedPercent = usedTokens / maxTokens;
@@ -64,7 +66,7 @@ const ContextIcon = () => {
 
   return (
     <svg
-      aria-label="Model context usage"
+      aria-label={t("elements.modelContextUsage")}
       height="20"
       role="img"
       style={{ color: "currentcolor" }}
@@ -100,9 +102,10 @@ const ContextIcon = () => {
 export type ContextTriggerProps = ComponentProps<typeof Button>;
 
 export const ContextTrigger = ({ children, ...props }: ContextTriggerProps) => {
+  const { i18n } = useTranslation("ai");
   const { usedTokens, maxTokens } = useContextValue();
   const usedPercent = usedTokens / maxTokens;
-  const renderedPercent = new Intl.NumberFormat("en-US", {
+  const renderedPercent = new Intl.NumberFormat(i18n.language, {
     maximumFractionDigits: 1,
     style: "percent",
   }).format(usedPercent);
@@ -140,16 +143,17 @@ export const ContextContentHeader = ({
   className,
   ...props
 }: ContextContentHeaderProps) => {
+  const { i18n } = useTranslation("ai");
   const { usedTokens, maxTokens } = useContextValue();
   const usedPercent = usedTokens / maxTokens;
-  const displayPct = new Intl.NumberFormat("en-US", {
+  const displayPct = new Intl.NumberFormat(i18n.language, {
     maximumFractionDigits: 1,
     style: "percent",
   }).format(usedPercent);
-  const used = new Intl.NumberFormat("en-US", {
+  const used = new Intl.NumberFormat(i18n.language, {
     notation: "compact",
   }).format(usedTokens);
-  const total = new Intl.NumberFormat("en-US", {
+  const total = new Intl.NumberFormat(i18n.language, {
     notation: "compact",
   }).format(maxTokens);
 
@@ -202,23 +206,24 @@ export const ContextContentFooter = ({
   </div>
 );
 
-const formatTokenCount = (tokens?: number) =>
+const formatTokenCount = (tokens: number | undefined, locale: string) =>
   tokens === undefined
     ? "—"
-    : new Intl.NumberFormat("en-US", { notation: "compact" }).format(tokens);
+    : new Intl.NumberFormat(locale, { notation: "compact" }).format(tokens);
 
 const UsageRow = ({
   label,
   tokens,
+  locale,
   className,
   ...props
-}: ComponentProps<"div"> & { label: string; tokens: number }) => (
+}: ComponentProps<"div"> & { label: string; tokens: number; locale: string }) => (
   <div
     className={cn("flex items-center justify-between text-xs", className)}
     {...props}
   >
     <span className="text-muted-foreground">{label}</span>
-    <span>{formatTokenCount(tokens)}</span>
+    <span>{formatTokenCount(tokens, locale)}</span>
   </div>
 );
 
@@ -228,6 +233,7 @@ export const ContextInputUsage = ({
   children,
   ...props
 }: ContextInputUsageProps) => {
+  const { t, i18n } = useTranslation("ai");
   const { usage } = useContextValue();
   const inputTokens = usage?.inputTokens ?? 0;
 
@@ -239,7 +245,14 @@ export const ContextInputUsage = ({
     return null;
   }
 
-  return <UsageRow label="Input" tokens={inputTokens} {...props} />;
+  return (
+    <UsageRow
+      label={t("elements.input")}
+      tokens={inputTokens}
+      locale={i18n.language}
+      {...props}
+    />
+  );
 };
 
 export type ContextOutputUsageProps = ComponentProps<"div">;
@@ -248,6 +261,7 @@ export const ContextOutputUsage = ({
   children,
   ...props
 }: ContextOutputUsageProps) => {
+  const { t, i18n } = useTranslation("ai");
   const { usage } = useContextValue();
   const outputTokens = usage?.outputTokens ?? 0;
 
@@ -259,7 +273,14 @@ export const ContextOutputUsage = ({
     return null;
   }
 
-  return <UsageRow label="Output" tokens={outputTokens} {...props} />;
+  return (
+    <UsageRow
+      label={t("elements.output")}
+      tokens={outputTokens}
+      locale={i18n.language}
+      {...props}
+    />
+  );
 };
 
 export type ContextReasoningUsageProps = ComponentProps<"div">;
@@ -268,6 +289,7 @@ export const ContextReasoningUsage = ({
   children,
   ...props
 }: ContextReasoningUsageProps) => {
+  const { t, i18n } = useTranslation("ai");
   const { usage } = useContextValue();
   const reasoningTokens = usage?.reasoningTokens ?? 0;
 
@@ -279,7 +301,14 @@ export const ContextReasoningUsage = ({
     return null;
   }
 
-  return <UsageRow label="Reasoning" tokens={reasoningTokens} {...props} />;
+  return (
+    <UsageRow
+      label={t("elements.reasoning")}
+      tokens={reasoningTokens}
+      locale={i18n.language}
+      {...props}
+    />
+  );
 };
 
 export type ContextCacheUsageProps = ComponentProps<"div">;
@@ -288,6 +317,7 @@ export const ContextCacheUsage = ({
   children,
   ...props
 }: ContextCacheUsageProps) => {
+  const { t, i18n } = useTranslation("ai");
   const { usage } = useContextValue();
   const cacheTokens = usage?.cachedInputTokens ?? 0;
 
@@ -299,5 +329,12 @@ export const ContextCacheUsage = ({
     return null;
   }
 
-  return <UsageRow label="Cache" tokens={cacheTokens} {...props} />;
+  return (
+    <UsageRow
+      label={t("elements.cache")}
+      tokens={cacheTokens}
+      locale={i18n.language}
+      {...props}
+    />
+  );
 };

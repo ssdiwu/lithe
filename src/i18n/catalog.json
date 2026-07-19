@@ -1,0 +1,13 @@
+{
+  "fallback": "en",
+  "locales": [
+    {
+      "id": "en",
+      "label": "English"
+    },
+    {
+      "id": "zh-CN",
+      "label": "简体中文"
+    }
+  ]
+}

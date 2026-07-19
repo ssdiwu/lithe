@@ -1,11 +1,16 @@
+import i18n from "@/i18n";
+
 const DEFAULT_BYTE_CAP = 1024 * 1024;
 const DEFAULT_BLOCK_SIZE = 16 * 1024;
 
 // No \x1bc here: a full reset would erase the snapshot restored just before
 // the drain, scrollback included.
-const OVERFLOW_NOTICE = new TextEncoder().encode(
-  "\r\n\x1b[0m\x1b[2m[terax: some output was dropped while this tab was hidden]\x1b[0m\r\n",
-);
+function overflowNotice(): Uint8Array {
+  const message = i18n.t("terminal:overflowNotice", {
+    defaultValue: "[Lithe: some output was dropped while this tab was hidden]",
+  });
+  return new TextEncoder().encode(`\r\n\x1b[0m\x1b[2m${message}\x1b[0m\r\n`);
+}
 
 const LF = 0x0a;
 
@@ -58,7 +63,7 @@ export class DormantRing {
     const last = this.blocks.length - 1;
     let skip = 0;
     if (this.overflowed && this.head <= last) {
-      write(OVERFLOW_NOTICE);
+      write(overflowNotice());
       // Cut landed mid-line, likely mid-escape-sequence; LF never occurs
       // inside a multi-byte UTF-8 sequence so resuming there is safe.
       const first = this.blocks[this.head];

@@ -2,8 +2,8 @@
 
 use std::time::{Duration, Instant};
 
-use terax_lib::modules::shell::background;
-use terax_lib::modules::workspace::WorkspaceEnv;
+use lithe_lib::modules::shell::background;
+use lithe_lib::modules::workspace::WorkspaceEnv;
 
 fn wait_until<F: Fn() -> bool>(timeout: Duration, check: F) -> bool {
     let deadline = Instant::now() + timeout;
@@ -33,12 +33,8 @@ fn spawn_invalid_cwd_errors() {
 
 #[test]
 fn spawn_captures_stdout_and_exits_zero() {
-    let proc = background::spawn(
-        "printf 'hello\\n'".into(),
-        None,
-        WorkspaceEnv::Local,
-    )
-    .expect("spawn");
+    let proc =
+        background::spawn("printf 'hello\\n'".into(), None, WorkspaceEnv::Local).expect("spawn");
 
     assert!(wait_until(Duration::from_secs(5), || {
         proc.read_logs(0).exited
@@ -62,8 +58,7 @@ fn spawn_captures_nonzero_exit() {
 
 #[test]
 fn kill_terminates_a_running_process() {
-    let proc =
-        background::spawn("sleep 30".into(), None, WorkspaceEnv::Local).expect("spawn");
+    let proc = background::spawn("sleep 30".into(), None, WorkspaceEnv::Local).expect("spawn");
 
     proc.kill();
 
@@ -90,7 +85,10 @@ fn read_logs_advances_offset() {
     assert!(first.next_offset > 0);
 
     let next = proc.read_logs(first.next_offset);
-    assert!(next.bytes.is_empty(), "consumed offset must return no bytes");
+    assert!(
+        next.bytes.is_empty(),
+        "consumed offset must return no bytes"
+    );
     assert_eq!(next.next_offset, first.next_offset);
 }
 

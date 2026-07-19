@@ -7,7 +7,7 @@ import {
   type Snippet,
 } from "../lib/snippets";
 
-const CHANGED_EVENT = "terax://ai-snippets-changed";
+const CHANGED_EVENT = "lithe://ai-snippets-changed";
 
 type State = {
   hydrated: boolean;
@@ -34,7 +34,9 @@ export const useSnippetsStore = create<State>((set, get) => ({
     const list = get().snippets;
     const idx = list.findIndex((s) => s.id === snippet.id);
     const next =
-      idx === -1 ? [...list, snippet] : list.map((s) => (s.id === snippet.id ? snippet : s));
+      idx === -1
+        ? [...list, snippet]
+        : list.map((s) => (s.id === snippet.id ? snippet : s));
     set({ snippets: next });
     void saveSnippets(next).then(() => emit(CHANGED_EVENT));
   },

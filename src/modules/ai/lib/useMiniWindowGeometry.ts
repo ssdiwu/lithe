@@ -9,7 +9,7 @@ import {
   type Viewport,
 } from "./miniWindowGeometry";
 
-const STORE_KEY = "terax-ui-mini-window-geom";
+const STORE_KEY = "lithe-ui-mini-window-geom";
 
 const viewport = (): Viewport => ({
   vw: window.innerWidth,
@@ -157,7 +157,11 @@ export function useMiniWindowGeometry() {
     (dir: ResizeDir) => (e: React.PointerEvent) => {
       if (e.button !== 0) return;
       e.stopPropagation();
-      beginGesture(e, (start, dx, dy, vp) => applyResize(start, dir, dx, dy, vp), 0);
+      beginGesture(
+        e,
+        (start, dx, dy, vp) => applyResize(start, dir, dx, dy, vp),
+        0,
+      );
     },
     [beginGesture],
   );

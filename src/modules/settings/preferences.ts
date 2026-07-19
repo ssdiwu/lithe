@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { applyLanguagePreference } from "@/i18n";
 import {
   DEFAULT_PREFERENCES,
   loadPreferences,
@@ -14,8 +15,8 @@ type State = Preferences & {
 
 let initPromise: Promise<void> | null = null;
 
-const FAST_BG_KIND_KEY = "terax-ui-bg-kind-shadow";
-const FAST_BG_IMAGE_ID_KEY = "terax-ui-bg-image-shadow";
+const FAST_BG_KIND_KEY = "lithe-ui-bg-kind-shadow";
+const FAST_BG_IMAGE_ID_KEY = "lithe-ui-bg-image-shadow";
 
 function mirrorBgFastPath(
   kind: Preferences["backgroundKind"],
@@ -54,9 +55,15 @@ export const usePreferencesStore = create<State>((set) => ({
       try {
         const prefs = await loadPreferences();
         set({ ...prefs, hydrated: true });
+        await applyLanguagePreference(prefs.language);
         mirrorBgFastPath(prefs.backgroundKind, prefs.backgroundImageId);
         void onPreferencesChange((key, value) => {
           set({ [key]: value } as Partial<State>);
+          if (key === "language") {
+            void applyLanguagePreference(value).catch((error) => {
+              console.error("language sync failed", error);
+            });
+          }
           if (key === "backgroundKind" || key === "backgroundImageId") {
             const s = usePreferencesStore.getState();
             mirrorBgFastPath(s.backgroundKind, s.backgroundImageId);

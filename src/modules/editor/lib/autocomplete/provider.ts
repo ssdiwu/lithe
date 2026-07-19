@@ -1,3 +1,4 @@
+import i18n from "@/i18n";
 import {
   type AutocompleteProviderId,
   DEFAULT_AUTOCOMPLETE_MODEL,
@@ -38,7 +39,12 @@ export async function requestCompletion(
   const modelId =
     deps.modelId.trim() || DEFAULT_AUTOCOMPLETE_MODEL[deps.provider] || "";
   if (!modelId) {
-    throw new Error(`No autocomplete model id set for ${deps.provider}.`);
+    throw new Error(
+      i18n.t("ai:errors.autocompleteModelMissing", {
+        defaultValue: "No autocomplete model id set for {{provider}}.",
+        provider: deps.provider,
+      }),
+    );
   }
   const keys = { ...EMPTY_PROVIDER_KEYS, [deps.provider]: deps.apiKey };
   const model = await buildLanguageModel(deps.provider, keys, modelId, {

@@ -1,8 +1,17 @@
+import i18n from "@/i18n";
 import type { ProviderKeys } from "./keyring";
 
 const GROQ_BASE_URL = "https://api.groq.com/openai/v1";
 const STT_TIMEOUT_GROQ_MS = 30_000;
 const STT_TIMEOUT_WHISPERCPP_MS = 180_000;
+
+function whisperMessage(
+  key: string,
+  defaultValue: string,
+  values: Record<string, unknown> = {},
+): string {
+  return i18n.t(`ai:whisper.${key}`, { defaultValue, ...values });
+}
 
 async function fetchWithTimeout(
   input: RequestInfo | URL,
@@ -44,15 +53,23 @@ async function transcribeViaRest(
   const headers: Record<string, string> = {};
   if (apiKey) headers["Authorization"] = `Bearer ${apiKey}`;
 
-  const res = await fetchWithTimeout(`${baseURL}/audio/transcriptions`, {
-    method: "POST",
-    headers,
-    body: form,
-  }, STT_TIMEOUT_GROQ_MS);
+  const res = await fetchWithTimeout(
+    `${baseURL}/audio/transcriptions`,
+    {
+      method: "POST",
+      headers,
+      body: form,
+    },
+    STT_TIMEOUT_GROQ_MS,
+  );
   if (!res.ok) {
     const body = await res.text().catch(() => "");
     throw new Error(
-      `STT request failed (${res.status}): ${body || res.statusText}`,
+      whisperMessage(
+        "requestFailed",
+        "STT request failed ({{status}}): {{detail}}",
+        { status: res.status, detail: body || res.statusText },
+      ),
     );
   }
   return res.text();
@@ -70,7 +87,8 @@ async function toWav(blob: Blob): Promise<Blob> {
     const view = new DataView(buffer);
 
     const writeStr = (offset: number, s: string) => {
-      for (let i = 0; i < s.length; i++) view.setUint8(offset + i, s.charCodeAt(i));
+      for (let i = 0; i < s.length; i++)
+        view.setUint8(offset + i, s.charCodeAt(i));
     };
 
     writeStr(0, "RIFF");
@@ -90,7 +108,7 @@ async function toWav(blob: Blob): Promise<Blob> {
     let offset = 44;
     for (let i = 0; i < length; i++) {
       const s = Math.max(-1, Math.min(1, channel[i]));
-      view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+      view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7fff, true);
       offset += 2;
     }
 
@@ -109,14 +127,22 @@ async function transcribeWhisperCpp(
   form.append("file", wav, "audio.wav");
   form.append("response_format", "text");
 
-  const res = await fetchWithTimeout(`${baseURL}/inference`, {
-    method: "POST",
-    body: form,
-  }, STT_TIMEOUT_WHISPERCPP_MS);
+  const res = await fetchWithTimeout(
+    `${baseURL}/inference`,
+    {
+      method: "POST",
+      body: form,
+    },
+    STT_TIMEOUT_WHISPERCPP_MS,
+  );
   if (!res.ok) {
     const body = await res.text().catch(() => "");
     throw new Error(
-      `STT request failed (${res.status}): ${body || res.statusText}`,
+      whisperMessage(
+        "requestFailed",
+        "STT request failed ({{status}}): {{detail}}",
+        { status: res.status, detail: body || res.statusText },
+      ),
     );
   }
   return res.text();
@@ -128,14 +154,21 @@ function assertLoopbackUrl(baseURL: string): void {
   try {
     url = new URL(baseURL);
   } catch {
-    throw new Error(`Invalid Whisper.cpp URL: ${baseURL}`);
+    throw new Error(
+      whisperMessage("invalidUrl", "Invalid Whisper.cpp URL: {{url}}", {
+        url: baseURL,
+      }),
+    );
   }
   const host = url.hostname.toLowerCase().replace(/^\[|\]$/g, "");
   const loopback =
     host === "localhost" || host === "::1" || /^127(\.\d{1,3}){3}$/.test(host);
   if (!loopback) {
     throw new Error(
-      "Whisper.cpp must run on a loopback address (localhost or 127.x.x.x) to keep transcription local.",
+      whisperMessage(
+        "loopbackOnly",
+        "Whisper.cpp must run on a loopback address (localhost or 127.x.x.x) to keep transcription local.",
+      ),
     );
   }
 }
@@ -154,18 +187,30 @@ export async function transcribeAudio(
   switch (provider) {
     case "openai": {
       const key = apiKeys.openai;
-      if (!key) throw new Error("OpenAI API key is not configured");
+      if (!key) {
+        throw new Error(
+          whisperMessage(
+            "openaiKeyMissing",
+            "OpenAI API key is not configured",
+          ),
+        );
+      }
       return transcribeOpenAI(blob, key);
     }
     case "groq": {
       const key = apiKeys.groq;
-      if (!key) throw new Error("Groq API key is not configured");
+      if (!key) {
+        throw new Error(
+          whisperMessage("groqKeyMissing", "Groq API key is not configured"),
+        );
+      }
       const model = options.groqSttModel || "whisper-large-v3-turbo";
       return transcribeViaRest(GROQ_BASE_URL, blob, key, model);
     }
     case "whispercpp": {
       const baseURL =
-        options.whispercppBaseURL?.replace(/\/+$/, "") || "http://127.0.0.1:8080";
+        options.whispercppBaseURL?.replace(/\/+$/, "") ||
+        "http://127.0.0.1:8080";
       assertLoopbackUrl(baseURL);
       return transcribeWhisperCpp(baseURL, blob);
     }

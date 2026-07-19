@@ -9,7 +9,7 @@ import {
   type Agent,
 } from "../lib/agents";
 
-const CHANGED_EVENT = "terax://ai-agents-changed";
+const CHANGED_EVENT = "lithe://ai-agents-changed";
 
 type AgentsState = {
   hydrated: boolean;
@@ -54,7 +54,9 @@ export const useAgentsStore = create<AgentsState>((set, get) => ({
     const list = get().customAgents;
     const idx = list.findIndex((a) => a.id === agent.id);
     const next =
-      idx === -1 ? [...list, agent] : list.map((a) => (a.id === agent.id ? agent : a));
+      idx === -1
+        ? [...list, agent]
+        : list.map((a) => (a.id === agent.id ? agent : a));
     set({ customAgents: next });
     void saveCustomAgents(next).then(broadcast);
   },

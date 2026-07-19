@@ -1,0 +1,2 @@
+NSCameraUsageDescription = "A program running within Lithe would like to use the camera.";
+NSMicrophoneUsageDescription = "A program running within Lithe would like to use your microphone.";

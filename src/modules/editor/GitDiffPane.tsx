@@ -1,6 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Spinner } from "@/components/ui/spinner";
+import { useTranslation } from "@/i18n";
 import { unifiedMergeView } from "@codemirror/merge";
 import { EditorState, type Extension } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
@@ -137,6 +138,7 @@ function loadStateFromCache(source: WorkingSource | CommitSource): LoadState {
 }
 
 export function GitDiffPane({ source, chipLabel, active }: Props) {
+  const { t } = useTranslation("editor");
   const cmRef = useRef<ReactCodeMirrorRef>(null);
   const themeExt = useEditorThemeExt();
   const [state, setState] = useState<LoadState>(() =>
@@ -236,9 +238,7 @@ export function GitDiffPane({ source, chipLabel, active }: Props) {
     let cancelled = false;
     resolveLanguage(path).then((res) => {
       if (cancelled || !res) return;
-      setState((s) =>
-        s.kind === "loaded" ? { ...s, langExt: res.ext } : s,
-      );
+      setState((s) => (s.kind === "loaded" ? { ...s, langExt: res.ext } : s));
     });
     return () => {
       cancelled = true;
@@ -296,7 +296,7 @@ export function GitDiffPane({ source, chipLabel, active }: Props) {
         {state.kind === "loading" || state.kind === "idle" ? (
           <div className="flex h-full items-center justify-center gap-2 text-[11px] text-muted-foreground">
             <Spinner className="size-3" />
-            Loading diff…
+            {t("loadingDiff")}
           </div>
         ) : state.kind === "error" ? (
           <div className="flex h-full items-center justify-center px-6 text-center text-[11.5px] text-destructive">
@@ -305,7 +305,7 @@ export function GitDiffPane({ source, chipLabel, active }: Props) {
         ) : useFallback ? (
           <ScrollArea className="h-full">
             <pre className="min-h-full whitespace-pre-wrap wrap-break-word p-4 font-mono text-[12px] leading-relaxed text-muted-foreground">
-              {fallbackPatch || "Diff preview is not available for this file."}
+              {fallbackPatch || t("diffPreviewUnavailable")}
             </pre>
           </ScrollArea>
         ) : (

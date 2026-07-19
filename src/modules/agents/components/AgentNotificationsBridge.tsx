@@ -1,3 +1,4 @@
+import i18n from "@/i18n";
 import type { Tab } from "@/modules/tabs";
 import { hasLeaf, leafIdForPty } from "@/modules/terminal";
 import { listen } from "@tauri-apps/api/event";
@@ -38,7 +39,9 @@ function route(
   const info = tabInfo(ctx.tabs, session.leafId);
   const name = displayAgent(session.agent);
   const heading =
-    kind === "attention" ? `${name} needs your input` : `${name} finished`;
+    kind === "attention"
+      ? i18n.t("agents:signal.needsInput", { name })
+      : i18n.t("agents:signal.finished", { name });
 
   routeAgentNotification({
     source: "terminal",
@@ -107,7 +110,7 @@ export function AgentNotificationsBridge({
   useEffect(() => {
     let alive = true;
     let unlisten: (() => void) | undefined;
-    listen<AgentSignal>("terax:agent-signal", (e) =>
+    listen<AgentSignal>("lithe:agent-signal", (e) =>
       handleSignal(e.payload, ctxRef.current),
     )
       .then((u) => {

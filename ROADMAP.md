@@ -1,16 +1,16 @@
 # Roadmap
 
-Terax direction, what's shipped, what's coming, and what's deliberately out of scope.
+Lithe direction, what's shipped, what's coming, and what's deliberately out of scope.
 
-This file is updated as direction evolves. For day-to-day work, see [GitHub Issues](https://github.com/crynta/terax-ai/issues) and the Projects board.
+This file is updated as direction evolves. For day-to-day work, use the Lithe repository's issue tracker.
 
-## What Terax is
+## What Lithe is
 
-Terax is a fast, lightweight, AI-native terminal (ADE - agentic development environment). It pairs a native PTY backend with a modern UI: multi-tab terminals, an integrated code editor, a file explorer, source control, and a first-class AI agent system that works with your own API keys or fully local models. Under 10 MB on disk. No telemetry. Keys stored in the OS keychain.
+Lithe is a fast, lightweight, AI-native terminal (ADE - agentic development environment). It pairs a native PTY backend with a modern UI: multi-tab terminals, an integrated code editor, a file explorer, source control, and a first-class AI agent system that works with your own API keys or fully local models. No telemetry. Keys are stored in the OS keychain.
 
 The product is opinionated: terminal-first, AI as a primitive (not a sidebar), lightweight always, cross-platform without compromise.
 
-## What Terax is not
+## What Lithe is not
 
 - Not a full IDE replacement. Heavy IDE features that overlap with VS Code / Cursor / Zed are out of scope.
 - Not a browser. Web preview exists for local dev servers and lightweight doc viewing only.
@@ -38,6 +38,8 @@ The themes below frame every scope decision.
 - [x] Inline search, link detection, true-color
 - [x] Private terminal tabs with AI-context redaction
 - [x] WSL bridge as workspace environment
+- [x] Explorer file drops insert shell-quoted paths at the input cursor
+- [x] Optional command-block presentation
 
 ### Editor
 
@@ -63,7 +65,7 @@ The themes below frame every scope decision.
 - [x] Multiple cloud and local providers (BYOK)
 - [x] Multi-agent and sub-agents
 - [x] Voice input
-- [x] Slash commands and skills
+- [x] Slash commands and reusable snippets
 - [x] Project memory and per-project configuration
 - [x] Tools with approval flow (file read / write / edit, bash, search, plan)
 - [x] Workspace file picker
@@ -75,12 +77,24 @@ The themes below frame every scope decision.
 - [x] Image and PDF viewers
 - [x] Sandboxed iframe
 
+### Themes and customization
+
+- [x] Bundled and custom application themes
+- [x] Independent editor themes
+- [x] Importable theme files and background images
+
+### Internationalization
+
+- [x] English and Simplified Chinese UI resources with parity tests
+- [x] System-language detection and manual language selection
+- [x] Localized macOS native menus and AppKit-provided menu items
+- [x] Community-ready locale catalog and split translation assets
+
 ### Platform Integration
 
 - [x] macOS, Linux (.deb / .rpm / AppImage), Windows (NSIS), WSL
-- [x] AUR (Arch)
 - [x] Windows Explorer context-menu integration
-- [x] Auto-updater
+- [x] Project-owned release packaging with no automatic updater
 - [x] OS keychain for API keys
 - [x] No telemetry
 
@@ -97,10 +111,8 @@ The themes below frame every scope decision.
 
 - [ ] SSH support (PTY auth and known_hosts first; SFTP and port forwarding later)
 - [ ] Inline terminal auto-suggestions (history-based first; AI-powered opt-in later)
-- [ ] Themes and customizations (terminal themes, UI accents, keybindings, layout)
 - [ ] AI autocomplete improvements in editor (project-aware context, lower latency)
-- [ ] Drag and drop in terminal (files as quoted paths, AI panel as context)
-- [ ] AI agent meta-orchestration (Terax agent spawning and managing external coding agents like Claude Code / OpenCode)
+- [ ] AI agent meta-orchestration (Lithe agent spawning and managing external coding agents like Claude Code / OpenCode)
 - [ ] More slash commands and skills
 - [ ] Approval flow improvements (YOLO / auto-approve, project-scoped policies, per-tool trust)
 - [ ] Persistent terminal sessions and layout restore
@@ -117,7 +129,7 @@ The themes below frame every scope decision.
 
 ## Wanted contributions
 
-Strategic areas where help is welcome. Pick something and propose an approach in Discord or via an issue first.
+Strategic areas where help is welcome. Pick something and propose an approach via an issue first.
 
 - **Test coverage.** PTY edge cases across platforms, security functions, AI tool guards.
 - **Bundle optimization.** Profile and propose specific dependency replacements or tree-shake fixes.
@@ -126,24 +138,24 @@ Strategic areas where help is welcome. Pick something and propose an approach in
 - **Themes.** Terminal and editor themes, UI accent palettes that fit the lightweight aesthetic.
 - **Provider integrations.** Only providers that add unique value beyond existing coverage. Justify the case before implementing.
 
-See `good-first-issue` and `help-wanted` labels on GitHub Issues for concrete tasks.
+See `good-first-issue` and `help-wanted` labels in the Lithe issue tracker for concrete tasks.
 
 ## Out of scope
 
-Categories that will not be built into Terax. Individual feature requests in these categories will be closed.
+Categories that will not be built into Lithe. Individual feature requests in these categories will be closed.
 
 - **Heavy IDE features.** Full language-server integration, integrated debuggers, refactoring engines, project-wide search at IDE scale. Use a real editor for those.
-- **Notebook and document workspaces.** Anything that turns Terax into a document host rather than a terminal.
+- **Notebook and document workspaces.** Anything that turns Lithe into a document host rather than a terminal.
 - **Package manager and toolchain UIs.** Use `npm`, `pip`, `cargo` and friends in the terminal directly.
 - **Full web browser features.** Preview pane stays scoped to local dev servers and lightweight doc viewing. No navigation history, no bookmarks, no dev tools.
-- **Telemetry, analytics, accounts.** Terax stays BYOK and offline-respectful.
+- **Telemetry, analytics, accounts.** Lithe stays BYOK and offline-respectful.
 - **Extension marketplaces at IDE scale.** Narrowly-scoped AI tool / skill bundles may happen eventually. Arbitrary UI or behavior extensions will not.
-- **Third-party subscription session bridges.** Forwarding cloud subscription auth (provider-managed login sessions) through Terax is not technically feasible for third-party clients.
+- **Third-party subscription session bridges.** Forwarding cloud subscription auth (provider-managed login sessions) through Lithe is not technically feasible for third-party clients.
 
 ## Decision authority
 
-Direction and scope decisions are made by [@crynta](https://github.com/crynta). Trusted reviewers (informal, no fixed roles yet) provide input on security, performance, and platform-specific areas.
+Direction and scope decisions are made by the Lithe maintainers. Trusted reviewers may provide input on security, performance, and platform-specific areas.
 
-If a PR is closed and you disagree, raise it in Discord. Happy to discuss, not happy to be ambushed in a PR comment thread.
+If a PR is closed and you disagree, raise the concern in an issue or discussion so the decision can be reviewed in context.
 
 This will likely formalize over time as the project grows.

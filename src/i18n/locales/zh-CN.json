@@ -1,0 +1,1387 @@
+{
+  "meta": {
+    "id": "zh-CN",
+    "label": "简体中文",
+    "direction": "ltr"
+  },
+  "resources": {
+    "nativeMenu": {
+      "file": "文件",
+      "edit": "编辑",
+      "view": "显示",
+      "window": "窗口",
+      "help": "帮助",
+      "about": "关于 Lithe",
+      "services": "服务",
+      "hide": "隐藏 Lithe",
+      "hideOthers": "隐藏其他",
+      "quit": "退出 Lithe",
+      "closeWindow": "关闭窗口",
+      "undo": "撤销",
+      "redo": "重做",
+      "cut": "剪切",
+      "copy": "拷贝",
+      "paste": "粘贴",
+      "selectAll": "全选",
+      "enterFullScreen": "进入全屏幕",
+      "minimize": "最小化",
+      "zoom": "缩放"
+    },
+    "agents": {
+      "time": {
+        "justNow": "刚刚",
+        "minutesAgo": "{{count}} 分钟前",
+        "hoursAgo": "{{count}} 小时前",
+        "daysAgo": "{{count}} 天前"
+      },
+      "status": {
+        "waiting": "等待中",
+        "working": "运行中"
+      },
+      "notif": {
+        "attention": "需要输入",
+        "finished": "已完成",
+        "error": "失败"
+      },
+      "hook": {
+        "enabled": "已启用",
+        "enabling": "启用中",
+        "enable": "启用"
+      },
+      "bell": {
+        "title": "Agent 通知",
+        "heading": "通知",
+        "active": "{{count}} 个进行中",
+        "clear": "清除",
+        "emptyLine1": "暂无 Agent 活动。",
+        "emptyLine2": "运行 Lithe agent 或编码 agent 即可在此追踪。",
+        "alerts": "Agent 提醒"
+      },
+      "toast": {
+        "open": "打开"
+      },
+      "signal": {
+        "needsInput": "{{name}} 需要你的输入",
+        "finished": "{{name}} 已完成"
+      },
+      "local": {
+        "needsApproval": "Lithe 需要你的批准",
+        "approveToContinue": "批准工具调用以继续",
+        "runFailed": "Lithe 运行失败",
+        "finished": "Lithe 已完成",
+        "taskReady": "你的任务已就绪"
+      }
+    },
+    "ai": {
+      "miniWindow": {
+        "suggestions": {
+          "explainError": {
+            "label": "解释上一个错误",
+            "hint": "读取终端缓冲区",
+            "text": "解释终端里的上一个错误。"
+          },
+          "generateCommand": {
+            "label": "生成命令",
+            "hint": "告诉我你想做什么",
+            "text": "给我一个命令，用来"
+          },
+          "summarizeBuffer": {
+            "label": "总结缓冲区",
+            "hint": "回顾最近的活动",
+            "text": "总结一下终端里刚刚发生了什么。"
+          }
+        },
+        "planMode": "计划模式",
+        "queued": "· 已排队 {{count}} 项",
+        "noEditsQueued": "· 无待处理编辑",
+        "exit": "退出",
+        "loadingSessions": "正在加载会话…",
+        "thinking": "思考中…",
+        "closeTitle": "关闭 (Esc)",
+        "context": {
+          "model": "模型",
+          "lastRequest": "上次请求",
+          "estimatedContext": "预估上下文",
+          "ofWhichCached": "其中已缓存",
+          "sessionInput": "会话输入",
+          "sessionOutput": "会话输出",
+          "cacheHit": "缓存命中",
+          "sessionCost": "会话费用",
+          "window": "窗口",
+          "footerLastRequest": "上次请求反映当前上下文大小；会话合计为累计值。",
+          "footerApprox": "Token 数量为近似值（字符数 / 4）。"
+        },
+        "switchSession": "切换会话",
+        "newChat": "新对话",
+        "newSession": "新建会话",
+        "deleteSession": "删除会话",
+        "empty": {
+          "title": "向 Lithe 提问",
+          "description": "Lithe 能看到当前活动的终端：cwd、最近的命令和输出。"
+        }
+      },
+      "toolApproval": {
+        "writeFile": "写入文件",
+        "editFile": "编辑文件",
+        "editFileBatch": "编辑文件（批量）",
+        "createDirectory": "创建目录",
+        "runShellCommand": "运行 shell 命令",
+        "spawnBackgroundProcess": "启动后台进程",
+        "needsApproval": "需要批准",
+        "deny": "拒绝",
+        "approve": "批准",
+        "lines_one": "{{count}} 行",
+        "lines_other": "{{count}} 行",
+        "reviewInDiffTab": " · 在 diff 标签页中查看",
+        "replaceAll": " · 全部替换",
+        "diffLines_one": "−{{removed}} / +{{added}} 行",
+        "diffLines_other": "−{{removed}} / +{{added}} 行",
+        "edits_one": "{{count}} 处编辑 · 在 diff 标签页中查看",
+        "edits_other": "{{count}} 处编辑 · 在 diff 标签页中查看"
+      },
+      "composer": {
+        "placeholder": "向 Lithe 提问   -   输入 # 使用片段和命令，输入 @ 引用文件",
+        "listening": "正在聆听…",
+        "transcribing": "正在转写…"
+      },
+      "statusBar": {
+        "openAiAgent": "打开 AI agent",
+        "openAiAgentTitle": "打开 AI agent",
+        "attachFileOrImage": "附加文件或图片",
+        "voiceNeedsKey": "语音功能需要 {{provider}} 密钥",
+        "stopAndTranscribe": "停止并转写",
+        "transcribing": "正在转写…",
+        "voiceInput": "语音输入",
+        "closeAiPanel": "关闭 AI 面板",
+        "miniWindowOpen": "迷你窗口已打开",
+        "openConversation": "打开对话",
+        "openChatWindow": "打开 AI 对话窗口（{{shortcut}}）",
+        "closeChatWindow": "关闭 AI 对话窗口（{{shortcut}}）",
+        "stop": "停止",
+        "send": "发送 (Enter)",
+        "searchPlaceholder": "搜索模型、提供方、能力…",
+        "tabAll": "全部",
+        "tabFavorites": "收藏",
+        "tabRecent": "最近",
+        "allProviders": "所有提供方",
+        "notConfigured": "{{label}}：未配置",
+        "openaiCompatible": "OpenAI Compatible",
+        "modelTitle": "模型：{{label}}",
+        "modelNoKey": "{{label}}：未配置密钥",
+        "noFavorites": "还没有收藏，给模型加星即可固定到这里。",
+        "noRecent": "没有最近使用的模型。",
+        "noMatch": "没有匹配的模型。",
+        "configureCta": "配置 {{label}} 以使用这些模型。",
+        "open": "打开",
+        "unfavorite": "取消收藏",
+        "favorite": "收藏",
+        "intelligence": "智能",
+        "speed": "速度",
+        "affordability": "性价比",
+        "capBarTitle": "{{label}}：{{value}}/5"
+      },
+      "chat": {
+        "editorSelection": "编辑器选区",
+        "terminalSelection": "终端选区",
+        "emptyTitle": "向 Lithe 提问",
+        "emptyDescription": "解释命令输出、修复错误、生成片段或运行任务。",
+        "thinking": "思考中…",
+        "continuePrompt": "从你停下的地方继续。不要复述，直接接着做。",
+        "somethingWentWrong": "出错了。",
+        "dismiss": "忽略",
+        "contextCompacted_one": "上下文已压缩，省略了 {{count}} 条较早的工具结果以节省 token。",
+        "contextCompacted_other": "上下文已压缩，省略了 {{count}} 条较早的工具结果以节省 token。",
+        "hitStepLimit": "已达到步数上限。继续以接着运行。",
+        "continue": "继续",
+        "read": "读取",
+        "readFiles_one": "{{count}} 个文件",
+        "readFiles_other": "{{count}} 个文件"
+      },
+      "selectionAsk": "向 Lithe 提问",
+      "statusPill": {
+        "openAiLog": "打开 AI 日志",
+        "error": "错误",
+        "thinking": "思考中…"
+      },
+      "slashCommands": {
+        "planModeOff": "计划模式已关闭",
+        "planModeOn": "计划模式已开启",
+        "claudeCodeUsage": "用法：/claude-code <request>",
+        "initLabel": "初始化工作区",
+        "planLabel": "计划模式",
+        "claudeCodeLabel": "委派给 Claude Code"
+      },
+      "whisper": {
+        "transcriptionFailed": "转写失败",
+        "microphoneAccessFailed": "麦克风访问失败",
+        "requestFailed": "语音转写请求失败（{{status}}）：{{detail}}",
+        "invalidUrl": "无效的 Whisper.cpp URL：{{url}}",
+        "loopbackOnly": "Whisper.cpp 必须运行在回环地址（localhost 或 127.x.x.x），以确保转写保留在本机。",
+        "openaiKeyMissing": "尚未配置 OpenAI API key",
+        "groqKeyMissing": "尚未配置 Groq API key"
+      },
+      "elements": {
+        "generatingCode": "正在生成代码…",
+        "generatingLanguage": "正在生成 {{language}}…",
+        "runInActiveTerminal": "在活动终端中运行",
+        "sent": "已发送",
+        "run": "运行",
+        "copyCode": "复制代码",
+        "previousBranch": "上一个分支",
+        "nextBranch": "下一个分支",
+        "branchPage": "{{current}} / {{total}}",
+        "modelContextUsage": "模型上下文用量",
+        "input": "输入",
+        "output": "输出",
+        "reasoning": "推理",
+        "cache": "缓存",
+        "thinking": "思考中",
+        "reasoned": "已完成推理",
+        "reasonedForSeconds": "已推理 {{duration}} 秒"
+      },
+      "tools": {
+        "labels": {
+          "read": "读取",
+          "list": "列出",
+          "write": "写入",
+          "createDir": "创建目录",
+          "edit": "编辑",
+          "run": "运行",
+          "spawn": "启动",
+          "logs": "日志",
+          "jobs": "任务",
+          "kill": "终止",
+          "search": "搜索",
+          "glob": "Glob",
+          "suggest": "建议",
+          "preview": "预览",
+          "subagent": "子智能体",
+          "todos": "待办"
+        },
+        "status": {
+          "awaitingApproval": "等待批准",
+          "responded": "已响应",
+          "preparing": "准备中",
+          "running": "运行中",
+          "done": "已完成",
+          "denied": "已拒绝",
+          "error": "错误"
+        },
+        "failed": "失败",
+        "items_one": "{{count}} 项",
+        "items_other": "{{count}} 项",
+        "input": "输入",
+        "output": "输出",
+        "error": "错误",
+        "read": "已读取",
+        "lines_one": "{{count}} 行",
+        "lines_other": "{{count}} 行",
+        "empty": "空",
+        "noMatches": "没有匹配项",
+        "filesScanned_one": "已扫描 {{count}} 个文件",
+        "filesScanned_other": "已扫描 {{count}} 个文件",
+        "hits_one": "{{count}} 个匹配项",
+        "hits_other": "{{count}} 个匹配项",
+        "files_one": "{{count}} 个文件",
+        "files_other": "{{count}} 个文件",
+        "truncated": "已截断",
+        "replacements_one": "{{count}} 处替换",
+        "replacements_other": "{{count}} 处替换",
+        "created": "已创建",
+        "wrote": "已写入",
+        "running": "运行中",
+        "exit": "退出码 {{code}}",
+        "timedOut": "已超时",
+        "insertIntoTerminal": "插入活动终端",
+        "inserted": "已插入",
+        "insert": "插入"
+      },
+      "picker": {
+        "noMatches": "没有匹配项。可在设置 → 智能体中添加片段。",
+        "builtIn": "内置片段",
+        "snippets": "片段",
+        "workspaceFiles": "工作区文件",
+        "noWorkspace": "未打开工作区",
+        "indexingWorkspace": "正在索引工作区…",
+        "noMatchingFiles": "没有匹配的文件",
+        "largeWorkspace": "工作区较大，请细化查询以缩小结果范围。"
+      },
+      "planReview": {
+        "title": "计划审阅",
+        "pendingChanges_one": "{{count}} 项待处理改动",
+        "pendingChanges_other": "{{count}} 项待处理改动",
+        "discardAll": "全部放弃",
+        "apply": "应用 {{count}} 项",
+        "toggleDiff": "展开或收起差异",
+        "new": "新建",
+        "multiEdit": "批量编辑",
+        "createDirectory": "创建目录",
+        "reject": "拒绝",
+        "noLineChanges": "没有行级改动"
+      },
+      "todos": "待办",
+      "removeCommand": "移除命令",
+      "removeSnippet": "移除片段",
+      "agentSteps": {
+        "reading": "正在读取 {{target}}",
+        "listing": "正在列出 {{target}}",
+        "grepping": "正在搜索 {{target}}",
+        "globbing": "正在匹配 {{target}}",
+        "editing": "正在编辑 {{target}}",
+        "writingFile": "正在写入 {{target}}",
+        "creating": "正在创建 {{target}}",
+        "running": "正在运行 {{target}}",
+        "spawning": "正在启动 {{target}}",
+        "readingLogs": "正在读取日志",
+        "listingBackground": "正在列出后台进程",
+        "stoppingBackground": "正在停止后台进程",
+        "suggesting": "正在建议 {{target}}",
+        "updatingPlan_one": "正在更新计划（{{count}} 项）",
+        "updatingPlan_other": "正在更新计划（{{count}} 项）",
+        "spawningSubagent": "正在启动 {{type}} 子智能体",
+        "calling": "正在调用 {{tool}}",
+        "writingResponse": "正在撰写回复"
+      },
+      "errors": {
+        "fallback": "AI 提供方拒绝了请求。请检查所选模型和提供方设置后重试。",
+        "modelUnavailable": "模型不可用",
+        "authenticationFailed": "身份验证失败",
+        "quotaExceeded": "额度已用尽",
+        "rateLimitReached": "已达到速率限制",
+        "noApiKey": "尚未为 {{provider}} 配置 API key。请在设置 → 模型中添加。",
+        "compatibleBaseUrlMissing": "OpenAI-compatible 提供方没有 Base URL。请在设置 → 模型中配置。",
+        "customEndpointMissing": "找不到自定义端点：{{id}}",
+        "endpointModelMissing": "{{name}}：尚未设置模型 ID。请在设置 → 模型中填写。",
+        "unsupportedProvider": "不支持的提供方：{{provider}}",
+        "lmstudioModelMissing": "LM Studio：尚未设置模型 ID。请在设置 → 模型中填写 LM Studio 已加载的模型 ID。",
+        "mlxModelMissing": "MLX：尚未设置模型 ID。请在设置 → 模型中填写 mlx_lm.server 提供的模型 ID。",
+        "ollamaModelMissing": "Ollama：尚未设置模型 ID。请在设置 → 模型中填写模型名称（例如 `ollama list` 显示的名称）。",
+        "compatibleModelMissing": "OpenAI-compatible：尚未设置模型 ID。请在设置 → 模型中填写。",
+        "openrouterModelMissing": "OpenRouter：尚未设置模型 ID。请在设置 → 模型中填写 OpenRouter 模型 ID。",
+        "autocompleteModelMissing": "尚未为 {{provider}} 设置自动补全模型 ID。"
+      }
+    },
+    "aiAgents": {
+      "name": {
+        "coder": "编码助手",
+        "architect": "架构师",
+        "reviewer": "代码审查",
+        "security": "安全",
+        "designer": "设计师"
+      },
+      "desc": {
+        "coder": "通用编码助手。编写、编辑并运行代码。",
+        "architect": "设计与权衡取舍。先规划再写代码。",
+        "reviewer": "审查代码变更的正确性、性能与安全性。",
+        "security": "对变更进行威胁建模并标记漏洞。",
+        "designer": "UI/UX 评审与优化。"
+      },
+      "trigger": {
+        "title": "Agent：{{name}}"
+      },
+      "group": {
+        "builtIn": "内置",
+        "custom": "自定义"
+      },
+      "manageAgents": "管理 Agent…"
+    },
+    "aiModels": {
+      "modelHint.gpt-5.5": "旗舰",
+      "modelHint.gpt-5.5-pro": "顶配",
+      "modelHint.gpt-5.4-mini": "快速",
+      "modelHint.gpt-5.4-nano": "极速",
+      "modelHint.gpt-5.3-codex": "编码",
+      "modelHint.gpt-4.1-mini": "低价",
+      "modelHint.claude-opus-4-8": "最佳",
+      "modelHint.claude-opus-4-7": "上一代",
+      "modelHint.claude-sonnet-4-6": "均衡",
+      "modelHint.claude-haiku-4-5": "快速",
+      "modelHint.claude-opus-4-6": "旧版",
+      "modelHint.gemini-3.5-flash": "快速",
+      "modelHint.gemini-3.1-flash-lite": "轻量",
+      "modelHint.gemini-3.1-pro-preview": "旗舰",
+      "modelHint.gemini-3-flash-preview": "快速",
+      "modelHint.gemini-2.5-pro": "稳定",
+      "modelHint.gemini-2.5-flash": "低价",
+      "modelHint.grok-4.20-reasoning": "推理",
+      "modelHint.grok-4.20-non-reasoning": "快速",
+      "modelHint.grok-4-fast-reasoning": "推理",
+      "modelHint.grok-4.3": "旗舰",
+      "modelHint.grok-build-0.1": "编码",
+      "modelHint.deepseek-v4-pro": "最佳",
+      "modelHint.deepseek-v4-flash": "快速",
+      "modelHint.deepseek-reasoner": "思考",
+      "modelHint.mistral-large-latest": "最佳",
+      "modelHint.mistral-medium-latest": "均衡",
+      "modelHint.codestral-latest": "代码",
+      "modelHint.gpt-oss-120b": "超快",
+      "modelHint.llama3.3-70b": "快速",
+      "modelHint.qwen-3-32b": "快速",
+      "modelHint.openai/gpt-oss-20b": "超快",
+      "modelHint.llama-3.3-70b-versatile": "全能",
+      "modelHint.deepseek-r1-distill-llama-70b": "思考",
+      "modelHint.openrouter-custom": "可配置",
+      "modelHint.openai-compatible-custom": "可配置",
+      "modelHint.lmstudio-local": "本地",
+      "modelHint.mlx-local": "本地",
+      "modelHint.ollama-local": "本地",
+      "modelDesc.gpt-5.5": "前沿的推理与编码能力。",
+      "modelDesc.gpt-5.5-pro": "面向最艰难的专业与 agentic 任务的最高准确度版本。",
+      "modelDesc.gpt-5.4-mini": "低成本下反应迅捷的默认选择。",
+      "modelDesc.gpt-5.4-nano": "小巧即时，非常适合自动补全。",
+      "modelDesc.gpt-5.3-codex": "为代码与工具调用调优。",
+      "modelDesc.gpt-4.1-mini": "超低价的批量任务主力。",
+      "modelDesc.claude-opus-4-8": "Anthropic 最强的模型，擅长复杂推理与长程 agentic 编码。",
+      "modelDesc.claude-opus-4-7": "上一代旗舰，擅长长链推理。",
+      "modelDesc.claude-sonnet-4-6": "质量与速度的最佳平衡点。",
+      "modelDesc.claude-haiku-4-5": "快速、低价、多模态。",
+      "modelDesc.claude-opus-4-6": "上一代 Opus。",
+      "modelDesc.gemini-3.5-flash": "高智能、极快的多模态模型。",
+      "modelDesc.gemini-3.1-flash-lite": "极快、低价、轻量的多模态模型。",
+      "modelDesc.gemini-3.1-pro-preview": "推理能力强，1M 上下文。",
+      "modelDesc.gemini-3-flash-preview": "快速多模态，1M 上下文。",
+      "modelDesc.gemini-2.5-pro": "生产稳定版 Gemini。",
+      "modelDesc.gemini-2.5-flash": "低成本的大批量吞吐。",
+      "modelDesc.grok-4.20-reasoning": "前沿推理，支持扩展思考。",
+      "modelDesc.grok-4.20-non-reasoning": "面向对话与工具的快速档位。",
+      "modelDesc.grok-4-fast-reasoning": "更实惠的 Grok 4，具备视觉与推理能力。",
+      "modelDesc.grok-4.3": "最智能、最快的 Grok。强大的 agentic 工具调用，1M 上下文。",
+      "modelDesc.grok-build-0.1": "面向 agentic 工作流的专用快速编码模型（驱动 Grok Build CLI）。",
+      "modelDesc.deepseek-v4-pro": "强大的开放权重代码模型。",
+      "modelDesc.deepseek-v4-flash": "低价快速的日常档位。",
+      "modelDesc.deepseek-reasoner": "以开放权重价格提供思维链推理。",
+      "modelDesc.mistral-large-latest": "Mistral 旗舰模型，128K 上下文。",
+      "modelDesc.mistral-medium-latest": "速度与智能的良好平衡。",
+      "modelDesc.codestral-latest": "Mistral 专为编码打造的模型。",
+      "modelDesc.gpt-oss-120b": "Cerebras 芯片上最快的推理速度。",
+      "modelDesc.llama3.3-70b": "运行在晶圆级芯片上的 Meta 开放模型。",
+      "modelDesc.qwen-3-32b": "以极高速度运行的多语言模型。",
+      "modelDesc.openai/gpt-oss-20b": "Groq LPU 上的亚秒级响应。",
+      "modelDesc.llama-3.3-70b-versatile": "快速且能力广泛。",
+      "modelDesc.deepseek-r1-distill-llama-70b": "在 Groq 上的推理蒸馏 Llama。",
+      "modelDesc.openrouter-custom": "OpenRouter 上按 id 指定的任意模型。",
+      "modelDesc.openai-compatible-custom": "任意 OpenAI 兼容端点。",
+      "modelDesc.lmstudio-local": "通过 LM Studio 运行的本地 GGUF 模型。",
+      "modelDesc.mlx-local": "通过 mlx_lm.server 运行的 Apple 芯片模型。",
+      "modelDesc.ollama-local": "通过 Ollama 运行的本地模型。",
+      "sttProvider.openai": "OpenAI Whisper",
+      "sttProvider.groq": "Groq Whisper",
+      "sttProvider.whispercpp": "Whisper.cpp (本地)"
+    },
+    "app": {
+      "close": {
+        "unsavedChanges": "未保存的更改",
+        "closeAnyway": "仍然关闭",
+        "fileUnsavedNamed": "“{{title}}”有未保存的更改。仍要关闭吗？",
+        "fileUnsaved": "此文件有未保存的更改。仍要关闭吗？",
+        "closeTerminalTitle": "关闭终端？",
+        "closeTerminalDescription": "有进程正在运行。关闭此标签页将终止该进程。",
+        "fileDeletedUnsavedNamed": "“{{title}}”有未保存的更改。该文件已被删除。仍要关闭吗？",
+        "fileDeletedUnsaved": "此文件有未保存的更改。该文件已被删除。仍要关闭吗？",
+        "filesDeletedUnsaved_one": "有 {{count}} 个文件存在未保存的更改。它们已被删除。仍要全部关闭吗？",
+        "filesDeletedUnsaved_other": "有 {{count}} 个文件存在未保存的更改。它们已被删除。仍要全部关闭吗？",
+        "quitTitle": "退出 Lithe？",
+        "quitDescription": "仍有进程在终端中运行。退出将终止该进程。",
+        "quitAnyway": "仍然退出"
+      },
+      "windowControls": {
+        "minimize": "最小化",
+        "maximize": "最大化",
+        "restore": "还原"
+      },
+      "workspace": {
+        "unsavedBeforeSwitch": "切换工作区前，请先保存或关闭存在未保存改动的编辑器标签页。"
+      }
+    },
+    "commandPalette": {
+      "group": {
+        "General": "常规",
+        "Spaces": "空间",
+        "Tabs": "标签页",
+        "Panes": "窗格",
+        "Git": "Git",
+        "Search": "搜索",
+        "View": "视图",
+        "AI": "AI"
+      },
+      "cmd": {
+        "settings.open": "打开设置",
+        "theme.pick": "更换主题...",
+        "shortcuts.open": "键盘快捷键",
+        "spaces.overview": "空间:总览",
+        "spaces.new": "新建空间",
+        "tab.new": "新建终端",
+        "tab.newBlock": "新建块终端",
+        "tab.newPrivate": "新建隐私终端",
+        "tab.newEditor": "新建编辑器标签页",
+        "tab.newPreview": "新建网页预览",
+        "tab.close": "关闭标签页或窗格",
+        "pane.splitRight": "向右拆分窗格",
+        "pane.splitDown": "向下拆分窗格",
+        "git.graph": "打开 Git 图谱",
+        "git.source": "切换源代码管理",
+        "search.content": "在文件中查找内容",
+        "history.open": "搜索命令历史",
+        "search.focus": "在当前标签页查找",
+        "explorer.search": "按名称搜索文件",
+        "sidebar.toggle": "切换文件资源管理器",
+        "ai.toggle": "切换 AI 智能体",
+        "ai.askSelection": "就选中内容询问 AI",
+        "agent.pi.start": "在终端中启动 Pi"
+      },
+      "switchToSpace": "切换到 {{name}}",
+      "disabled": {
+        "noTerminalTab": "无终端标签页",
+        "paneLimit": "窗格数已达上限",
+        "lastTab": "最后一个标签页",
+        "noWorkspaceRoot": "无工作区根目录",
+        "currentSpace": "当前空间",
+        "noSearchableView": "无可搜索视图"
+      },
+      "ui": {
+        "placeholderThemes": "搜索主题...",
+        "placeholderContent": "在文件中查找文本...",
+        "placeholderHistory": "搜索命令历史...",
+        "placeholderDefault": "输入命令,> 查历史,# 在文件中查找",
+        "dialogTitle": "命令面板",
+        "dialogDescription": "运行命令、切换主题,或搜索工作区。",
+        "back": "返回",
+        "headingThemes": "主题",
+        "headingContents": "内容",
+        "headingHistory": "命令历史",
+        "noThemes": "无主题",
+        "noWorkspaceRoot": "无工作区根目录",
+        "typeAtLeast2": "至少输入 2 个字符",
+        "noMatches": "无匹配项",
+        "openTerminalForHistory": "打开终端以运行历史命令",
+        "noHistory": "无历史记录",
+        "searchModes": "搜索模式",
+        "modeHintHistory": "搜索命令历史",
+        "modeHintContent": "在文件中查找文本",
+        "searchFailed": "搜索失败",
+        "retry": "重试",
+        "searching": "搜索中...",
+        "noCommandsFound": "未找到命令。输入 ? 查看搜索模式。"
+      }
+    },
+    "common": {
+      "cancel": "取消",
+      "close": "关闭",
+      "create": "新建",
+      "rename": "重命名",
+      "delete": "删除",
+      "copy": "复制",
+      "copied": "已复制",
+      "loading": "加载中…",
+      "back": "返回",
+      "refresh": "刷新",
+      "previous": "上一个",
+      "next": "下一个",
+      "save": "保存",
+      "remove": "移除",
+      "edit": "编辑",
+      "home": "主目录",
+      "open": "打开",
+      "more": "更多",
+      "breadcrumb": "面包屑导航"
+      ,"branch": "分支：{{name}}"
+    },
+    "editor": {
+      "newFile": "新建文件",
+      "newFileDescription": "文件名（相对于工作区根目录）。扩展名决定语言模式。",
+      "newFilePlaceholder": "example.ts",
+      "nameRequired": "名称不能为空",
+      "pathMustBeRelative": "路径必须为相对路径",
+      "noWorkspaceRoot": "没有工作区根目录",
+      "formatOnSaveSkipped": "已跳过保存时格式化",
+      "formatOnSaveSkippedDescription": "该文件没有活动的语言服务器。请在状态栏中启用一个，或在设置中选择 Biome/Prettier。",
+      "languageServerFormatFailed": "语言服务器格式化失败",
+      "languageServerNoFormatter": "当前语言服务器不提供格式化功能。请在设置中选择外部格式化工具（如 Python 的 Ruff、Prettier 或 rustfmt）。",
+      "formatFailed": "{{formatter}} 格式化失败",
+      "fileChangedOnDisk": "磁盘上的文件已更改",
+      "fileChangedOnDiskDescription": "{{name}} 在你有未保存改动时被其他程序修改。若要保留当前版本，请覆盖磁盘文件。",
+      "overwrite": "覆盖",
+      "copyFailed": "复制失败：{{error}}",
+      "openLinkHint": "按 Cmd/Ctrl 并点击以打开",
+      "diffPreviewUnavailable": "无法预览此文件的差异。",
+      "saveToPreview": "保存后预览",
+      "loadingDiff": "正在加载差异…",
+      "customFormatCommandMissing": "尚未在设置中配置自定义格式化命令。",
+      "formatterTimedOut": "{{formatter}} 已超时",
+      "formatterFailed": "{{formatter}} 失败",
+      "binaryFile": "二进制文件",
+      "fileTooLarge": "文件过大",
+      "previewNotSupported": "不支持预览",
+      "syntaxFeaturesDisabled": "语法功能已禁用",
+      "statusPending": "待审阅",
+      "statusApplied": "已应用",
+      "statusRejected": "已拒绝",
+      "accept": "接受",
+      "reject": "拒绝"
+    },
+    "explorer": {
+      "noCurrentDirectory": "当前无目录",
+      "searchFiles": "搜索文件",
+      "newFile": "新建文件",
+      "newFolder": "新建文件夹",
+      "clearSearch": "清除搜索",
+      "searchPlaceholder": "搜索文件…",
+      "searching": "搜索中…",
+      "noMatches": "无匹配结果",
+      "partialResults": "仅显示部分结果，请细化搜索条件。",
+      "moveConfirm": {
+        "title": "确认移动此项目？",
+        "description": "将“{{name}}”移动到“{{destination}}”中？",
+        "action": "确认移动"
+      },
+      "menu": {
+        "open": "打开",
+        "openInTerminal": "在终端中打开",
+        "revealInFinder": "在访达中显示",
+        "newFile": "新建文件",
+        "newFolder": "新建文件夹",
+        "copyPath": "复制路径",
+        "copyRelativePath": "复制相对路径",
+        "attachToAgent": "附加到 Agent",
+        "confirmDelete": "再次点击以确认"
+      }
+    },
+    "gitHistory": {
+      "unknownError": "未知错误",
+      "loadingCommits": "正在加载提交…",
+      "couldNotLoadHistory": "无法加载历史记录",
+      "retry": "重试",
+      "noCommitsYet": "暂无提交",
+      "noCommitsDescription": "此分支还没有任何提交。",
+      "columnSha": "SHA",
+      "columnSubject": "标题",
+      "columnAuthor": "作者",
+      "columnDate": "日期",
+      "columnChanges": "变更",
+      "loadingMore": "正在加载更多…",
+      "endOfHistory": "已到历史记录末尾",
+      "failedToLoadMore": "加载更多失败",
+      "noSubject": "(无标题)",
+      "unknownAuthor": "未知",
+      "filesChanged_one": "变更了 {{count}} 个文件",
+      "filesChanged_other": "变更了 {{count}} 个文件",
+      "copySha": "复制 SHA",
+      "loadingFiles": "正在加载文件…",
+      "noFileChanges": "没有文件变更。",
+      "filesHeading": "文件",
+      "binary": "二进制"
+    },
+    "header": {
+      "settings": "设置",
+      "toggleSidebar": "切换侧边栏",
+      "commandPalette": "命令面板",
+      "search": "搜索",
+      "gitSearch": "Git 搜索",
+      "searchWithShortcut": "{{label}} ({{shortcut}})",
+      "clearSearch": "清除搜索"
+    },
+    "lsp": {
+      "startTitle": "为此工作区启动 {{command}}",
+      "enableLsp": "启用 {{name}} LSP",
+      "serverStoppedTitle": "语言服务器已停止",
+      "pillLabel": "{{name}} LSP",
+      "serverStoppedHeading": "{{name}} 语言服务器已停止",
+      "restart": "重启",
+      "disable": "禁用",
+      "dismissTitle": "关闭（可在设置中重新启用）",
+      "installLsp": "安装 {{name}} LSP",
+      "languageServer": "{{name}} 语言服务器",
+      "notFoundOnPath": "Lithe 未在你的 PATH 中找到 <code>{{command}}</code>。请安装它，然后重新检查：",
+      "copyCommandTitle": "复制命令",
+      "documentation": "文档",
+      "checking": "检查中…",
+      "checkAgain": "重新检查",
+      "serverStartingTitle": "语言服务器启动中",
+      "serverActiveTitle": "语言服务器运行中",
+      "runningStatus_starting": "<code>{{command}}</code> 正在为此工作区启动。",
+      "runningStatus_running": "<code>{{command}}</code> 正在为此工作区运行。"
+      ,"failedToStart": "{{name}} 语言服务器启动失败",
+      "stopped": "{{name}} 语言服务器已停止",
+      "keepsCrashing": "{{name}} 语言服务器持续崩溃",
+      "exited": "{{name}} 语言服务器已退出",
+      "serverKeptCrashing": "语言服务器持续崩溃。",
+      "givingUp": "已停止为此工作区重试。"
+    },
+    "markdown": {
+      "rendered": "渲染",
+      "raw": "源码",
+      "readFailed": "读取文件失败：{{error}}",
+      "binaryCannotRender": "二进制文件无法渲染为 Markdown。",
+      "fileTooLarge": "文件大小为 {{size}} 字节，限制为 {{limit}} 字节。"
+    },
+    "preview": {
+      "iframeTitle": "预览",
+      "xfoHint": "许多公共网站拒绝被嵌入（X-Frame-Options）。如果页面空白，请在外部打开。",
+      "suspended": {
+        "title": "预览已挂起",
+        "description": "在后台停留一段时间后已释放以节省内存。",
+        "reload": "重新加载"
+      },
+      "empty": {
+        "title": "暂无可预览内容",
+        "description": "在上方输入 URL，或打开 <ports>Ports</ports> 下拉菜单直接跳转到正在运行的开发服务器。公共网站通常会阻止嵌入，如果看到空白页面，请通过链接图标在浏览器中打开。"
+      },
+      "addressBar": {
+        "reloadTitle": "重新加载",
+        "portsTitle": "常用开发服务器端口",
+        "ports": "Ports",
+        "checking": "检测中…",
+        "placeholder": "http://localhost:3000",
+        "openInBrowserTitle": "在系统浏览器中打开",
+        "dismiss": "关闭",
+        "enterUrlNotice": "请输入 URL 或选择一个端口预设。",
+        "noServerNotice": "端口 :{{port}} 上没有正在监听的服务器。"
+      }
+    },
+    "settings": {
+      "common": {
+        "save": "保存",
+        "cancel": "取消",
+        "remove": "移除",
+        "edit": "编辑",
+        "delete": "删除",
+        "connected": "已连接",
+        "loading": "加载中…"
+      },
+      "tabs": {
+        "general": "常规",
+        "editor": "编辑器",
+        "themes": "主题",
+        "shortcuts": "快捷键",
+        "models": "模型",
+        "agents": "智能体",
+        "about": "关于"
+      },
+      "general": {
+        "header": {
+          "title": "常规",
+          "description": "外观模式、终端与启动。"
+        },
+        "appearance": {
+          "label": "外观",
+          "system": "跟随系统",
+          "light": "浅色",
+          "dark": "深色",
+          "seeThemes": "主题、背景与个性化设置请见 <strong>主题</strong> 标签页。"
+        },
+      "language": {
+        "label": "语言",
+        "description": "Lithe 界面的显示语言。",
+        "system": "跟随系统"
+      },
+        "zoom": {
+          "label": "缩放",
+          "uiZoomLevel": "界面缩放比例"
+        },
+        "explorer": {
+          "label": "资源管理器",
+          "showHidden": {
+            "title": "显示隐藏文件",
+            "description": "在文件资源管理器和搜索中包含以点开头的文件和文件夹（.env、.gitignore、.config）。"
+          },
+          "gitDecorations": {
+            "title": "Git 状态标记",
+            "description": "在文件资源管理器中为改动文件着色，并淡化被 gitignore 忽略的条目。"
+          }
+        },
+        "terminal": {
+          "label": "终端",
+          "webgl": {
+            "title": "使用 WebGL 渲染器",
+            "moreInfo": "关于 WebGL 渲染器的更多信息",
+            "tooltip": "xterm 的 WebGL 渲染器会把字形缓存在 GPU 纹理图集中。在某些 macOS 环境下（尤其是使用 Nerd Fonts 时），图集可能损坏、导致终端文字无法辨认。作为回退可关闭它，性能略有下降，但文字会通过 DOM 渲染器正确显示。",
+            "description": "硬件加速渲染。若文字出现损坏或空白方块，请关闭。"
+          },
+          "cursorBlink": {
+            "title": "光标闪烁",
+            "description": "让终端光标闪烁。默认关闭以降低空闲 CPU 占用，与 VS Code 和 macOS 终端一致。"
+          },
+          "fontFamily": {
+            "title": "字体",
+            "description": "用于图标的 Nerd Font 名称（例如 \"CaskaydiaCove Nerd Font Mono\"）。留空则自动检测。",
+            "placeholder": "自动检测"
+          },
+          "fontWeight": {
+            "title": "字重",
+            "description": "终端字符的粗细",
+            "normal": "常规",
+            "medium": "中等",
+            "semibold": "半粗",
+            "bold": "粗体"
+          },
+          "shell": {
+            "title": "集成终端 Shell",
+            "descriptionNonIntegrated": "此 Shell 不支持命令块和目录跟踪。",
+            "descriptionWsl": "集成终端使用的 Shell。WSL 空间使用发行版的登录 Shell。已有标签页保持原 Shell。",
+            "descriptionDefault": "新终端标签页使用的 Shell。已有标签页保持原 Shell。",
+            "auto": "自动"
+          },
+          "workspaceEnv": {
+            "title": "工作区环境",
+            "description": "新空间（终端与 AI 智能体）运行的位置：Windows 或某个 WSL 发行版。已有空间保持不变；可在状态栏随时切换。",
+            "windows": "Windows",
+            "unavailable": "{{name}}（不可用）"
+          },
+          "letterSpacing": {
+            "title": "字间距",
+            "description": "字符之间额外的水平间距（px）。使用负值可收紧 Nerd Fonts。"
+          },
+          "fontSize": {
+            "title": "字号",
+            "description": "终端文字大小。"
+          },
+          "scrollback": {
+            "title": "回滚缓冲",
+            "description": "每个终端保留的历史行数。行数越多占用内存越大（约 3 KB/行）。",
+            "lines": "{{count}} 行"
+          }
+        },
+        "agents": {
+          "label": "智能体",
+          "notifications": {
+            "title": "编码智能体通知",
+            "description": "当终端中运行的 Claude Code 或 Codex 需要你输入或已完成时提醒你。Lithe 未聚焦时发送桌面通知，否则应用内提示。"
+          }
+        },
+        "startup": {
+          "label": "启动",
+          "launchAtLogin": {
+            "title": "登录时启动",
+            "description": "登录系统时自动打开 Lithe。"
+          },
+          "restoreWindow": {
+            "title": "恢复窗口位置与大小",
+            "description": "在你上次离开的位置重新打开主窗口。下次启动时生效。"
+          }
+        }
+      },
+      "editor": {
+        "header": {
+          "title": "编辑器",
+          "description": "编辑行为、保存与语言服务器。"
+        },
+        "appearance": {
+          "label": "外观",
+          "fontSize": {
+            "title": "字体大小",
+            "description": "代码编辑器文字大小。"
+          }
+        },
+        "editing": {
+          "label": "编辑",
+          "vimMode": {
+            "title": "Vim 模式",
+            "description": "在代码编辑器中启用 Vim 键位。"
+          },
+          "wordWrap": {
+            "title": "自动换行",
+            "description": "换行显示长行，而非水平滚动。"
+          }
+        },
+        "saving": {
+          "label": "保存",
+          "autoSave": {
+            "title": "自动保存",
+            "description": "检测到改动后，延迟一段时间自动保存文件。"
+          },
+          "autoSaveDelay": {
+            "title": "自动保存延迟",
+            "description": "未保存改动被自动保存前的延迟时间。",
+            "unit": "毫秒"
+          },
+          "formatOnSave": {
+            "title": "保存时格式化",
+            "description": "在显式保存（Cmd+S / :w）时用下方的格式化工具格式化文件。"
+          },
+          "formatter": {
+            "title": "格式化工具",
+            "description": "语言服务器在写入前格式化缓冲区；Biome 和 Prettier 从你的 PATH 中对已保存文件运行。",
+            "lsp": "语言服务器"
+          },
+          "customCommand": {
+            "title": "自定义命令",
+            "description": "对已保存文件运行；{file} 会替换为带引号的文件路径，省略时则追加到命令末尾。"
+          },
+          "overrides": {
+            "title": "按语言覆盖",
+            "description": "为特定语言使用不同的格式化工具（例如 Python 使用 Ruff）。",
+            "add": "添加覆盖项",
+            "remove": "移除覆盖项"
+          }
+        },
+        "lsp": {
+          "label": "语言服务器",
+          "addCustomServer": "添加自定义服务器",
+          "statusChecking": "检测中...",
+          "statusNotFound": "未在 PATH 中找到",
+          "detectAgain": "重新检测",
+          "removeServer": "移除服务器",
+          "dialogTitle": "自定义语言服务器",
+          "fieldName": "名称",
+          "fieldCommand": "命令",
+          "fieldArguments": "参数",
+          "fieldExtensions": "文件扩展名",
+          "fieldLanguageId": "LSP language id",
+          "fieldRootMarkers": "根标记文件",
+          "addServer": "添加服务器"
+        }
+      },
+      "themes": {
+        "header": {
+          "title": "主题",
+          "description": "主题、背景图片与个性化。"
+        },
+        "theme": {
+          "label": "主题",
+          "create": "新建",
+          "import": "导入 .lithe-theme",
+          "editAria": "编辑 {{name}}",
+          "removeAria": "移除 {{name}}"
+        },
+        "editorTheme": {
+          "label": "编辑器主题",
+          "description": "代码编辑器的语法配色。自动模式跟随应用主题。",
+          "auto": "自动（跟随应用主题）"
+        },
+        "background": {
+          "label": "背景",
+          "remove": "移除",
+          "replace": "更换图片",
+          "choose": "选择图片",
+          "opacity": "不透明度",
+          "blur": "模糊",
+          "dropHint": "将图片拖到此处或选择一张。仅存储在本地；未设置前不影响默认外观。",
+          "storageBlocked": "图片存储正被另一个 Lithe 窗口占用。",
+          "storageFull": "存储空间不足，无法保存此图片。请移除不用的主题或背景后重试。",
+          "notImage": "该文件不是图片。",
+          "animatedTooLarge": "为保证流畅度，动态图片最大为 {{limit}} MB；当前图片为 {{size}}。",
+          "imageTooLarge": "图片最大为 {{limit}} MB；当前图片为 {{size}}。",
+          "decodeFailed": "无法解码该图片，请尝试其他文件。",
+          "encodeUnavailable": "当前环境无法编码图片。",
+          "encodeFailed": "图片编码失败。"
+        },
+        "validation": {
+          "themeObject": "主题必须是 JSON 对象",
+          "mustBeObject": "{{path}} 必须是对象",
+          "unknownColorKey": "{{path}} 不是可识别的颜色键",
+          "nonEmptyString": "{{path}} 必须是非空字符串",
+          "mustBeString": "{{path}} 必须是字符串",
+          "ansiArray": "{{path}} 必须是包含 16 个字符串的数组",
+          "idFormat": "id 必须是 kebab-case 字符串（a-z、0-9、-）",
+          "nameRequired": "name 必须是非空字符串",
+          "variantsRequired": "variants 至少要包含 light 或 dark 其中之一",
+          "invalidJson": "无效的 JSON",
+          "starterName": "我的主题",
+          "starterDescription": "自定义主题。"
+        }
+      },
+      "shortcuts": {
+        "header": {
+          "title": "快捷键",
+          "description": "查看并自定义键盘快捷键。"
+        },
+        "resetAll": "全部重置",
+        "searchPlaceholder": "搜索快捷键...",
+        "unassigned": "未分配",
+        "recording": "录制中...",
+        "escToCancel": "（按 Esc 取消）",
+        "resetToDefault": "重置为默认",
+        "clearShortcut": "清除快捷键",
+        "resetDialog": {
+          "title": "重置所有快捷键？",
+          "description": "这会将你所有自定义的键盘快捷键还原为出厂默认值。此操作无法撤销。",
+          "cancel": "取消"
+        }
+      },
+      "models": {
+        "header": {
+          "title": "模型",
+          "description": "连接你使用的提供商。密钥保存在操作系统的钥匙串中，仅由 Lithe 使用。"
+        },
+        "defaults": {
+          "label": "默认设置",
+          "chatModel": "对话模型",
+          "autocomplete": "自动补全",
+          "notConnectedHint": "{{provider}} 尚未连接，请在下方添加。",
+          "trigger": "触发方式",
+          "automatic": "自动（输入时）",
+          "manual": "手动（{{shortcut}}）",
+          "shortcut": "快捷键"
+        },
+        "voice": {
+          "title": "语音输入",
+          "provider": "提供商",
+          "model": "模型",
+          "baseUrl": "Base URL",
+          "descOpenai": "使用你的官方 OpenAI API key 和 Whisper 模型进行转写。",
+          "descGroq": "使用你的官方 Groq API key 和 Groq 的 Whisper 端点进行转写。",
+          "descWhispercpp": "连接本地 Whisper.cpp 服务器，完全离线转写。"
+        },
+        "providers": {
+          "label": "提供商",
+          "addProvider": "添加提供商",
+          "cloud": "云端",
+        "localCustom": "本地与自定义",
+        "openaiCompatible": "OpenAI Compatible",
+        "ollamaCloud": "Ollama Cloud",
+          "emptyTitle": "尚未连接任何提供商。",
+          "emptyHint": "点击\"添加提供商\"以连接云端或本地模型来源。",
+          "notConnected": "未连接"
+        },
+        "ollamaCloud": {
+          "loading": "正在获取官方模型目录与上下文窗口…",
+          "modelCount": "可用模型 {{count}} 个",
+          "refresh": "刷新模型",
+          "loadFailed": "无法获取 Ollama Cloud 官方模型目录。",
+          "partial": "模型目录已获取，但有 {{count}} 个模型的上下文窗口未能刷新。",
+          "viewCatalog": "查看模型目录与上下文窗口"
+        },
+        "local": {
+          "lmstudioDescription": "通过 LM Studio 的 HTTP 服务器运行 GGUF 模型（在 Developer 标签页中启用）。",
+          "lmstudioHint": "填写 LM Studio 中已加载的模型 ID；可在服务器的 /v1/models 页面查看。",
+          "mlxDescription": "通过 mlx_lm.server 在 Apple Silicon 上运行推理（pip install mlx-lm）。",
+          "mlxHint": "填写启动 mlx_lm.server 时使用的 Hugging Face 仓库路径。",
+          "ollamaDescription": "通过 Ollama 内置的 OpenAI-compatible API 运行本地模型。",
+          "ollamaHint": "填写 `ollama list` / `ollama pull` 使用的模型名称。",
+          "compatibleDescription": "连接任意 OpenAI-compatible 端点，例如 vLLM、Z.AI、Fireworks 等。",
+          "openrouterDescription": "使用 OpenRouter 上的任意模型；填写完整的 provider/model ID。",
+          "openrouterHint": "可在 openrouter.ai/models 浏览模型 ID。"
+        },
+        "card": {
+          "docs": "文档",
+          "getKey": "获取密钥",
+          "removeProvider": "移除提供商",
+          "removeEndpoint": "移除端点",
+        "test": "测试",
+        "loadModels": "获取模型",
+        "loadingModels": "获取中…",
+        "availableModels": "可用模型",
+        "chooseModel": "从 {{count}} 个模型中选择",
+        "noModels": "该端点未返回任何模型。",
+        "loadModelsFailed": "无法获取模型，请检查 URL 和 API key。",
+          "testing": "测试中…",
+          "reachable": "可访问，服务器已响应。",
+          "unreachable": "无法连接到服务器。",
+          "baseUrl": "Base URL",
+          "modelId": "Model ID",
+          "context": "上下文",
+          "tokens": "tokens",
+          "apiKey": "API key",
+          "name": "名称",
+          "namePlaceholder": "我的端点",
+          "removeKey": "移除密钥",
+          "replace": "替换",
+          "showKey": "显示密钥",
+          "hideKey": "隐藏密钥",
+          "pasteKey": "粘贴 API key",
+          "keySaved": "密钥已保存",
+          "enterKey": "请输入你的 API key。",
+          "keyPrefixHint": "{{provider}} 的密钥以 \"{{prefix}}\" 开头。",
+          "failedSave": "保存失败：{{error}}",
+          "providerDoesNotUseKey": "{{provider}} 不使用 API key",
+          "keyRequired": "API key 不能为空",
+          "optionalKeyPlaceholder": "可选，无需鉴权的端点可留空"
+        }
+      },
+      "agents": {
+        "header": {
+          "title": "智能体",
+          "description": "AI 使用的角色人设与片段。可在输入栏切换智能体。"
+        },
+        "customInstructions": {
+          "label": "自定义指令",
+          "placeholder": "例如：始终用简洁的要点回复。优先使用 pnpm 而非 npm。我的机器是 M 系列 Mac。"
+        },
+        "list": {
+          "label": "智能体",
+          "newAgent": "新建智能体",
+          "newAgentName": "新智能体",
+          "builtIn": "内置",
+          "active": "使用中",
+          "useAgent": "使用此智能体"
+        },
+        "snippets": {
+          "label": "片段",
+          "description": "可复用的指令，用 <code>#handle</code> 插入任意提示词。",
+          "newSnippet": "新建片段",
+          "empty": "还没有片段。新建一个，并在 AI 输入框中用 <code>#handle</code> 插入。"
+        },
+        "agentDialog": {
+          "newTitle": "新建智能体",
+          "editTitle": "编辑智能体",
+          "icon": "图标",
+          "name": "名称",
+          "namePlaceholder": "例如：测试工程师",
+          "description": "描述",
+          "descriptionPlaceholder": "一行说明，显示在智能体选择器中",
+          "instructions": "指令",
+          "instructionsPlaceholder": "角色人设与规则。会追加到 Lithe 的核心系统提示词之后。"
+        },
+        "snippetDialog": {
+          "newTitle": "新建片段",
+          "editTitle": "编辑片段",
+          "handle": "标识符",
+          "handlePlaceholder": "review",
+          "name": "名称",
+          "namePlaceholder": "例如：合并前审查清单",
+          "description": "描述",
+          "descriptionPlaceholder": "一行说明，显示在 # 选择器中",
+          "content": "内容",
+          "contentPlaceholder": "使用 #handle 时，会作为 <snippet> 块插入到提示词中。",
+          "errRequired": "必填。",
+          "errFormat": "只能包含小写字母、数字和短横线。",
+          "errInUse": "已被占用。"
+        }
+      },
+      "about": {
+        "header": {
+          "title": "关于"
+        },
+      "tagline": "开源、终端优先的 AI 原生开发工作台",
+        "build": "构建",
+        "bundleId": "Bundle ID",
+        "license": "许可证",
+      "sourceCode": "源代码",
+      "upstreamFoundation": "上游基础项目",
+      "updates": "更新",
+      "updatesDisabled": "已禁用自动更新",
+      "viewUpstream": "查看上游源代码",
+        "website": "网站",
+        "viewOnGitHub": "在 GitHub 上查看",
+        "reportIssue": "反馈问题"
+      }
+    },
+    "shortcuts": {
+      "group": {
+        "General": "常规",
+        "Tabs": "标签页",
+        "Spaces": "空间",
+        "Panes": "窗格",
+        "Terminal": "终端",
+        "Search": "搜索",
+        "AI": "AI",
+        "View": "视图",
+        "Editor": "编辑器"
+      },
+      "label": {
+        "commandPalette.open": "打开命令面板",
+        "commandPalette.content": "在文件中查找",
+        "settings.open": "打开设置",
+        "tab.new": "新建标签页",
+        "tab.newBlock": "新建 Blocks 终端",
+        "tab.newPrivate": "新建隐私终端",
+        "tab.newPreview": "新建网页预览",
+        "tab.newEditor": "新建编辑器标签页",
+        "tab.close": "关闭标签页或窗格",
+        "pane.splitRight": "向右拆分窗格",
+        "pane.splitDown": "向下拆分窗格",
+        "pane.focusNext": "聚焦下一个窗格",
+        "pane.focusPrev": "聚焦上一个窗格",
+        "pane.swapLeft": "向左交换窗格",
+        "pane.swapRight": "向右交换窗格",
+        "pane.swapUp": "向上交换窗格",
+        "pane.swapDown": "向下交换窗格",
+        "pane.source": "切换源代码面板",
+        "terminal.clear": "清空终端",
+        "terminal.toggleInput": "切换 Shell / AI 输入",
+        "blocks.prev": "上一个命令块",
+        "blocks.next": "下一个命令块",
+        "tab.next": "下一个标签页",
+        "tab.prev": "上一个标签页",
+        "tab.selectByIndex": "跳到标签页 1–9",
+        "space.next": "下一个空间",
+        "space.prev": "上一个空间",
+        "space.overview": "打开空间",
+        "explorer.search": "搜索文件",
+        "search.focus": "在终端中查找",
+        "ai.toggle": "切换 AI 智能体",
+        "ai.toggleMini": "切换 AI 对话窗口",
+        "ai.askSelection": "就选中内容询问 AI",
+        "agent.focusAttention": "跳到需要关注的智能体",
+        "sidebar.toggle": "切换文件资源管理器",
+        "explorer.focus": "切换文件资源管理器焦点",
+        "view.zoomIn": "放大",
+        "view.zoomOut": "缩小",
+        "view.zoomReset": "重置缩放",
+        "view.zenMode": "切换禅模式",
+        "editor.undo": "撤销",
+        "editor.redo": "重做",
+        "editor.aiComplete": "触发 AI 补全",
+        "editor.codeComplete": "触发代码补全"
+      }
+    },
+    "sidebar": {
+      "files": "文件",
+      "sourceControl": "源代码管理"
+    },
+    "sourceControl": {
+      "noUpstream": "无上游分支",
+      "sourceControl": "源代码管理",
+      "detached": "游离",
+      "branch": {
+        "loading": "正在加载分支…",
+        "localBranches": "本地分支",
+        "worktrees": "工作树",
+        "noBranches": "未找到分支。"
+      },
+      "commit": {
+        "waitForAction": "请等待当前 Git 操作完成。",
+        "stageToEnable": "暂存更改以启用提交。",
+        "enterMessage": "请输入提交信息以启用提交。",
+        "hint": "使用 {{shortcut}} 提交。",
+        "placeholder": "提交信息",
+        "charCount": "字数：{{count}}",
+        "toCommit": "提交",
+        "button": "提交",
+        "committing": "正在提交…"
+      },
+      "push": {
+        "unavailable": "当前无法推送。",
+        "button": "推送",
+        "pushing": "正在推送…"
+      },
+      "staged": {
+        "nothing": "无暂存内容"
+      },
+      "stagedFiles_one": "已暂存 {{count}} 个文件",
+      "stagedFiles_other": "已暂存 {{count}} 个文件",
+      "fetch": {
+        "fetching": "正在拉取…",
+        "label": "从远程拉取"
+      },
+      "pull": {
+        "pulling": "正在拉取…",
+        "diverged": "分支已分叉，请在终端中解决",
+        "noUpstream": "未配置上游分支",
+        "upToDate": "已是最新",
+        "commits": "拉取 {{count}} 个提交（快进）"
+      },
+      "refresh": "刷新源代码管理",
+      "commitGraph": "提交图",
+      "panel": {
+        "loadingRepo": "正在加载仓库",
+        "noRepo": "无仓库",
+        "noRepoBody": "当前工作区不在 Git 仓库内。",
+        "error": "源代码管理错误",
+        "unknownError": "未知的源代码管理错误",
+        "retry": "重试"
+      },
+      "discard": {
+        "title": "放弃更改？",
+        "descAll": "这将放弃 {{label}}，且无法撤销。",
+        "descOne": "放弃“{{label}}”中的更改？此操作无法撤销。",
+        "action": "放弃",
+        "one": "放弃 {{path}}"
+      },
+      "cleanTree": "工作树干净",
+      "cleanTreeOn": "位于",
+      "changedFiles": "已更改文件",
+      "divergedBanner": {
+        "title": "已与上游分叉",
+        "detail": "- 请在终端中解决"
+      },
+      "changes": "更改",
+      "all": "全部",
+      "stageAll": "暂存所有更改",
+      "stageFile": "暂存 {{path}}",
+      "menu": {
+        "openDiff": "打开差异",
+        "openFile": "打开文件",
+        "unstage": "取消暂存",
+        "stage": "暂存",
+        "discardChanges": "放弃更改",
+        "copyRelativePath": "复制相对路径",
+        "copyAbsolutePath": "复制绝对路径",
+        "revealInFinder": "在访达中显示",
+        "revealInFileManager": "在文件管理器中显示"
+      }
+    },
+    "spaces": {
+      "titleWithShortcut": "Spaces · {{shortcut}}",
+      "title": "Spaces",
+      "heading": "Spaces",
+      "newSpace": "新建 space",
+      "collapse": "折叠",
+      "expand": "展开",
+      "renameSpace": "重命名 space",
+      "newTab": "新建标签页",
+      "deleteSpace": "删除 space",
+      "dropToMoveHere": "拖放到此处以移动",
+      "noTabs": "暂无标签页",
+      "closeTab": "关闭标签页"
+      ,"defaultName": "空间 {{count}}"
+    },
+    "statusbar": {
+      "private": {
+        "label": "私密：对 AI 隐藏",
+        "tooltip": "AI 无法看到此终端的输出。可用于密钥、SSH，或任何你不想发送给模型的内容。"
+      },
+      "cwd": {
+        "noDirectory": "无目录",
+        "noSubfolders": "没有子文件夹",
+        "showHiddenFolders": "显示隐藏文件夹"
+      },
+      "workspace": {
+        "environment": "工作区环境",
+        "windows": "Windows",
+        "windowsLocal": "Windows 本地",
+        "loadingWslDistros": "正在加载 WSL 发行版...",
+        "wslUnavailable": "WSL 不可用",
+        "noWslDistros": "未找到 WSL 发行版",
+        "wslDistro": "WSL: {{distro}}"
+      }
+    },
+    "tabs": {
+      "autoDetect": "自动检测",
+      "mode": "模式：{{name}}",
+      "fewerLanguages": "↑ 收起语言",
+      "allLanguages": "↓ 全部语言",
+      "unsavedChanges": "未保存的更改",
+      "closeTab": "关闭标签页",
+      "renameTab": "重命名标签页",
+      "newTab": "新建标签页",
+      "terminal": "Terminal",
+      "blocks": "Blocks",
+      "privacy": "隐私",
+      "editor": "编辑器",
+      "preview": "预览",
+      "gitGraph": "Git Graph"
+    },
+  "terminal": {
+    "modeShell": "命令",
+    "modeAi": "AI",
+    "inputPlaceholder": "运行命令  -  ↑ 历史  {{shortcut}} 切换到 AI",
+      "overflowNotice": "[Lithe：此标签页隐藏期间的部分输出已丢弃]",
+      "spawnFailed": "[Lithe] Shell 启动失败：{{detail}}",
+      "pressEnterRetry": "按 Enter 重试",
+      "block": {
+        "commandFallback": "命令",
+        "exit": "退出码 {{code}}",
+        "runAgain": "重新运行",
+        "actions": "块操作",
+        "copyCommand": "复制命令",
+        "copyOutput": "复制输出",
+        "copyCommandAndOutput": "复制命令和输出",
+        "attachToAiChat": "附加到 AI 对话",
+        "findInBlock": "在块中查找",
+        "toast": {
+          "commandCopied": "命令已复制",
+          "outputCopied": "输出已复制",
+          "blockCopied": "块已复制"
+        }
+      },
+      "watermark": {
+        "browseHistory": "浏览命令历史",
+        "autocomplete": "自动补全路径和命令",
+        "switchShellAi": "在 Shell 和 AI 之间切换",
+        "openAiAssistant": "打开 AI 助手"
+      },
+      "dropFilePathHere": "将文件路径拖放到这里"
+    }
+  }
+}

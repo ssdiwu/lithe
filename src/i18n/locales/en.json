@@ -1,0 +1,1387 @@
+{
+  "meta": {
+    "id": "en",
+    "label": "English",
+    "direction": "ltr"
+  },
+  "resources": {
+    "nativeMenu": {
+      "file": "File",
+      "edit": "Edit",
+      "view": "View",
+      "window": "Window",
+      "help": "Help",
+      "about": "About Lithe",
+      "services": "Services",
+      "hide": "Hide Lithe",
+      "hideOthers": "Hide Others",
+      "quit": "Quit Lithe",
+      "closeWindow": "Close Window",
+      "undo": "Undo",
+      "redo": "Redo",
+      "cut": "Cut",
+      "copy": "Copy",
+      "paste": "Paste",
+      "selectAll": "Select All",
+      "enterFullScreen": "Enter Full Screen",
+      "minimize": "Minimize",
+      "zoom": "Zoom"
+    },
+    "agents": {
+      "time": {
+        "justNow": "just now",
+        "minutesAgo": "{{count}}m ago",
+        "hoursAgo": "{{count}}h ago",
+        "daysAgo": "{{count}}d ago"
+      },
+      "status": {
+        "waiting": "waiting",
+        "working": "working"
+      },
+      "notif": {
+        "attention": "needs input",
+        "finished": "finished",
+        "error": "failed"
+      },
+      "hook": {
+        "enabled": "enabled",
+        "enabling": "Enabling",
+        "enable": "Enable"
+      },
+      "bell": {
+        "title": "Agent notifications",
+        "heading": "Notifications",
+        "active": "{{count}} active",
+        "clear": "Clear",
+        "emptyLine1": "No agent activity yet.",
+        "emptyLine2": "Run the Lithe agent or a coding agent to track it here.",
+        "alerts": "Agent alerts"
+      },
+      "toast": {
+        "open": "Open"
+      },
+      "signal": {
+        "needsInput": "{{name}} needs your input",
+        "finished": "{{name}} finished"
+      },
+      "local": {
+        "needsApproval": "Lithe needs your approval",
+        "approveToContinue": "Approve a tool to continue",
+        "runFailed": "Lithe run failed",
+        "finished": "Lithe finished",
+        "taskReady": "Your task is ready"
+      }
+    },
+    "ai": {
+      "miniWindow": {
+        "suggestions": {
+          "explainError": {
+            "label": "Explain the last error",
+            "hint": "Read the terminal buffer",
+            "text": "Explain the last error in the terminal."
+          },
+          "generateCommand": {
+            "label": "Generate a command",
+            "hint": "Tell me what you want to do",
+            "text": "Give me a command to "
+          },
+          "summarizeBuffer": {
+            "label": "Summarize buffer",
+            "hint": "Recap recent activity",
+            "text": "Summarize what just happened in the terminal."
+          }
+        },
+        "planMode": "Plan mode",
+        "queued": "· {{count}} queued",
+        "noEditsQueued": "· no edits queued",
+        "exit": "Exit",
+        "loadingSessions": "Loading sessions…",
+        "thinking": "Thinking…",
+        "closeTitle": "Close (Esc)",
+        "context": {
+          "model": "Model",
+          "lastRequest": "Last request",
+          "estimatedContext": "Estimated context",
+          "ofWhichCached": "Of which cached",
+          "sessionInput": "Session input",
+          "sessionOutput": "Session output",
+          "cacheHit": "Cache hit",
+          "sessionCost": "Session cost",
+          "window": "Window",
+          "footerLastRequest": "Last request reflects current context size; session totals are cumulative.",
+          "footerApprox": "Token count is approximate (chars / 4)."
+        },
+        "switchSession": "Switch session",
+        "newChat": "New chat",
+        "newSession": "New session",
+        "deleteSession": "Delete session",
+        "empty": {
+          "title": "Ask Lithe anything",
+          "description": "Lithe sees the active terminal - cwd, recent commands, and output."
+        }
+      },
+      "toolApproval": {
+        "writeFile": "Write file",
+        "editFile": "Edit file",
+        "editFileBatch": "Edit file (batch)",
+        "createDirectory": "Create directory",
+        "runShellCommand": "Run shell command",
+        "spawnBackgroundProcess": "Spawn background process",
+        "needsApproval": "needs approval",
+        "deny": "Deny",
+        "approve": "Approve",
+        "lines_one": "{{count}} line",
+        "lines_other": "{{count}} lines",
+        "reviewInDiffTab": " · review in the diff tab",
+        "replaceAll": " · replace all",
+        "diffLines_one": "−{{removed}} / +{{added}} line",
+        "diffLines_other": "−{{removed}} / +{{added}} lines",
+        "edits_one": "{{count}} edit · review in the diff tab",
+        "edits_other": "{{count}} edits · review in the diff tab"
+      },
+      "composer": {
+        "placeholder": "Ask Lithe anything   -   # for snippets and commands, @ for files",
+        "listening": "Listening…",
+        "transcribing": "Transcribing…"
+      },
+      "statusBar": {
+        "openAiAgent": "Open AI agent",
+        "openAiAgentTitle": "Open AI agent",
+        "attachFileOrImage": "Attach file or image",
+        "voiceNeedsKey": "Voice needs a {{provider}} key",
+        "stopAndTranscribe": "Stop & transcribe",
+        "transcribing": "Transcribing…",
+        "voiceInput": "Voice input",
+        "closeAiPanel": "Close AI panel",
+        "miniWindowOpen": "Mini-window open",
+        "openConversation": "Open conversation",
+        "openChatWindow": "Open AI chat window ({{shortcut}})",
+        "closeChatWindow": "Close AI chat window ({{shortcut}})",
+        "stop": "Stop",
+        "send": "Send (Enter)",
+        "searchPlaceholder": "Search models, providers, capabilities…",
+        "tabAll": "All",
+        "tabFavorites": "Favorites",
+        "tabRecent": "Recent",
+        "allProviders": "All providers",
+        "notConfigured": "{{label}} - not configured",
+        "openaiCompatible": "OpenAI Compatible",
+        "modelTitle": "Model: {{label}}",
+        "modelNoKey": "{{label}} - no key configured",
+        "noFavorites": "No favorites yet - star a model to pin it here.",
+        "noRecent": "No recently-used models.",
+        "noMatch": "No models match.",
+        "configureCta": "Configure {{label}} to use these models.",
+        "open": "Open",
+        "unfavorite": "Unfavorite",
+        "favorite": "Favorite",
+        "intelligence": "Intelligence",
+        "speed": "Speed",
+        "affordability": "Affordability",
+        "capBarTitle": "{{label}}: {{value}}/5"
+      },
+      "chat": {
+        "editorSelection": "Editor selection",
+        "terminalSelection": "Terminal selection",
+        "emptyTitle": "Ask Lithe anything",
+        "emptyDescription": "Explain command output, fix errors, generate snippets, or run a task.",
+        "thinking": "Thinking…",
+        "continuePrompt": "Continue from where you stopped. Don't recap - just keep going.",
+        "somethingWentWrong": "Something went wrong.",
+        "dismiss": "Dismiss",
+        "contextCompacted_one": "Context compacted - {{count}} older tool result elided to save tokens.",
+        "contextCompacted_other": "Context compacted - {{count}} older tool results elided to save tokens.",
+        "hitStepLimit": "Hit the step limit. Continue to keep going.",
+        "continue": "Continue",
+        "read": "Read",
+        "readFiles_one": "{{count}} file",
+        "readFiles_other": "{{count}} files"
+      },
+      "selectionAsk": "Ask Lithe",
+      "statusPill": {
+        "openAiLog": "Open AI log",
+        "error": "Error",
+        "thinking": "Thinking…"
+      },
+      "slashCommands": {
+        "planModeOff": "Plan mode off",
+        "planModeOn": "Plan mode on",
+        "claudeCodeUsage": "Usage: /claude-code <request>",
+        "initLabel": "Initialize workspace",
+        "planLabel": "Plan mode",
+        "claudeCodeLabel": "Delegate to Claude Code"
+      },
+      "whisper": {
+        "transcriptionFailed": "Transcription failed",
+        "microphoneAccessFailed": "Microphone access failed",
+        "requestFailed": "STT request failed ({{status}}): {{detail}}",
+        "invalidUrl": "Invalid Whisper.cpp URL: {{url}}",
+        "loopbackOnly": "Whisper.cpp must run on a loopback address (localhost or 127.x.x.x) to keep transcription local.",
+        "openaiKeyMissing": "OpenAI API key is not configured",
+        "groqKeyMissing": "Groq API key is not configured"
+      },
+      "elements": {
+        "generatingCode": "Generating code…",
+        "generatingLanguage": "Generating {{language}}…",
+        "runInActiveTerminal": "Run in active terminal",
+        "sent": "Sent",
+        "run": "Run",
+        "copyCode": "Copy code",
+        "previousBranch": "Previous branch",
+        "nextBranch": "Next branch",
+        "branchPage": "{{current}} of {{total}}",
+        "modelContextUsage": "Model context usage",
+        "input": "Input",
+        "output": "Output",
+        "reasoning": "Reasoning",
+        "cache": "Cache",
+        "thinking": "Thinking",
+        "reasoned": "Reasoned",
+        "reasonedForSeconds": "Reasoned for {{duration}}s"
+      },
+      "tools": {
+        "labels": {
+          "read": "Read",
+          "list": "List",
+          "write": "Write",
+          "createDir": "Create dir",
+          "edit": "Edit",
+          "run": "Run",
+          "spawn": "Spawn",
+          "logs": "Logs",
+          "jobs": "Jobs",
+          "kill": "Kill",
+          "search": "Search",
+          "glob": "Glob",
+          "suggest": "Suggest",
+          "preview": "Preview",
+          "subagent": "Subagent",
+          "todos": "Todos"
+        },
+        "status": {
+          "awaitingApproval": "awaiting approval",
+          "responded": "responded",
+          "preparing": "preparing",
+          "running": "running",
+          "done": "done",
+          "denied": "denied",
+          "error": "error"
+        },
+        "failed": "failed",
+        "items_one": "{{count}} item",
+        "items_other": "{{count}} items",
+        "input": "Input",
+        "output": "Output",
+        "error": "Error",
+        "read": "read",
+        "lines_one": "{{count}} line",
+        "lines_other": "{{count}} lines",
+        "empty": "empty",
+        "noMatches": "no matches",
+        "filesScanned_one": "{{count}} file scanned",
+        "filesScanned_other": "{{count}} files scanned",
+        "hits_one": "{{count}} hit",
+        "hits_other": "{{count}} hits",
+        "files_one": "{{count}} file",
+        "files_other": "{{count}} files",
+        "truncated": "truncated",
+        "replacements_one": "{{count}} replacement",
+        "replacements_other": "{{count}} replacements",
+        "created": "created",
+        "wrote": "wrote",
+        "running": "running",
+        "exit": "exit {{code}}",
+        "timedOut": "timed out",
+        "insertIntoTerminal": "Insert into active terminal",
+        "inserted": "Inserted",
+        "insert": "Insert"
+      },
+      "picker": {
+        "noMatches": "No matches. Add snippets in Settings → Agents.",
+        "builtIn": "Pre-built snippets",
+        "snippets": "Snippets",
+        "workspaceFiles": "Workspace files",
+        "noWorkspace": "No workspace open",
+        "indexingWorkspace": "Indexing workspace…",
+        "noMatchingFiles": "No matching files",
+        "largeWorkspace": "Workspace is large - refine your query to narrow results."
+      },
+      "planReview": {
+        "title": "Plan review",
+        "pendingChanges_one": "{{count}} pending change",
+        "pendingChanges_other": "{{count}} pending changes",
+        "discardAll": "Discard all",
+        "apply": "Apply {{count}}",
+        "toggleDiff": "Toggle diff",
+        "new": "new",
+        "multiEdit": "multi-edit",
+        "createDirectory": "create directory",
+        "reject": "Reject",
+        "noLineChanges": "no line-level changes"
+      },
+      "todos": "Todos",
+      "removeCommand": "Remove command",
+      "removeSnippet": "Remove snippet",
+      "agentSteps": {
+        "reading": "Reading {{target}}",
+        "listing": "Listing {{target}}",
+        "grepping": "Grepping {{target}}",
+        "globbing": "Globbing {{target}}",
+        "editing": "Editing {{target}}",
+        "writingFile": "Writing {{target}}",
+        "creating": "Creating {{target}}",
+        "running": "Running {{target}}",
+        "spawning": "Spawning {{target}}",
+        "readingLogs": "Reading logs",
+        "listingBackground": "Listing background processes",
+        "stoppingBackground": "Stopping background process",
+        "suggesting": "Suggesting {{target}}",
+        "updatingPlan_one": "Updating plan ({{count}} item)",
+        "updatingPlan_other": "Updating plan ({{count}} items)",
+        "spawningSubagent": "Spawning {{type}} subagent",
+        "calling": "Calling {{tool}}",
+        "writingResponse": "Writing"
+      },
+      "errors": {
+        "fallback": "The AI provider rejected the request. Check the selected model and provider settings, then try again.",
+        "modelUnavailable": "Model unavailable",
+        "authenticationFailed": "Authentication failed",
+        "quotaExceeded": "Quota exceeded",
+        "rateLimitReached": "Rate limit reached",
+        "noApiKey": "No API key configured for {{provider}}. Open Settings → Models to add one.",
+        "compatibleBaseUrlMissing": "OpenAI-compatible provider has no base URL. Set it in Settings → Models.",
+        "customEndpointMissing": "Custom endpoint not found: {{id}}",
+        "endpointModelMissing": "{{name}}: no model id set. Open Settings → Models.",
+        "unsupportedProvider": "Unsupported provider: {{provider}}",
+        "lmstudioModelMissing": "LM Studio: no model id set. Open Settings → Models and enter the model id loaded in LM Studio.",
+        "mlxModelMissing": "MLX: no model id set. Open Settings → Models and enter the model id served by mlx_lm.server.",
+        "ollamaModelMissing": "Ollama: no model id set. Open Settings → Models and enter the model id (e.g. the name from `ollama list`).",
+        "compatibleModelMissing": "OpenAI-compatible: no model id set. Open Settings → Models.",
+        "openrouterModelMissing": "OpenRouter: no model id set. Open Settings → Models and enter an OpenRouter model id.",
+        "autocompleteModelMissing": "No autocomplete model id set for {{provider}}."
+      }
+    },
+    "aiAgents": {
+      "name": {
+        "coder": "Coder",
+        "architect": "Architect",
+        "reviewer": "Code Reviewer",
+        "security": "Security",
+        "designer": "Designer"
+      },
+      "desc": {
+        "coder": "General-purpose coding assistant. Writes, edits, and runs.",
+        "architect": "Design and tradeoffs. Plans before code.",
+        "reviewer": "Reviews diffs for correctness, perf, security.",
+        "security": "Threat-models changes and flags vulns.",
+        "designer": "UI/UX critique and refinement."
+      },
+      "trigger": {
+        "title": "Agent: {{name}}"
+      },
+      "group": {
+        "builtIn": "Built-in",
+        "custom": "Custom"
+      },
+      "manageAgents": "Manage agents…"
+    },
+    "aiModels": {
+      "modelHint.gpt-5.5": "Flagship",
+      "modelHint.gpt-5.5-pro": "Max",
+      "modelHint.gpt-5.4-mini": "Fast",
+      "modelHint.gpt-5.4-nano": "Fastest",
+      "modelHint.gpt-5.3-codex": "Coding",
+      "modelHint.gpt-4.1-mini": "Cheap",
+      "modelHint.claude-opus-4-8": "Best",
+      "modelHint.claude-opus-4-7": "Previous",
+      "modelHint.claude-sonnet-4-6": "Balanced",
+      "modelHint.claude-haiku-4-5": "Fast",
+      "modelHint.claude-opus-4-6": "Legacy",
+      "modelHint.gemini-3.5-flash": "Fast",
+      "modelHint.gemini-3.1-flash-lite": "Lite",
+      "modelHint.gemini-3.1-pro-preview": "Flagship",
+      "modelHint.gemini-3-flash-preview": "Fast",
+      "modelHint.gemini-2.5-pro": "Stable",
+      "modelHint.gemini-2.5-flash": "Cheap",
+      "modelHint.grok-4.20-reasoning": "Reasoning",
+      "modelHint.grok-4.20-non-reasoning": "Fast",
+      "modelHint.grok-4-fast-reasoning": "Reasoning",
+      "modelHint.grok-4.3": "Flagship",
+      "modelHint.grok-build-0.1": "Coding",
+      "modelHint.deepseek-v4-pro": "Best",
+      "modelHint.deepseek-v4-flash": "Fast",
+      "modelHint.deepseek-reasoner": "Thinking",
+      "modelHint.mistral-large-latest": "Best",
+      "modelHint.mistral-medium-latest": "Balanced",
+      "modelHint.codestral-latest": "Code",
+      "modelHint.gpt-oss-120b": "Ultra-fast",
+      "modelHint.llama3.3-70b": "Fast",
+      "modelHint.qwen-3-32b": "Fast",
+      "modelHint.openai/gpt-oss-20b": "Ultra-fast",
+      "modelHint.llama-3.3-70b-versatile": "Versatile",
+      "modelHint.deepseek-r1-distill-llama-70b": "Thinking",
+      "modelHint.openrouter-custom": "Configurable",
+      "modelHint.openai-compatible-custom": "Configurable",
+      "modelHint.lmstudio-local": "Local",
+      "modelHint.mlx-local": "Local",
+      "modelHint.ollama-local": "Local",
+      "modelDesc.gpt-5.5": "Frontier reasoning and code.",
+      "modelDesc.gpt-5.5-pro": "Highest-accuracy version for the hardest professional and agentic tasks.",
+      "modelDesc.gpt-5.4-mini": "Snappy default at low cost.",
+      "modelDesc.gpt-5.4-nano": "Tiny and instant - great for autocomplete.",
+      "modelDesc.gpt-5.3-codex": "Tuned for code and tool use.",
+      "modelDesc.gpt-4.1-mini": "Ultra-cheap workhorse for bulk tasks.",
+      "modelDesc.claude-opus-4-8": "Anthropic's most capable model for complex reasoning and long-horizon agentic coding.",
+      "modelDesc.claude-opus-4-7": "Previous-gen flagship for long reasoning.",
+      "modelDesc.claude-sonnet-4-6": "Sweet spot of quality and speed.",
+      "modelDesc.claude-haiku-4-5": "Quick, cheap, multimodal.",
+      "modelDesc.claude-opus-4-6": "Previous-gen Opus.",
+      "modelDesc.gemini-3.5-flash": "High-intelligence, extremely fast multimodal model.",
+      "modelDesc.gemini-3.1-flash-lite": "Extremely fast, cheap, and lightweight multimodal model.",
+      "modelDesc.gemini-3.1-pro-preview": "Strong reasoning, 1M context.",
+      "modelDesc.gemini-3-flash-preview": "Fast multimodal, 1M context.",
+      "modelDesc.gemini-2.5-pro": "Production-stable Gemini.",
+      "modelDesc.gemini-2.5-flash": "Bulk throughput at low cost.",
+      "modelDesc.grok-4.20-reasoning": "Frontier reasoning with extended thinking.",
+      "modelDesc.grok-4.20-non-reasoning": "Fast tier for chat and tools.",
+      "modelDesc.grok-4-fast-reasoning": "Cheaper Grok 4 with vision and reasoning.",
+      "modelDesc.grok-4.3": "Most intelligent and fastest Grok. Strong agentic tool use and 1M context.",
+      "modelDesc.grok-build-0.1": "Specialized fast coding model for agentic workflows (powers Grok Build CLI).",
+      "modelDesc.deepseek-v4-pro": "Strong open-weight code model.",
+      "modelDesc.deepseek-v4-flash": "Cheap and fast everyday tier.",
+      "modelDesc.deepseek-reasoner": "Chain-of-thought at open-weight prices.",
+      "modelDesc.mistral-large-latest": "Flagship Mistral model with 128K context.",
+      "modelDesc.mistral-medium-latest": "Good balance of speed and intelligence.",
+      "modelDesc.codestral-latest": "Purpose-built coding model from Mistral.",
+      "modelDesc.gpt-oss-120b": "Fastest inference on Cerebras silicon.",
+      "modelDesc.llama3.3-70b": "Meta's open model on wafer-scale silicon.",
+      "modelDesc.qwen-3-32b": "Multilingual model at extreme speed.",
+      "modelDesc.openai/gpt-oss-20b": "Sub-second responses on Groq LPU.",
+      "modelDesc.llama-3.3-70b-versatile": "Fast and broadly capable.",
+      "modelDesc.deepseek-r1-distill-llama-70b": "Reasoning-distilled Llama on Groq.",
+      "modelDesc.openrouter-custom": "Any model on OpenRouter by id.",
+      "modelDesc.openai-compatible-custom": "Any OpenAI-compatible endpoint.",
+      "modelDesc.lmstudio-local": "Local GGUF models via LM Studio.",
+      "modelDesc.mlx-local": "Apple-silicon models via mlx_lm.server.",
+      "modelDesc.ollama-local": "Local models via Ollama.",
+      "sttProvider.openai": "OpenAI Whisper",
+      "sttProvider.groq": "Groq Whisper",
+      "sttProvider.whispercpp": "Whisper.cpp (local)"
+    },
+    "app": {
+      "close": {
+        "unsavedChanges": "Unsaved Changes",
+        "closeAnyway": "Close Anyway",
+        "fileUnsavedNamed": "\"{{title}}\" has unsaved changes. Close anyway?",
+        "fileUnsaved": "This file has unsaved changes. Close anyway?",
+        "closeTerminalTitle": "Close Terminal?",
+        "closeTerminalDescription": "A process is running. Closing this tab will terminate it.",
+        "fileDeletedUnsavedNamed": "\"{{title}}\" has unsaved changes. The file has been deleted. Close anyway?",
+        "fileDeletedUnsaved": "This file has unsaved changes. The file has been deleted. Close anyway?",
+        "filesDeletedUnsaved_one": "{{count}} file has unsaved changes. They have been deleted. Close all anyway?",
+        "filesDeletedUnsaved_other": "{{count}} files have unsaved changes. They have been deleted. Close all anyway?",
+        "quitTitle": "Quit Lithe?",
+        "quitDescription": "A process is still running in a terminal. Quitting will terminate it.",
+        "quitAnyway": "Quit Anyway"
+      },
+      "windowControls": {
+        "minimize": "Minimize",
+        "maximize": "Maximize",
+        "restore": "Restore"
+      },
+      "workspace": {
+        "unsavedBeforeSwitch": "Save or close unsaved editor tabs before switching workspace."
+      }
+    },
+    "commandPalette": {
+      "group": {
+        "General": "General",
+        "Spaces": "Spaces",
+        "Tabs": "Tabs",
+        "Panes": "Panes",
+        "Git": "Git",
+        "Search": "Search",
+        "View": "View",
+        "AI": "AI"
+      },
+      "cmd": {
+        "settings.open": "Open settings",
+        "theme.pick": "Change theme...",
+        "shortcuts.open": "Keyboard shortcuts",
+        "spaces.overview": "Spaces: Overview",
+        "spaces.new": "New Space",
+        "tab.new": "New terminal",
+        "tab.newBlock": "New block terminal",
+        "tab.newPrivate": "New private terminal",
+        "tab.newEditor": "New editor tab",
+        "tab.newPreview": "New web preview",
+        "tab.close": "Close tab or pane",
+        "pane.splitRight": "Split pane right",
+        "pane.splitDown": "Split pane down",
+        "git.graph": "Open git graph",
+        "git.source": "Toggle source control",
+        "search.content": "Find content in files",
+        "history.open": "Search command history",
+        "search.focus": "Find in current tab",
+        "explorer.search": "Search files by name",
+        "sidebar.toggle": "Toggle file explorer",
+        "ai.toggle": "Toggle AI agent",
+        "ai.askSelection": "Ask AI about selection",
+        "agent.pi.start": "Start Pi in a terminal"
+      },
+      "switchToSpace": "Switch to {{name}}",
+      "disabled": {
+        "noTerminalTab": "No terminal tab",
+        "paneLimit": "Pane limit",
+        "lastTab": "Last tab",
+        "noWorkspaceRoot": "No workspace root",
+        "currentSpace": "Current space",
+        "noSearchableView": "No searchable view"
+      },
+      "ui": {
+        "placeholderThemes": "Search themes...",
+        "placeholderContent": "Find text in files...",
+        "placeholderHistory": "Search command history...",
+        "placeholderDefault": "Type a command, > for history, # to find in files",
+        "dialogTitle": "Command Palette",
+        "dialogDescription": "Run a command, switch theme, or search your workspace.",
+        "back": "Back",
+        "headingThemes": "Themes",
+        "headingContents": "Contents",
+        "headingHistory": "Command history",
+        "noThemes": "No themes",
+        "noWorkspaceRoot": "No workspace root",
+        "typeAtLeast2": "Type at least 2 characters",
+        "noMatches": "No matches",
+        "openTerminalForHistory": "Open a terminal to run history",
+        "noHistory": "No history",
+        "searchModes": "Search modes",
+        "modeHintHistory": "Search command history",
+        "modeHintContent": "Find text in files",
+        "searchFailed": "Search failed",
+        "retry": "Retry",
+        "searching": "Searching...",
+        "noCommandsFound": "No commands found. Type ? to see search modes."
+      }
+    },
+    "common": {
+      "cancel": "Cancel",
+      "close": "Close",
+      "create": "Create",
+      "rename": "Rename",
+      "delete": "Delete",
+      "copy": "Copy",
+      "copied": "Copied",
+      "loading": "Loading…",
+      "back": "Back",
+      "refresh": "Refresh",
+      "previous": "Previous",
+      "next": "Next",
+      "save": "Save",
+      "remove": "Remove",
+      "edit": "Edit",
+      "home": "Home",
+      "open": "Open",
+      "more": "More",
+      "breadcrumb": "Breadcrumb"
+      ,"branch": "Branch: {{name}}"
+    },
+    "editor": {
+      "newFile": "New file",
+      "newFileDescription": "Filename (relative to workspace root). The extension determines the language mode.",
+      "newFilePlaceholder": "example.ts",
+      "nameRequired": "Name is required",
+      "pathMustBeRelative": "Path must be relative",
+      "noWorkspaceRoot": "No workspace root",
+      "formatOnSaveSkipped": "Format on save skipped",
+      "formatOnSaveSkippedDescription": "No active language server for this file. Enable one in the statusbar, or pick Biome/Prettier in Settings.",
+      "languageServerFormatFailed": "Language server format failed",
+      "languageServerNoFormatter": "The active language server has no formatter. Pick an external one in Settings (Ruff for Python, Prettier, rustfmt, ...).",
+      "formatFailed": "{{formatter}} format failed",
+      "fileChangedOnDisk": "File changed on disk",
+      "fileChangedOnDiskDescription": "{{name}} was modified by another program while you had unsaved changes. Overwrite to keep your version.",
+      "overwrite": "Overwrite",
+      "copyFailed": "Copy failed: {{error}}",
+      "openLinkHint": "Cmd/Ctrl+Click to open",
+      "diffPreviewUnavailable": "Diff preview is not available for this file.",
+      "saveToPreview": "Save to preview",
+      "loadingDiff": "Loading diff…",
+      "customFormatCommandMissing": "No custom format command configured in Settings.",
+      "formatterTimedOut": "{{formatter}} timed out",
+      "formatterFailed": "{{formatter}} failed",
+      "binaryFile": "Binary file",
+      "fileTooLarge": "File too large",
+      "previewNotSupported": "preview not supported",
+      "syntaxFeaturesDisabled": "syntax features disabled",
+      "statusPending": "Pending review",
+      "statusApplied": "Applied",
+      "statusRejected": "Rejected",
+      "accept": "Accept",
+      "reject": "Reject"
+    },
+    "explorer": {
+      "noCurrentDirectory": "No current directory",
+      "searchFiles": "Search files",
+      "newFile": "New file",
+      "newFolder": "New folder",
+      "clearSearch": "Clear search",
+      "searchPlaceholder": "Search files…",
+      "searching": "Searching…",
+      "noMatches": "No matches",
+      "partialResults": "Showing partial results - refine your query.",
+      "moveConfirm": {
+        "title": "Move this item?",
+        "description": "Move \"{{name}}\" into \"{{destination}}\"?",
+        "action": "Move"
+      },
+      "menu": {
+        "open": "Open",
+        "openInTerminal": "Open in Terminal",
+        "revealInFinder": "Reveal in Finder",
+        "newFile": "New File",
+        "newFolder": "New Folder",
+        "copyPath": "Copy Path",
+        "copyRelativePath": "Copy Relative Path",
+        "attachToAgent": "Attach to Agent",
+        "confirmDelete": "Click again to confirm"
+      }
+    },
+    "gitHistory": {
+      "unknownError": "Unknown error",
+      "loadingCommits": "Loading commits…",
+      "couldNotLoadHistory": "Could not load history",
+      "retry": "Retry",
+      "noCommitsYet": "No commits yet",
+      "noCommitsDescription": "This branch has no commits.",
+      "columnSha": "SHA",
+      "columnSubject": "Subject",
+      "columnAuthor": "Author",
+      "columnDate": "Date",
+      "columnChanges": "Changes",
+      "loadingMore": "Loading more…",
+      "endOfHistory": "End of history",
+      "failedToLoadMore": "Failed to load more",
+      "noSubject": "(no subject)",
+      "unknownAuthor": "Unknown",
+      "filesChanged_one": "{{count}} file changed",
+      "filesChanged_other": "{{count}} files changed",
+      "copySha": "Copy SHA",
+      "loadingFiles": "Loading files…",
+      "noFileChanges": "No file changes.",
+      "filesHeading": "Files",
+      "binary": "binary"
+    },
+    "header": {
+      "settings": "Settings",
+      "toggleSidebar": "Toggle sidebar",
+      "commandPalette": "Command palette",
+      "search": "Search",
+      "gitSearch": "Git search",
+      "searchWithShortcut": "{{label}} ({{shortcut}})",
+      "clearSearch": "Clear search"
+    },
+    "lsp": {
+      "startTitle": "Start {{command}} for this workspace",
+      "enableLsp": "Enable {{name}} LSP",
+      "serverStoppedTitle": "Language server stopped",
+      "pillLabel": "{{name}} LSP",
+      "serverStoppedHeading": "{{name}} language server stopped",
+      "restart": "Restart",
+      "disable": "Disable",
+      "dismissTitle": "Dismiss (you can re-enable from Settings)",
+      "installLsp": "Install {{name}} LSP",
+      "languageServer": "{{name}} language server",
+      "notFoundOnPath": "Lithe found no <code>{{command}}</code> on your PATH. Install it, then check again:",
+      "copyCommandTitle": "Copy command",
+      "documentation": "Documentation",
+      "checking": "Checking…",
+      "checkAgain": "Check again",
+      "serverStartingTitle": "Language server starting",
+      "serverActiveTitle": "Language server active",
+      "runningStatus_starting": "<code>{{command}}</code> is starting for this workspace.",
+      "runningStatus_running": "<code>{{command}}</code> is running for this workspace."
+      ,"failedToStart": "{{name}} language server failed to start",
+      "stopped": "{{name}} language server stopped",
+      "keepsCrashing": "{{name}} language server keeps crashing",
+      "exited": "{{name}} language server exited",
+      "serverKeptCrashing": "The server kept crashing.",
+      "givingUp": "Giving up for this workspace."
+    },
+    "markdown": {
+      "rendered": "Rendered",
+      "raw": "Raw",
+      "readFailed": "Failed to read file: {{error}}",
+      "binaryCannotRender": "Binary file - cannot render as markdown.",
+      "fileTooLarge": "File is {{size}} bytes; limit {{limit}}."
+    },
+    "preview": {
+      "iframeTitle": "Preview",
+      "xfoHint": "Many public sites refuse to embed (X-Frame-Options). If the page is blank, open it externally.",
+      "suspended": {
+        "title": "Preview suspended",
+        "description": "Released to free memory after sitting in the background.",
+        "reload": "Reload"
+      },
+      "empty": {
+        "title": "Nothing to preview yet",
+        "description": "Type a URL above, or open the <ports>Ports</ports> dropdown to jump straight to your running dev server. Public sites often block embedding - open them in your browser via the link icon if you see a blank page."
+      },
+      "addressBar": {
+        "reloadTitle": "Reload",
+        "portsTitle": "Common dev-server ports",
+        "ports": "Ports",
+        "checking": "checking…",
+        "placeholder": "http://localhost:3000",
+        "openInBrowserTitle": "Open in system browser",
+        "dismiss": "Dismiss",
+        "enterUrlNotice": "Enter a URL or pick a port preset.",
+        "noServerNotice": "No server listening on :{{port}}."
+      }
+    },
+    "settings": {
+      "common": {
+        "save": "Save",
+        "cancel": "Cancel",
+        "remove": "Remove",
+        "edit": "Edit",
+        "delete": "Delete",
+        "connected": "Connected",
+        "loading": "Loading…"
+      },
+      "tabs": {
+        "general": "General",
+        "editor": "Editor",
+        "themes": "Themes",
+        "shortcuts": "Shortcuts",
+        "models": "Models",
+        "agents": "Agents",
+        "about": "About"
+      },
+      "general": {
+        "header": {
+          "title": "General",
+          "description": "Mode, terminal, and startup."
+        },
+        "appearance": {
+          "label": "Appearance",
+          "system": "System",
+          "light": "Light",
+          "dark": "Dark",
+          "seeThemes": "For theme, background and customization, see the <strong>Themes</strong> tab."
+        },
+      "language": {
+        "label": "Language",
+        "description": "Display language for the Lithe interface.",
+        "system": "Follow system"
+      },
+        "zoom": {
+          "label": "Zoom",
+          "uiZoomLevel": "UI zoom level"
+        },
+        "explorer": {
+          "label": "Explorer",
+          "showHidden": {
+            "title": "Show hidden files",
+            "description": "Include dot-prefixed files and folders (.env, .gitignore, .config) in the file explorer and search."
+          },
+          "gitDecorations": {
+            "title": "Git decorations",
+            "description": "Tint changed files and dim gitignored entries in the file explorer."
+          }
+        },
+        "terminal": {
+          "label": "Terminal",
+          "webgl": {
+            "title": "Use WebGL renderer",
+            "moreInfo": "More info about WebGL renderer",
+            "tooltip": "xterm's WebGL renderer caches glyphs in a GPU texture atlas. On some macOS setups (especially with Nerd Fonts), the atlas corrupts and terminal text becomes unreadable. Turn this off as a fallback - performance dips slightly, but text renders correctly via the DOM renderer.",
+            "description": "Hardware-accelerated rendering. Turn off if text shows corruption or blank tiles."
+          },
+          "cursorBlink": {
+            "title": "Cursor blinking",
+            "description": "Blink the terminal cursor. Off by default for lower idle CPU, matching VS Code and the macOS terminal."
+          },
+          "fontFamily": {
+            "title": "Font family",
+            "description": "Nerd Font name for icons (e.g. \"CaskaydiaCove Nerd Font Mono\"). Leave blank to auto-detect.",
+            "placeholder": "Auto-detect"
+          },
+          "fontWeight": {
+            "title": "Font weight",
+            "description": "Thickness of terminal characters",
+            "normal": "Normal",
+            "medium": "Medium",
+            "semibold": "Semi-Bold",
+            "bold": "Bold"
+          },
+          "shell": {
+            "title": "Integrated terminal shell",
+            "descriptionNonIntegrated": "Command blocks and directory tracking are unavailable for this shell.",
+            "descriptionWsl": "Shell for the integrated terminal. WSL spaces use the distro login shell. Existing tabs keep their shell.",
+            "descriptionDefault": "Shell for new terminal tabs. Existing tabs keep their shell.",
+            "auto": "Auto"
+          },
+          "workspaceEnv": {
+            "title": "Workspace environment",
+            "description": "Where new spaces run, terminal and AI agent alike: Windows or a WSL distro. Existing spaces keep theirs; switch any from the status bar.",
+            "windows": "Windows",
+            "unavailable": "{{name}} (unavailable)"
+          },
+          "letterSpacing": {
+            "title": "Letter spacing",
+            "description": "Extra horizontal space between characters (px). Use negative values to tighten Nerd Fonts."
+          },
+          "fontSize": {
+            "title": "Font size",
+            "description": "Terminal text size."
+          },
+          "scrollback": {
+            "title": "Scrollback",
+            "description": "Lines of history kept per terminal. Higher uses more RAM (~3 KB / line).",
+            "lines": "{{count}} lines"
+          }
+        },
+        "agents": {
+          "label": "Agents",
+          "notifications": {
+            "title": "Coding agent notifications",
+            "description": "Alert when Claude Code or Codex running in a terminal needs your input or finishes. Desktop notification when Lithe is unfocused, in-app otherwise."
+          }
+        },
+        "startup": {
+          "label": "Startup",
+          "launchAtLogin": {
+            "title": "Launch at login",
+            "description": "Open Lithe automatically when you sign in."
+          },
+          "restoreWindow": {
+            "title": "Restore window position & size",
+            "description": "Reopen the main window where you left it. Applies on next launch."
+          }
+        }
+      },
+      "editor": {
+        "header": {
+          "title": "Editor",
+          "description": "Editing behavior, saving, and language servers."
+        },
+        "appearance": {
+          "label": "Appearance",
+          "fontSize": {
+            "title": "Font size",
+            "description": "Code editor text size."
+          }
+        },
+        "editing": {
+          "label": "Editing",
+          "vimMode": {
+            "title": "Vim mode",
+            "description": "Enable Vim keybindings in the code editor."
+          },
+          "wordWrap": {
+            "title": "Word wrap",
+            "description": "Wrap long lines instead of scrolling horizontally."
+          }
+        },
+        "saving": {
+          "label": "Saving",
+          "autoSave": {
+            "title": "Auto save",
+            "description": "Automatically save files after a delay when changes are detected."
+          },
+          "autoSaveDelay": {
+            "title": "Auto save delay",
+            "description": "Delay before unsaved changes are saved automatically.",
+            "unit": "ms"
+          },
+          "formatOnSave": {
+            "title": "Format on save",
+            "description": "Format the file on explicit save (Cmd+S / :w) with the formatter below."
+          },
+          "formatter": {
+            "title": "Formatter",
+            "description": "Language server formats the buffer before writing; Biome and Prettier run on the saved file from your PATH.",
+            "lsp": "Language server"
+          },
+          "customCommand": {
+            "title": "Custom command",
+            "description": "Runs on the saved file; {file} is replaced with the quoted path (appended when omitted)."
+          },
+          "overrides": {
+            "title": "Language overrides",
+            "description": "Use a different formatter for specific languages (e.g. Ruff for Python).",
+            "add": "Add override",
+            "remove": "Remove override"
+          }
+        },
+        "lsp": {
+          "label": "Language servers",
+          "addCustomServer": "Add custom server",
+          "statusChecking": "checking...",
+          "statusNotFound": "not found on PATH",
+          "detectAgain": "Detect again",
+          "removeServer": "Remove server",
+          "dialogTitle": "Custom language server",
+          "fieldName": "Name",
+          "fieldCommand": "Command",
+          "fieldArguments": "Arguments",
+          "fieldExtensions": "File extensions",
+          "fieldLanguageId": "LSP language id",
+          "fieldRootMarkers": "Root markers",
+          "addServer": "Add server"
+        }
+      },
+      "themes": {
+        "header": {
+          "title": "Themes",
+          "description": "Theme, background image, and customization."
+        },
+        "theme": {
+          "label": "Theme",
+          "create": "Create",
+          "import": "Import .lithe-theme",
+          "editAria": "Edit {{name}}",
+          "removeAria": "Remove {{name}}"
+        },
+        "editorTheme": {
+          "label": "Editor theme",
+          "description": "Syntax colors for the code editor. Auto follows the app theme.",
+          "auto": "Auto (match app theme)"
+        },
+        "background": {
+          "label": "Background",
+          "remove": "Remove",
+          "replace": "Replace image",
+          "choose": "Choose image",
+          "opacity": "Opacity",
+          "blur": "Blur",
+          "dropHint": "Drop an image here or pick one. Stored locally; doesn't affect the default look until set.",
+          "storageBlocked": "Image storage is blocked by another Lithe window.",
+          "storageFull": "Not enough storage to save this image. Remove unused themes or backgrounds and try again.",
+          "notImage": "This file isn't an image.",
+          "animatedTooLarge": "Animated images are limited to {{limit}} MB to keep things smooth. This one is {{size}}.",
+          "imageTooLarge": "Images are limited to {{limit}} MB. This one is {{size}}.",
+          "decodeFailed": "This image couldn't be decoded. Try a different file.",
+          "encodeUnavailable": "Image encoding is unavailable in this environment.",
+          "encodeFailed": "Failed to encode the image."
+        },
+        "validation": {
+          "themeObject": "Theme must be a JSON object",
+          "mustBeObject": "{{path}} must be an object",
+          "unknownColorKey": "{{path}} is not a recognized color key",
+          "nonEmptyString": "{{path}} must be a non-empty string",
+          "mustBeString": "{{path}} must be a string",
+          "ansiArray": "{{path}} must be an array of 16 strings",
+          "idFormat": "id must be a kebab-case string (a-z, 0-9, -)",
+          "nameRequired": "name must be a non-empty string",
+          "variantsRequired": "variants must contain at least one of: light, dark",
+          "invalidJson": "Invalid JSON",
+          "starterName": "My Theme",
+          "starterDescription": "Custom theme."
+        }
+      },
+      "shortcuts": {
+        "header": {
+          "title": "Shortcuts",
+          "description": "View and customize keyboard shortcuts."
+        },
+        "resetAll": "Reset All",
+        "searchPlaceholder": "Search shortcuts...",
+        "unassigned": "Unassigned",
+        "recording": "Recording...",
+        "escToCancel": "(Esc to cancel)",
+        "resetToDefault": "Reset to default",
+        "clearShortcut": "Clear shortcut",
+        "resetDialog": {
+          "title": "Reset all shortcuts?",
+          "description": "This will revert all your custom keyboard shortcuts to their factory defaults. This action cannot be undone.",
+          "cancel": "Cancel"
+        }
+      },
+      "models": {
+        "header": {
+          "title": "Models",
+          "description": "Connect the providers you use. Keys live in your OS keychain and are used only by Lithe."
+        },
+        "defaults": {
+          "label": "Defaults",
+          "chatModel": "Chat model",
+          "autocomplete": "Autocomplete",
+          "notConnectedHint": "{{provider}} isn't connected - add it below.",
+          "trigger": "Trigger",
+          "automatic": "Automatic (as you type)",
+          "manual": "Manual ({{shortcut}})",
+          "shortcut": "shortcut"
+        },
+        "voice": {
+          "title": "Voice input",
+          "provider": "Provider",
+          "model": "Model",
+          "baseUrl": "Base URL",
+          "descOpenai": "Uses your official OpenAI API key and the Whisper model for transcription.",
+          "descGroq": "Uses your official Groq API key and Groq's Whisper endpoint for transcription.",
+          "descWhispercpp": "Connects to a local Whisper.cpp server for fully offline transcription."
+        },
+        "providers": {
+          "label": "Providers",
+          "addProvider": "Add provider",
+          "cloud": "Cloud",
+        "localCustom": "Local & custom",
+        "openaiCompatible": "OpenAI Compatible",
+        "ollamaCloud": "Ollama Cloud",
+          "emptyTitle": "No providers connected yet.",
+          "emptyHint": "Click \"Add provider\" to connect a cloud or local model source.",
+          "notConnected": "not connected"
+        },
+        "ollamaCloud": {
+          "loading": "Loading the official model catalog and context windows…",
+          "modelCount": "{{count}} models available",
+          "refresh": "Refresh models",
+          "loadFailed": "Could not load the official Ollama Cloud model catalog.",
+          "partial": "Loaded the catalog, but {{count}} context windows could not be refreshed.",
+          "viewCatalog": "View model catalog and context windows"
+        },
+        "local": {
+          "lmstudioDescription": "Run GGUF models via LM Studio's HTTP server (Developer tab → enable).",
+          "lmstudioHint": "The model id loaded in LM Studio - see the server's /v1/models page.",
+          "mlxDescription": "Apple-silicon inference via mlx_lm.server (pip install mlx-lm).",
+          "mlxHint": "The Hugging Face repo path you launched mlx_lm.server with.",
+          "ollamaDescription": "Local models via Ollama's built-in OpenAI-compatible API.",
+          "ollamaHint": "The model name from `ollama list` / `ollama pull`.",
+          "compatibleDescription": "Any OpenAI-compatible endpoint - vLLM, Z.AI, Fireworks, etc.",
+          "openrouterDescription": "Any model on OpenRouter - type its full provider/model id.",
+          "openrouterHint": "Browse ids at openrouter.ai/models."
+        },
+        "card": {
+          "docs": "Docs",
+          "getKey": "Get key",
+          "removeProvider": "Remove provider",
+          "removeEndpoint": "Remove endpoint",
+        "test": "Test",
+        "loadModels": "Load models",
+        "loadingModels": "Loading…",
+        "availableModels": "Available models",
+        "chooseModel": "Choose from {{count}} models",
+        "noModels": "The endpoint returned no models.",
+        "loadModelsFailed": "Could not load models. Check the URL and API key.",
+          "testing": "Testing…",
+          "reachable": "Reachable - server responded.",
+          "unreachable": "Could not reach the server.",
+          "baseUrl": "Base URL",
+          "modelId": "Model ID",
+          "context": "Context",
+          "tokens": "tokens",
+          "apiKey": "API key",
+          "name": "Name",
+          "namePlaceholder": "My endpoint",
+          "removeKey": "Remove key",
+          "replace": "Replace",
+          "showKey": "Show key",
+          "hideKey": "Hide key",
+          "pasteKey": "Paste API key",
+          "keySaved": "Key saved",
+          "enterKey": "Enter your API key.",
+          "keyPrefixHint": "{{provider}} keys start with \"{{prefix}}\".",
+          "failedSave": "Failed to save: {{error}}",
+          "providerDoesNotUseKey": "{{provider}} does not use an API key",
+          "keyRequired": "API key is empty",
+          "optionalKeyPlaceholder": "Optional - leave empty for unauthenticated endpoints"
+        }
+      },
+      "agents": {
+        "header": {
+          "title": "Agents",
+          "description": "Personas and snippets the AI uses. Switch agents from the input bar."
+        },
+        "customInstructions": {
+          "label": "Custom instructions",
+          "placeholder": "e.g. Always reply in concise bullet points. Prefer pnpm over npm. My machine is an M-series Mac."
+        },
+        "list": {
+          "label": "Agents",
+          "newAgent": "New agent",
+          "newAgentName": "New agent",
+          "builtIn": "Built-in",
+          "active": "Active",
+          "useAgent": "Use agent"
+        },
+        "snippets": {
+          "label": "Snippets",
+          "description": "Reusable instructions you can drop into any prompt with <code>#handle</code>.",
+          "newSnippet": "New snippet",
+          "empty": "No snippets yet. Create one and insert it with <code>#handle</code> in the AI input."
+        },
+        "agentDialog": {
+          "newTitle": "New agent",
+          "editTitle": "Edit agent",
+          "icon": "Icon",
+          "name": "Name",
+          "namePlaceholder": "e.g. Test Engineer",
+          "description": "Description",
+          "descriptionPlaceholder": "One line - shown in the agent picker",
+          "instructions": "Instructions",
+          "instructionsPlaceholder": "Persona & rules. Appended to Lithe's core system prompt."
+        },
+        "snippetDialog": {
+          "newTitle": "New snippet",
+          "editTitle": "Edit snippet",
+          "handle": "Handle",
+          "handlePlaceholder": "review",
+          "name": "Name",
+          "namePlaceholder": "e.g. Pre-merge review checklist",
+          "description": "Description",
+          "descriptionPlaceholder": "One line - shown in the # picker",
+          "content": "Content",
+          "contentPlaceholder": "Inserted into the prompt as a <snippet> block when you use #handle.",
+          "errRequired": "Required.",
+          "errFormat": "Lowercase letters, digits, and dashes only.",
+          "errInUse": "Already in use."
+        }
+      },
+      "about": {
+        "header": {
+          "title": "About"
+        },
+      "tagline": "Open-source terminal-first AI-native developer workspace",
+        "build": "Build",
+        "bundleId": "Bundle ID",
+        "license": "License",
+      "sourceCode": "Source code",
+      "upstreamFoundation": "Upstream foundation",
+      "updates": "Updates",
+      "updatesDisabled": "Automatic updates are disabled",
+      "viewUpstream": "View upstream source",
+        "website": "Website",
+        "viewOnGitHub": "View on GitHub",
+        "reportIssue": "Report an issue"
+      }
+    },
+    "shortcuts": {
+      "group": {
+        "General": "General",
+        "Tabs": "Tabs",
+        "Spaces": "Spaces",
+        "Panes": "Panes",
+        "Terminal": "Terminal",
+        "Search": "Search",
+        "AI": "AI",
+        "View": "View",
+        "Editor": "Editor"
+      },
+      "label": {
+        "commandPalette.open": "Open command palette",
+        "commandPalette.content": "Find in files",
+        "settings.open": "Open settings",
+        "tab.new": "New tab",
+        "tab.newBlock": "New Blocks terminal",
+        "tab.newPrivate": "New private terminal",
+        "tab.newPreview": "New web preview",
+        "tab.newEditor": "New editor tab",
+        "tab.close": "Close tab or pane",
+        "pane.splitRight": "Split pane right",
+        "pane.splitDown": "Split pane down",
+        "pane.focusNext": "Focus next pane",
+        "pane.focusPrev": "Focus previous pane",
+        "pane.swapLeft": "Swap pane left",
+        "pane.swapRight": "Swap pane right",
+        "pane.swapUp": "Swap pane up",
+        "pane.swapDown": "Swap pane down",
+        "pane.source": "Toggle source panel",
+        "terminal.clear": "Clear terminal",
+        "terminal.toggleInput": "Toggle Shell / AI input",
+        "blocks.prev": "Previous command block",
+        "blocks.next": "Next command block",
+        "tab.next": "Next tab",
+        "tab.prev": "Previous tab",
+        "tab.selectByIndex": "Jump to tab 1–9",
+        "space.next": "Next space",
+        "space.prev": "Previous space",
+        "space.overview": "Open spaces",
+        "explorer.search": "Search files",
+        "search.focus": "Find in terminal",
+        "ai.toggle": "Toggle AI agent",
+        "ai.toggleMini": "Toggle AI chat window",
+        "ai.askSelection": "Ask AI about selection",
+        "agent.focusAttention": "Jump to agent needing attention",
+        "sidebar.toggle": "Toggle file explorer",
+        "explorer.focus": "Toggle file explorer focus",
+        "view.zoomIn": "Zoom in",
+        "view.zoomOut": "Zoom out",
+        "view.zoomReset": "Reset zoom",
+        "view.zenMode": "Toggle zen mode",
+        "editor.undo": "Undo",
+        "editor.redo": "Redo",
+        "editor.aiComplete": "Trigger AI completion",
+        "editor.codeComplete": "Trigger code completion"
+      }
+    },
+    "sidebar": {
+      "files": "Files",
+      "sourceControl": "Source Control"
+    },
+    "sourceControl": {
+      "noUpstream": "No upstream",
+      "sourceControl": "Source Control",
+      "detached": "detached",
+      "branch": {
+        "loading": "Loading branches…",
+        "localBranches": "Local Branches",
+        "worktrees": "Worktrees",
+        "noBranches": "No branches found."
+      },
+      "commit": {
+        "waitForAction": "Wait for the current Git action to finish.",
+        "stageToEnable": "Stage changes to enable commit.",
+        "enterMessage": "Enter a commit message to enable commit.",
+        "hint": "Commit with {{shortcut}}.",
+        "placeholder": "Commit message",
+        "charCount": "Ch: {{count}}",
+        "toCommit": "to commit",
+        "button": "Commit",
+        "committing": "Committing…"
+      },
+      "push": {
+        "unavailable": "Push is unavailable right now.",
+        "button": "Push",
+        "pushing": "Pushing…"
+      },
+      "staged": {
+        "nothing": "Nothing staged"
+      },
+      "stagedFiles_one": "{{count}} file staged",
+      "stagedFiles_other": "{{count}} files staged",
+      "fetch": {
+        "fetching": "Fetching…",
+        "label": "Fetch from remote"
+      },
+      "pull": {
+        "pulling": "Pulling…",
+        "diverged": "Branch diverged - resolve in terminal",
+        "noUpstream": "No upstream configured",
+        "upToDate": "Already up to date",
+        "commits": "Pull {{count}} commits (fast-forward)"
+      },
+      "refresh": "Refresh source control",
+      "commitGraph": "Commit Graph",
+      "panel": {
+        "loadingRepo": "Loading repository",
+        "noRepo": "No repository",
+        "noRepoBody": "The active workspace is not inside a Git repository.",
+        "error": "Source control error",
+        "unknownError": "Unknown source control error",
+        "retry": "Retry"
+      },
+      "discard": {
+        "title": "Discard changes?",
+        "descAll": "This will discard {{label}} and cannot be undone.",
+        "descOne": "Discard changes in \"{{label}}\"? This cannot be undone.",
+        "action": "Discard",
+        "one": "Discard {{path}}"
+      },
+      "cleanTree": "Working tree clean",
+      "cleanTreeOn": "on",
+      "changedFiles": "Changed files",
+      "divergedBanner": {
+        "title": "Diverged from upstream",
+        "detail": "- resolve in terminal"
+      },
+      "changes": "Changes",
+      "all": "All",
+      "stageAll": "Stage all changes",
+      "stageFile": "Stage {{path}}",
+      "menu": {
+        "openDiff": "Open Diff",
+        "openFile": "Open File",
+        "unstage": "Unstage",
+        "stage": "Stage",
+        "discardChanges": "Discard Changes",
+        "copyRelativePath": "Copy Relative Path",
+        "copyAbsolutePath": "Copy Absolute Path",
+        "revealInFinder": "Reveal in Finder",
+        "revealInFileManager": "Reveal in File Manager"
+      }
+    },
+    "spaces": {
+      "titleWithShortcut": "Spaces · {{shortcut}}",
+      "title": "Spaces",
+      "heading": "Spaces",
+      "newSpace": "New space",
+      "collapse": "Collapse",
+      "expand": "Expand",
+      "renameSpace": "Rename space",
+      "newTab": "New tab",
+      "deleteSpace": "Delete space",
+      "dropToMoveHere": "Drop to move here",
+      "noTabs": "No tabs",
+      "closeTab": "Close tab"
+      ,"defaultName": "Space {{count}}"
+    },
+    "statusbar": {
+      "private": {
+        "label": "Private: hidden from AI",
+        "tooltip": "AI can't see this terminal's output. Use it for secrets, SSH, or anything you don't want sent to the model."
+      },
+      "cwd": {
+        "noDirectory": "no directory",
+        "noSubfolders": "No subfolders",
+        "showHiddenFolders": "Show hidden folders"
+      },
+      "workspace": {
+        "environment": "Workspace environment",
+        "windows": "Windows",
+        "windowsLocal": "Windows Local",
+        "loadingWslDistros": "Loading WSL distros...",
+        "wslUnavailable": "WSL unavailable",
+        "noWslDistros": "No WSL distros found",
+        "wslDistro": "WSL: {{distro}}"
+      }
+    },
+    "tabs": {
+      "autoDetect": "Auto Detect",
+      "mode": "Mode: {{name}}",
+      "fewerLanguages": "↑ Fewer languages",
+      "allLanguages": "↓ All languages",
+      "unsavedChanges": "Unsaved changes",
+      "closeTab": "Close tab",
+      "renameTab": "Rename tab",
+      "newTab": "New tab",
+      "terminal": "Terminal",
+      "blocks": "Blocks",
+      "privacy": "Privacy",
+      "editor": "Editor",
+      "preview": "Preview",
+      "gitGraph": "Git Graph"
+    },
+  "terminal": {
+    "modeShell": "Shell",
+    "modeAi": "AI",
+    "inputPlaceholder": "Run a command  -  ↑ history  {{shortcut}} switch to AI",
+      "overflowNotice": "[Lithe: some output was dropped while this tab was hidden]",
+      "spawnFailed": "[Lithe] failed to start shell: {{detail}}",
+      "pressEnterRetry": "press Enter to retry",
+      "block": {
+        "commandFallback": "command",
+        "exit": "exit {{code}}",
+        "runAgain": "Run again",
+        "actions": "Block actions",
+        "copyCommand": "Copy command",
+        "copyOutput": "Copy output",
+        "copyCommandAndOutput": "Copy command and output",
+        "attachToAiChat": "Attach to AI chat",
+        "findInBlock": "Find in block",
+        "toast": {
+          "commandCopied": "Command copied",
+          "outputCopied": "Output copied",
+          "blockCopied": "Block copied"
+        }
+      },
+      "watermark": {
+        "browseHistory": "Browse your command history",
+        "autocomplete": "Autocomplete paths and commands",
+        "switchShellAi": "Switch between Shell and AI",
+        "openAiAssistant": "Open the AI assistant"
+      },
+      "dropFilePathHere": "Drop file path here"
+    }
+  }
+}

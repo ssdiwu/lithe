@@ -1,6 +1,6 @@
 # AI subsystem
 
-This guide elaborates on `TERAX.md`. If anything here conflicts with `TERAX.md`, `TERAX.md` wins.
+This guide elaborates on `LITHE.md`. If anything here conflicts with `LITHE.md`, `LITHE.md` wins.
 
 ## Overview
 
@@ -13,12 +13,25 @@ Main entry point: `runAgentStream` in `src/modules/ai/lib/agent.ts`.
 Cloud providers are defined in `src/modules/ai/config.ts`:
 
 - OpenAI, Anthropic, Google, xAI, Cerebras, Groq, DeepSeek, Mistral, OpenRouter
+- Ollama Cloud, with one API key and a dynamically loaded model catalog
 - `openai-compatible` for any custom base URL
 - Local: LM Studio, MLX, Ollama
 
+Ollama Cloud is a dedicated provider in Lithe. The settings window loads the
+account's current catalog through Ollama's native `/api/tags` route and loads
+each model's capabilities and architecture-specific context window through
+`/api/show`. Chat, defaults, favorites, recent models, sub-agents, and editor
+autocomplete reference that shared catalog. Requests use Ollama's documented
+OpenAI-compatible `/v1` transport. Other custom endpoints remain independent
+named connections and use the conventional `/models` route when discovering
+models.
+
 `buildLanguageModel` in `src/modules/ai/lib/agent.ts:76` branches on `provider` to construct the correct AI SDK provider instance. Local providers use `createOpenAICompatible` with a `localProxyFetch` that allows private-network access, while cloud providers use their dedicated SDK constructors.
 
-Model metadata (context limits, costs, reasoning behavior) lives in the model registry in `config.ts`. `resolveModel` maps a model id to its provider and defaults.
+Static model metadata (context limits, costs, reasoning behavior) lives in the
+model registry in `config.ts`. Ollama Cloud metadata is cached in preferences
+after discovery. `resolveModel` maps both static and dynamic model ids to their
+provider and defaults.
 
 ### Adding a new provider
 
@@ -36,12 +49,27 @@ Keys are never persisted outside the OS keychain / Linux secrets file.
 `runAgentStream` (`agent.ts:391`):
 
 1. Resolves the model via `buildConfiguredLanguageModel`.
-2. Builds a stable system prompt from `selectSystemPrompt(modelId)` plus optional persona, custom instructions, and `TERAX.md` project memory.
+2. Builds a stable system prompt from `selectSystemPrompt(modelId)` plus optional persona, custom instructions, and `LITHE.md` project memory with a legacy `TERAX.md` fallback.
 3. Converts UI messages to model messages, prunes reasoning content if the model does not keep it, and compacts old messages if the context limit is exceeded.
 4. Streams via `streamText` with the tool set from `buildTools(ctx)` and `stopWhen: stepCountIs(MAX_AGENT_STEPS)`.
 5. Emits step labels, usage deltas, and finish metadata.
 
 The tool set is assembled in `src/modules/ai/tools/tools.ts` from `fs`, `edit`, `search`, `shell`, `subagent`, `terminal`, `todo`, and `managedAgent` builders.
+
+## Personas, snippets, and Skills
+
+The user-facing entries stored by `src/modules/ai/lib/agents.ts` are personas,
+despite the historical "agent" label in the UI and storage names. Selecting one
+only appends its `instructions` to the shared system prompt. It does not create
+a new run loop or change the available tools.
+
+Snippets are explicit `#handle` prompt macros. They expand selected reusable
+text into the next user message and do not control routing or tools.
+
+Lithe does not currently discover or execute `SKILL.md` packages. Skills must
+not be confused with personas or snippets: a future Skills adapter needs a
+catalog, explicit or routed selection, lazy instruction loading, and a policy
+for referenced files and executable helpers.
 
 ## Sub-agents
 
@@ -49,7 +77,7 @@ The tool set is assembled in `src/modules/ai/tools/tools.ts` from `fs`, `edit`, 
 
 ## Sessions
 
-Conversations are organized into sessions. Persistence lives in `terax-ai-sessions.json` via `tauri-plugin-store` (`src/modules/ai/lib/sessions.ts`):
+Conversations are organized into sessions. Persistence lives in `lithe-ai-sessions.json` via `tauri-plugin-store` (`src/modules/ai/lib/sessions.ts`):
 
 - `sessions` key: list of session metadata
 - `activeId` key: active session id
@@ -91,7 +119,7 @@ AI-proposed file edits open in an `ai-diff` tab. The user accepts or rejects per
 
 ## See also
 
-- [`TERAX.md`](../../TERAX.md) - the architecture source of truth
+- [`LITHE.md`](../../LITHE.md) - the fork-specific architecture source of truth
 - [`docs/README.md`](../README.md) - index of contributor guides
 - [Two-process model](two-process-model.md) - IPC boundary and command catalog
 - [Security model](security-model.md) - the boundaries every tool must respect

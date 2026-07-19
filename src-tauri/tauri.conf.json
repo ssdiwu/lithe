@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "Terax",
-  "version": "0.8.5",
-  "identifier": "app.crynta.terax",
+  "productName": "Lithe",
+  "version": "0.1.0",
+  "identifier": "app.lithe.workspace",
   "build": {
     "beforeDevCommand": "pnpm dev",
     "devUrl": "http://localhost:1420",
@@ -13,7 +13,7 @@
   "app": {
     "windows": [
       {
-        "title": "Terax",
+        "title": "Lithe",
         "width": 800,
         "height": 600,
         "minWidth": 420,
@@ -35,10 +35,13 @@
   "bundle": {
     "active": true,
     "targets": "all",
-    "createUpdaterArtifacts": true,
-    "copyright": "Copyright 2026 Crynta",
+    "createUpdaterArtifacts": false,
+    "copyright": "Copyright 2026 Lithe contributors",
     "license": "Apache-2.0",
-    "publisher": "Crynta",
+    "publisher": "Lithe contributors",
+    "resources": {
+      "infoplist/": ""
+    },
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
@@ -84,10 +87,10 @@
     },
     "category": "DeveloperTool",
     "shortDescription": "AI-native terminal emulator",
-    "longDescription": "Terax — an open-source AI-native terminal emulator with multi-tab, file explorer, code editor, web preview, voice input, and AI agents.",
+    "longDescription": "Lithe is an open-source terminal-first AI-native developer workspace with multi-tab terminals, a file explorer, code editor, web preview, voice input, and AI agents.",
     "fileAssociations": [
       {
-        "name": "Terax Document",
+        "name": "Lithe Document",
         "role": "Editor",
         "mimeType": "text/plain",
         "ext": [
@@ -103,13 +106,5 @@
         ]
       }
     ]
-  },
-  "plugins": {
-    "updater": {
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDNCQUJGRDhBQjYwRTM0NjkKUldScE5BNjJpdjJyT3dIN0dqbUpHaDA4QW1GaDVmTTllRXdZVk96dFNTRUZ3Y2hiVGszYjFqRloK",
-      "endpoints": [
-        "https://github.com/crynta/terax-ai/releases/latest/download/latest.json"
-      ]
-    }
   }
 }

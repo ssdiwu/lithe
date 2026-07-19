@@ -1,4 +1,9 @@
-import { CodeIcon, HashtagIcon, TerminalIcon } from "@hugeicons/core-free-icons";
+import {
+  CodeIcon,
+  HashtagIcon,
+  TerminalIcon,
+} from "@hugeicons/core-free-icons";
+import { useTranslation } from "@/i18n";
 import { HugeiconsIcon } from "@hugeicons/react";
 import type { ReactNode } from "react";
 import type { FileAttachment } from "../lib/composer";
@@ -27,6 +32,7 @@ export function ChipsRow({
   onRemoveCommand,
   leading,
 }: Props) {
+  const { t } = useTranslation("ai");
   const hasAttachments =
     files.length > 0 || snippets.length > 0 || commands.length > 0;
   if (!leading && !hasAttachments) return null;
@@ -39,7 +45,7 @@ export function ChipsRow({
           icon={cmd.icon}
           title={cmd.label}
           onRemove={() => onRemoveCommand(cmd.name)}
-          removeLabel="Remove command"
+          removeLabel={t("removeCommand")}
         >
           #{cmd.name}
         </Chip>
@@ -51,7 +57,7 @@ export function ChipsRow({
           icon={HashtagIcon}
           title={s.description || s.name}
           onRemove={() => onRemoveSnippet(s.id)}
-          removeLabel="Remove snippet"
+          removeLabel={t("removeSnippet")}
         >
           {s.handle}
         </Chip>
@@ -74,7 +80,13 @@ export function ChipsRow({
 
 function fileIcon(f: FileAttachment): ReactNode {
   if (f.kind === "image" && f.url) {
-    return <img src={f.url} alt="" className="size-4 shrink-0 rounded object-cover" />;
+    return (
+      <img
+        src={f.url}
+        alt=""
+        className="size-4 shrink-0 rounded object-cover"
+      />
+    );
   }
   if (f.kind === "selection") {
     return (

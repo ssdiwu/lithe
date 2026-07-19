@@ -1,4 +1,4 @@
-export const KEYRING_SERVICE = "terax-ai";
+export const KEYRING_SERVICE = "lithe-ai";
 
 export type ProviderId =
   | "openai"
@@ -10,6 +10,7 @@ export type ProviderId =
   | "deepseek"
   | "mistral"
   | "openrouter"
+  | "ollama-cloud"
   | "openai-compatible"
   | "lmstudio"
   | "mlx"
@@ -90,6 +91,13 @@ export const PROVIDERS: readonly ProviderInfo[] = [
     consoleUrl: "https://openrouter.ai/keys",
   },
   {
+    id: "ollama-cloud",
+    label: "Ollama Cloud",
+    keyringAccount: "ollama-cloud-api-key",
+    keyPrefix: null,
+    consoleUrl: "https://ollama.com/settings/keys",
+  },
+  {
     id: "openai-compatible",
     label: "OpenAI Compatible",
     keyringAccount: "openai-compatible-api-key",
@@ -109,7 +117,8 @@ export const PROVIDERS: readonly ProviderInfo[] = [
     label: "MLX",
     keyringAccount: "",
     keyPrefix: null,
-    consoleUrl: "https://github.com/ml-explore/mlx-lm/blob/main/mlx_lm/SERVER.md",
+    consoleUrl:
+      "https://github.com/ml-explore/mlx-lm/blob/main/mlx_lm/SERVER.md",
   },
   {
     id: "ollama",
@@ -128,13 +137,44 @@ export type CustomEndpoint = {
   contextLimit: number;
 };
 
-const COMPAT_MODEL_PREFIX = "compat-";
+/** Model metadata returned by Ollama Cloud's `/api/tags` + `/api/show` APIs. */
+export type OllamaCloudModel = {
+  name: string;
+  contextLimit: number | null;
+  capabilities: string[];
+  parameterSize?: string;
+};
 
-export function compatModelIdForEndpoint(endpointId: string): string {
+const OLLAMA_CLOUD_MODEL_PREFIX = "ollama-cloud:";
+export type OllamaCloudModelId = `${typeof OLLAMA_CLOUD_MODEL_PREFIX}${string}`;
+
+export function ollamaCloudModelId(name: string): OllamaCloudModelId {
+  return `${OLLAMA_CLOUD_MODEL_PREFIX}${name.trim()}`;
+}
+
+export function isOllamaCloudModelId(
+  modelId: string,
+): modelId is OllamaCloudModelId {
+  return (
+    modelId.startsWith(OLLAMA_CLOUD_MODEL_PREFIX) &&
+    modelId.length > OLLAMA_CLOUD_MODEL_PREFIX.length
+  );
+}
+
+export function ollamaCloudModelNameFromId(modelId: string): string {
+  return isOllamaCloudModelId(modelId)
+    ? modelId.slice(OLLAMA_CLOUD_MODEL_PREFIX.length)
+    : "";
+}
+
+const COMPAT_MODEL_PREFIX = "compat-";
+export type CompatModelId = `${typeof COMPAT_MODEL_PREFIX}${string}`;
+
+export function compatModelIdForEndpoint(endpointId: string): CompatModelId {
   return `${COMPAT_MODEL_PREFIX}${endpointId}`;
 }
 
-export function isCompatModelId(modelId: string): boolean {
+export function isCompatModelId(modelId: string): modelId is CompatModelId {
   return modelId.startsWith(COMPAT_MODEL_PREFIX);
 }
 
@@ -633,6 +673,7 @@ export const MODELS = [
 ] as const satisfies readonly ModelInfo[];
 
 export type ModelId = (typeof MODELS)[number]["id"];
+export type SelectableModelId = ModelId | CompatModelId | OllamaCloudModelId;
 
 export function getCompatModelInfo(
   modelId: string,
@@ -653,11 +694,45 @@ export function getCompatModelInfo(
   };
 }
 
+export function getOllamaCloudModelInfo(
+  modelId: string,
+  models: readonly OllamaCloudModel[] = [],
+): ModelInfo {
+  const name = ollamaCloudModelNameFromId(modelId);
+  const model = models.find((candidate) => candidate.name === name);
+  const tags: ModelTag[] = [];
+  if (model?.capabilities.includes("vision")) tags.push("vision");
+  if (model?.capabilities.includes("thinking")) tags.push("reasoning");
+  if (model?.capabilities.includes("tools")) tags.push("tools");
+  const details = [
+    model?.parameterSize,
+    model?.contextLimit
+      ? `${model.contextLimit.toLocaleString()} tokens`
+      : null,
+  ].filter(Boolean);
+  return {
+    id: modelId,
+    provider: "ollama-cloud",
+    label: name || "Ollama Cloud model",
+    hint: "Cloud",
+    description:
+      details.length > 0
+        ? `Ollama Cloud · ${details.join(" · ")}`
+        : "Model served by Ollama Cloud.",
+    capabilities: { intelligence: 3, speed: 3, cost: 3 },
+    ...(tags.length > 0 ? { tags } : {}),
+  };
+}
+
 export function resolveModel(
   modelId: string,
   endpoints: readonly CustomEndpoint[] = [],
+  ollamaCloudModels: readonly OllamaCloudModel[] = [],
 ): ModelInfo {
   if (isCompatModelId(modelId)) return getCompatModelInfo(modelId, endpoints);
+  if (isOllamaCloudModelId(modelId)) {
+    return getOllamaCloudModelInfo(modelId, ollamaCloudModels);
+  }
   const m = MODELS.find((x) => x.id === modelId);
   if (!m) throw new Error(`Unknown model: ${modelId}`);
   return m;
@@ -673,8 +748,31 @@ export function isKnownModelId(id: string): id is ModelId {
   return MODELS.some((x) => x.id === id);
 }
 
+/** True when an id can be resolved from the static registry or the current
+ * named-endpoint list. Used when hydrating persisted model selections. */
+export function isSelectableModelId(
+  id: string,
+  endpoints: readonly CustomEndpoint[],
+  ollamaCloudModels: readonly OllamaCloudModel[] = [],
+): id is SelectableModelId {
+  if (isKnownModelId(id)) return true;
+  if (isOllamaCloudModelId(id)) {
+    const name = ollamaCloudModelNameFromId(id);
+    return ollamaCloudModels.some((model) => model.name === name);
+  }
+  if (!isCompatModelId(id)) return false;
+  const endpointId = endpointIdFromCompatModel(id);
+  return endpoints.some(
+    (endpoint) =>
+      endpoint.id === endpointId &&
+      endpoint.baseURL.trim().length > 0 &&
+      endpoint.modelId.trim().length > 0,
+  );
+}
+
 const FREEFORM_PROVIDERS: ReadonlySet<ProviderId> = new Set([
   "openrouter",
+  "ollama-cloud",
   "openai-compatible",
   "lmstudio",
   "mlx",
@@ -768,12 +866,14 @@ export const MODEL_CONTEXT_LIMITS: Record<string, number> = {
 
 export function getModelContextLimit(
   modelId: string | undefined,
-  compatOverride?: number,
+  dynamicOverride?: number | null,
 ): number {
   if (!modelId) return 128_000;
-  if (isCompatModelId(modelId)) return compatOverride ?? 128_000;
-  if (modelId === "openai-compatible-custom" && compatOverride)
-    return compatOverride;
+  if (isCompatModelId(modelId) || isOllamaCloudModelId(modelId)) {
+    return dynamicOverride ?? 128_000;
+  }
+  if (modelId === "openai-compatible-custom" && dynamicOverride)
+    return dynamicOverride;
   return MODEL_CONTEXT_LIMITS[modelId] ?? 128_000;
 }
 
@@ -896,11 +996,13 @@ export const WHISPERCPP_DEFAULT_BASE_URL = "http://127.0.0.1:8080";
 export const LMSTUDIO_DEFAULT_BASE_URL = "http://localhost:1234/v1";
 export const MLX_DEFAULT_BASE_URL = "http://127.0.0.1:8080/v1";
 export const OLLAMA_DEFAULT_BASE_URL = "http://localhost:11434/v1";
+export const OLLAMA_CLOUD_BASE_URL = "https://ollama.com/v1";
+export const OLLAMA_CLOUD_KEYS_URL = "https://ollama.com/settings/keys";
 export const OPENAI_COMPATIBLE_DEFAULT_BASE_URL = "";
 export const MAX_AGENT_STEPS = 24;
 export const TERMINAL_BUFFER_LINES = 300;
 
-export const SYSTEM_PROMPT = `You are Terax, an AI agent embedded in a developer terminal emulator. You are a hands-on engineer, not a chat bot — your job is to *do* the work, not narrate it.
+export const SYSTEM_PROMPT = `You are Lithe, an AI agent embedded in a developer terminal workspace. You are a hands-on engineer, not a chat bot: your job is to *do* the work, not narrate it.
 
 # Environment
 Every turn carries a short <env> block (prepended to the latest user message): workspace_root, active_terminal_cwd, optionally active_file. Treat it as ground truth — never ask the user where they are. The terminal scrollback is NOT auto-injected; call get_terminal_output only when the user references "this error" / "the last command" or you genuinely need to interpret recent output.
@@ -951,7 +1053,7 @@ Every turn carries a short <env> block (prepended to the latest user message): w
 - Code blocks always carry a language fence.
 - Refused reads on sensitive files (.env, .ssh, credentials) are final — don't retry.`;
 
-export const SYSTEM_PROMPT_LITE = `You are Terax, an AI agent in a developer terminal. Each turn carries an <env> block (workspace_root, active_terminal_cwd, optional active_file) prepended to the user's message — treat as ground truth.
+export const SYSTEM_PROMPT_LITE = `You are Lithe, an AI agent in a developer terminal workspace. Each turn carries an <env> block (workspace_root, active_terminal_cwd, optional active_file) prepended to the user's message: treat it as ground truth.
 
 Tools: read_file, list_directory, grep, glob, get_terminal_output, edit, multi_edit, write_file, create_directory, bash_run, bash_background, bash_logs, bash_list, bash_kill, suggest_command, open_preview.
 

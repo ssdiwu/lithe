@@ -1,6 +1,8 @@
 # Testing
 
-This guide elaborates on `TERAX.md` and `CONTRIBUTING.md`. If anything conflicts with those files, they win.
+This guide elaborates on `LITHE.md` and `CONTRIBUTING.md`. If it conflicts with
+either file, those project-level rules win. `TERAX.md` remains an inherited
+architecture reference only.
 
 ## Running checks locally
 
@@ -77,6 +79,7 @@ When testing `src/modules/ai/lib/security.ts` or the Rust equivalents, cover:
 
 ## See also
 
-- [`TERAX.md`](../../TERAX.md) - the architecture source of truth
+- [`LITHE.md`](../../LITHE.md) - Lithe identity and compatibility source of truth
+- [`TERAX.md`](../../TERAX.md) - inherited architecture reference
 - [`CONTRIBUTING.md`](../../CONTRIBUTING.md) - quality bar, project layout, how to contribute
 - [`docs/README.md`](../README.md) - index of contributor guides

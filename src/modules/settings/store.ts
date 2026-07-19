@@ -4,23 +4,29 @@ import {
   DEFAULT_AUTOCOMPLETE_MODEL,
   DEFAULT_MODEL_ID,
   DEFAULT_STT_PROVIDER,
-  isKnownModelId,
+  isSelectableModelId,
   LMSTUDIO_DEFAULT_BASE_URL,
   MLX_DEFAULT_BASE_URL,
-  type ModelId,
   migrateLegacyCompatEndpoint,
   OLLAMA_DEFAULT_BASE_URL,
   OPENAI_COMPATIBLE_DEFAULT_BASE_URL,
+  type OllamaCloudModel,
+  type SelectableModelId,
   type SttProvider,
   WHISPERCPP_DEFAULT_BASE_URL,
 } from "@/modules/ai/config";
+import {
+  applyLanguagePreference,
+  isLanguagePreference,
+  SYSTEM_LANGUAGE,
+} from "@/i18n";
 import type { KeyBinding, ShortcutId } from "@/modules/shortcuts/shortcuts";
 import { emit, listen, type UnlistenFn } from "@tauri-apps/api/event";
 import { LazyStore } from "@tauri-apps/plugin-store";
 
 export type ThemePref = "system" | "light" | "dark";
 
-export const DEFAULT_THEME_ID = "terax-default";
+export const DEFAULT_THEME_ID = "lithe-default";
 
 export type BackgroundKind = "none" | "image";
 
@@ -111,14 +117,17 @@ export const EDITOR_THEME_LABELS: Record<EditorThemeId, string> = {
   "xcode-light": "Xcode Light",
 };
 
+export type Language = string;
+
 export type Preferences = {
   theme: ThemePref;
   themeId: string;
+  language: Language;
   backgroundKind: BackgroundKind;
   backgroundImageId: string | null;
   backgroundOpacity: number;
   backgroundBlur: number;
-  defaultModelId: ModelId;
+  defaultModelId: SelectableModelId;
   editorTheme: EditorThemePref;
   editorFontSize: number;
   customInstructions: string;
@@ -138,6 +147,7 @@ export type Preferences = {
   openaiCompatibleModelId: string;
   openaiCompatibleContextLimit: number;
   customEndpoints: CustomEndpoint[];
+  ollamaCloudModels: OllamaCloudModel[];
   openrouterModelId: string;
   sttProvider: SttProvider;
   groqSttModel: string;
@@ -197,9 +207,10 @@ export type LspCustomServer = {
   rootMarkers: string[];
 };
 
-const STORE_PATH = "terax-settings.json";
+const STORE_PATH = "lithe-settings.json";
 const KEY_THEME = "theme";
 const KEY_THEME_ID = "themeId";
+const KEY_LANGUAGE = "language";
 const KEY_BG_KIND = "backgroundKind";
 const KEY_BG_IMAGE_ID = "backgroundImageId";
 const KEY_BG_OPACITY = "backgroundOpacity";
@@ -226,6 +237,7 @@ const KEY_OPENAI_COMPAT_BASE_URL = "openaiCompatibleBaseURL";
 const KEY_OPENAI_COMPAT_MODEL_ID = "openaiCompatibleModelId";
 const KEY_OPENAI_COMPAT_CONTEXT_LIMIT = "openaiCompatibleContextLimit";
 const KEY_CUSTOM_ENDPOINTS = "customEndpoints";
+const KEY_OLLAMA_CLOUD_MODELS = "ollamaCloudModels";
 const KEY_OPENROUTER_MODEL_ID = "openrouterModelId";
 const KEY_STT_PROVIDER = "sttProvider";
 const KEY_GROQ_STT_MODEL = "groqSttModel";
@@ -284,6 +296,7 @@ export const TERMINAL_SCROLLBACK_PRESETS = [
 export const DEFAULT_PREFERENCES: Preferences = {
   theme: "system",
   themeId: DEFAULT_THEME_ID,
+  language: SYSTEM_LANGUAGE,
   backgroundKind: "none",
   backgroundImageId: null,
   backgroundOpacity: 0.5,
@@ -308,6 +321,7 @@ export const DEFAULT_PREFERENCES: Preferences = {
   openaiCompatibleModelId: "",
   openaiCompatibleContextLimit: 128_000,
   customEndpoints: [],
+  ollamaCloudModels: [],
   openrouterModelId: "",
   sttProvider: DEFAULT_STT_PROVIDER,
   groqSttModel: "whisper-large-v3-turbo",
@@ -347,7 +361,7 @@ const store = new LazyStore(STORE_PATH, { defaults: {}, autoSave: 200 });
 // page lives in a separate webview, so writes there never reach the main
 // window's subscribers. Mirror every setter through a Tauri event so any
 // window can listen.
-const PREFS_CHANGED_EVENT = "terax://prefs-changed";
+const PREFS_CHANGED_EVENT = "lithe://prefs-changed";
 
 async function writePref<T>(key: string, value: T): Promise<void> {
   await store.set(key, value);
@@ -361,9 +375,38 @@ export async function loadPreferences(): Promise<Preferences> {
   const entries = await store.entries();
   const map = new Map<string, unknown>(entries);
   const get = <T>(k: string): T | undefined => map.get(k) as T | undefined;
+  const customEndpoints = (() => {
+    const stored = get<CustomEndpoint[]>(KEY_CUSTOM_ENDPOINTS);
+    if (stored && stored.length > 0) return stored;
+    return migrateLegacyCompatEndpoint(
+      get<string>(KEY_OPENAI_COMPAT_BASE_URL) ?? "",
+      get<string>(KEY_OPENAI_COMPAT_MODEL_ID) ?? "",
+      get<number>(KEY_OPENAI_COMPAT_CONTEXT_LIMIT) ?? 128_000,
+      crypto.randomUUID().slice(0, 8),
+    );
+  })();
+  const ollamaCloudModels = (
+    get<OllamaCloudModel[]>(KEY_OLLAMA_CLOUD_MODELS) ?? []
+  ).filter(
+    (model) =>
+      typeof model?.name === "string" &&
+      model.name.trim().length > 0 &&
+      (model.contextLimit === null ||
+        (typeof model.contextLimit === "number" &&
+          Number.isFinite(model.contextLimit) &&
+          model.contextLimit > 0)) &&
+      Array.isArray(model.capabilities) &&
+      model.capabilities.every((capability) => typeof capability === "string"),
+  );
   return {
     theme: get<ThemePref>(KEY_THEME) ?? DEFAULT_PREFERENCES.theme,
     themeId: get<string>(KEY_THEME_ID) ?? DEFAULT_PREFERENCES.themeId,
+    language: ((): Language => {
+      const stored = get<string>(KEY_LANGUAGE);
+      return isLanguagePreference(stored)
+        ? stored
+        : DEFAULT_PREFERENCES.language;
+    })(),
     backgroundKind:
       get<BackgroundKind>(KEY_BG_KIND) ?? DEFAULT_PREFERENCES.backgroundKind,
     backgroundImageId:
@@ -375,9 +418,10 @@ export async function loadPreferences(): Promise<Preferences> {
     backgroundBlur: clampBlur(
       get<number>(KEY_BG_BLUR) ?? DEFAULT_PREFERENCES.backgroundBlur,
     ),
-    defaultModelId: ((): ModelId => {
+    defaultModelId: ((): SelectableModelId => {
       const stored = get<string>(KEY_DEFAULT_MODEL);
-      return stored && isKnownModelId(stored)
+      return stored &&
+        isSelectableModelId(stored, customEndpoints, ollamaCloudModels)
         ? stored
         : DEFAULT_PREFERENCES.defaultModelId;
     })(),
@@ -428,16 +472,8 @@ export async function loadPreferences(): Promise<Preferences> {
     openaiCompatibleContextLimit:
       get<number>(KEY_OPENAI_COMPAT_CONTEXT_LIMIT) ??
       DEFAULT_PREFERENCES.openaiCompatibleContextLimit,
-    customEndpoints: (() => {
-      const stored = get<CustomEndpoint[]>(KEY_CUSTOM_ENDPOINTS);
-      if (stored && stored.length > 0) return stored;
-      return migrateLegacyCompatEndpoint(
-        get<string>(KEY_OPENAI_COMPAT_BASE_URL) ?? "",
-        get<string>(KEY_OPENAI_COMPAT_MODEL_ID) ?? "",
-        get<number>(KEY_OPENAI_COMPAT_CONTEXT_LIMIT) ?? 128_000,
-        crypto.randomUUID().slice(0, 8),
-      );
-    })(),
+    customEndpoints,
+    ollamaCloudModels,
     openrouterModelId:
       get<string>(KEY_OPENROUTER_MODEL_ID) ??
       DEFAULT_PREFERENCES.openrouterModelId,
@@ -450,10 +486,14 @@ export async function loadPreferences(): Promise<Preferences> {
       DEFAULT_PREFERENCES.whispercppBaseURL,
     favoriteModelIds: (
       get<string[]>(KEY_FAVORITE_MODELS) ?? DEFAULT_PREFERENCES.favoriteModelIds
-    ).filter(isKnownModelId),
+    ).filter((id) =>
+      isSelectableModelId(id, customEndpoints, ollamaCloudModels),
+    ),
     recentModelIds: (
       get<string[]>(KEY_RECENT_MODELS) ?? DEFAULT_PREFERENCES.recentModelIds
-    ).filter(isKnownModelId),
+    ).filter((id) =>
+      isSelectableModelId(id, customEndpoints, ollamaCloudModels),
+    ),
     vimMode: get<boolean>(KEY_VIM_MODE) ?? DEFAULT_PREFERENCES.vimMode,
     editorWordWrap:
       get<boolean>(KEY_EDITOR_WORD_WRAP) ?? DEFAULT_PREFERENCES.editorWordWrap,
@@ -556,6 +596,14 @@ export async function setThemeId(value: string): Promise<void> {
   await writePref(KEY_THEME_ID, value);
 }
 
+export async function setLanguage(value: Language): Promise<void> {
+  if (!isLanguagePreference(value)) {
+    throw new Error(`Unsupported language preference: ${value}`);
+  }
+  await applyLanguagePreference(value);
+  await writePref(KEY_LANGUAGE, value);
+}
+
 /** Slider stores 0..1. Actual rendered opacity is halved in SurfaceLayer
  *  so the image never exceeds 50% — keeps UI/terminal readable at any setting. */
 export const BG_OPACITY_RENDER_FACTOR = 0.5;
@@ -588,7 +636,7 @@ export async function setBackgroundBlur(value: number): Promise<void> {
   await writePref(KEY_BG_BLUR, clampBlur(value));
 }
 
-export async function setDefaultModel(value: ModelId): Promise<void> {
+export async function setDefaultModel(value: SelectableModelId): Promise<void> {
   await writePref(KEY_DEFAULT_MODEL, value);
 }
 
@@ -685,6 +733,12 @@ export async function setCustomEndpoints(
   value: CustomEndpoint[],
 ): Promise<void> {
   await writePref(KEY_CUSTOM_ENDPOINTS, value);
+}
+
+export async function setOllamaCloudModels(
+  value: OllamaCloudModel[],
+): Promise<void> {
+  await writePref(KEY_OLLAMA_CLOUD_MODELS, value);
 }
 
 export async function setOpenrouterModelId(value: string): Promise<void> {
@@ -859,6 +913,7 @@ export async function onPreferencesChange(
   const map: Record<string, PrefKey> = {
     [KEY_THEME]: "theme",
     [KEY_THEME_ID]: "themeId",
+    [KEY_LANGUAGE]: "language",
     [KEY_BG_KIND]: "backgroundKind",
     [KEY_BG_IMAGE_ID]: "backgroundImageId",
     [KEY_BG_OPACITY]: "backgroundOpacity",
@@ -883,6 +938,7 @@ export async function onPreferencesChange(
     [KEY_OPENAI_COMPAT_MODEL_ID]: "openaiCompatibleModelId",
     [KEY_OPENAI_COMPAT_CONTEXT_LIMIT]: "openaiCompatibleContextLimit",
     [KEY_CUSTOM_ENDPOINTS]: "customEndpoints",
+    [KEY_OLLAMA_CLOUD_MODELS]: "ollamaCloudModels",
     [KEY_OPENROUTER_MODEL_ID]: "openrouterModelId",
     [KEY_STT_PROVIDER]: "sttProvider",
     [KEY_GROQ_STT_MODEL]: "groqSttModel",
@@ -936,7 +992,7 @@ export async function onPreferencesChange(
 
 // API key changes are stored in OS keychain (not the prefs store),
 // so we broadcast via a Tauri event for cross-window listeners.
-const KEYS_CHANGED_EVENT = "terax://ai-keys-changed";
+const KEYS_CHANGED_EVENT = "lithe://ai-keys-changed";
 
 export async function emitKeysChanged(): Promise<void> {
   await emit(KEYS_CHANGED_EVENT);

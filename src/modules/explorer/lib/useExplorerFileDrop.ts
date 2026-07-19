@@ -3,6 +3,7 @@ import { getCurrentWebview } from "@tauri-apps/api/webview";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { currentWorkspaceEnv } from "@/modules/workspace";
+import i18n from "@/i18n";
 
 type Options = {
   rootPath: string | null;
@@ -75,14 +76,18 @@ export function useExplorerFileDrop({ rootPath, isDir, onCopied }: Options) {
             workspace: currentWorkspaceEnv(),
           })
             .then(() => onCopied(dir))
-            .catch((err) => toast.error(`Copy failed: ${String(err)}`));
+            .catch((err) =>
+              toast.error(i18n.t("editor:copyFailed", { error: String(err) })),
+            );
         }
       })
       .then((fn) => {
         if (disposed) fn();
         else unlisten = fn;
       })
-      .catch((err) => console.error("[terax] explorer drop listen failed:", err));
+      .catch((err) =>
+        console.error("[lithe] explorer drop listen failed:", err),
+      );
 
     return () => {
       disposed = true;

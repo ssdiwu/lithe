@@ -2,7 +2,7 @@ import { getCurrentWebview } from "@tauri-apps/api/webview";
 import { useEffect } from "react";
 import { useTerminalDropStore } from "./dropStore";
 import { formatDroppedPaths } from "./quoteShellPath";
-import { pasteIntoLeaf } from "./rendererPool";
+import { insertTextIntoLeaf } from "./useTerminalSession";
 
 // Tauri reports the drop point in physical pixels on some platforms and logical
 // on others; only scale down when it overflows the logical viewport.
@@ -46,7 +46,7 @@ export function useTerminalFileDrop(): void {
           if (!p.paths.length) return;
           const leafId = leafIdAt(p.position.x, p.position.y);
           if (leafId !== null) {
-            pasteIntoLeaf(leafId, formatDroppedPaths(p.paths));
+            insertTextIntoLeaf(leafId, formatDroppedPaths(p.paths));
           }
         }
       })
@@ -54,7 +54,7 @@ export function useTerminalFileDrop(): void {
         if (disposed) fn();
         else unlisten = fn;
       })
-      .catch((err) => console.error("[terax] drag-drop listen failed:", err));
+      .catch((err) => console.error("[lithe] drag-drop listen failed:", err));
 
     return () => {
       disposed = true;

@@ -1,6 +1,7 @@
 import "@xterm/xterm/css/xterm.css";
 import "./styles/globals.css";
 
+import { initI18n } from "./i18n";
 import { invoke } from "@tauri-apps/api/core";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import ReactDOM from "react-dom/client";
@@ -12,7 +13,9 @@ if (USE_CUSTOM_WINDOW_CONTROLS) {
   document.documentElement.dataset.chrome = "borderless";
 }
 
-// Render-instrumentation overlay, opt-in: `VITE_REACT_SCAN=true pnpm dev`.
+await initI18n();
+
+// Render-instrumentation overlay, opt-in: `pnpm dev:profile`.
 // Dev-only dynamic import so it never reaches the production bundle.
 if (import.meta.env.DEV && import.meta.env.VITE_REACT_SCAN === "true") {
   const { scan } = await import("react-scan");

@@ -1,8 +1,21 @@
-const DB_NAME = "terax-bg-images";
+import i18n from "@/i18n";
+
+const DB_NAME = "lithe-bg-images";
 const STORE = "images";
 const VERSION = 1;
 
 let dbPromise: Promise<IDBDatabase> | null = null;
+
+function backgroundMessage(
+  key: string,
+  defaultValue: string,
+  values: Record<string, unknown> = {},
+): string {
+  return i18n.t(`settings:themes.background.${key}`, {
+    defaultValue,
+    ...values,
+  });
+}
 
 function openDb(): Promise<IDBDatabase> {
   if (dbPromise) return dbPromise;
@@ -19,7 +32,15 @@ function openDb(): Promise<IDBDatabase> {
       resolve(db);
     };
     req.onerror = () => reject(req.error);
-    req.onblocked = () => reject(new Error("IndexedDB blocked by another tab"));
+    req.onblocked = () =>
+      reject(
+        new Error(
+          backgroundMessage(
+            "storageBlocked",
+            "Image storage is blocked by another Lithe window.",
+          ),
+        ),
+      );
   }).catch((e) => {
     if (dbPromise === p) dbPromise = null;
     throw e;
@@ -41,7 +62,10 @@ export async function putBgImage(id: string, blob: Blob): Promise<void> {
   } catch (e) {
     if (e instanceof DOMException && e.name === "QuotaExceededError") {
       throw new Error(
-        "Not enough storage to save this image. Remove unused themes or backgrounds and try again.",
+        backgroundMessage(
+          "storageFull",
+          "Not enough storage to save this image. Remove unused themes or backgrounds and try again.",
+        ),
       );
     }
     throw e;
@@ -89,20 +113,32 @@ async function isAnimated(file: File): Promise<boolean> {
   );
   if (
     head.length < 30 ||
-    head[0] !== 0x52 || head[1] !== 0x49 || head[2] !== 0x46 || head[3] !== 0x46 ||
-    head[8] !== 0x57 || head[9] !== 0x45 || head[10] !== 0x42 || head[11] !== 0x50
-  ) return false;
+    head[0] !== 0x52 ||
+    head[1] !== 0x49 ||
+    head[2] !== 0x46 ||
+    head[3] !== 0x46 ||
+    head[8] !== 0x57 ||
+    head[9] !== 0x45 ||
+    head[10] !== 0x42 ||
+    head[11] !== 0x50
+  )
+    return false;
   if (
-    head[12] === 0x56 && head[13] === 0x50 && head[14] === 0x38 && head[15] === 0x58
+    head[12] === 0x56 &&
+    head[13] === 0x50 &&
+    head[14] === 0x38 &&
+    head[15] === 0x58
   ) {
     return (head[20] & 0x02) !== 0;
   }
   return false;
 }
 
-export async function importBgImageFromFile(file: File): Promise<{ id: string; blob: Blob }> {
+export async function importBgImageFromFile(
+  file: File,
+): Promise<{ id: string; blob: Blob }> {
   if (!file.type.startsWith("image/")) {
-    throw new Error("This file isn't an image.");
+    throw new Error(backgroundMessage("notImage", "This file isn't an image."));
   }
   const id = crypto.randomUUID();
   const animated = await isAnimated(file);
@@ -111,8 +147,16 @@ export async function importBgImageFromFile(file: File): Promise<{ id: string; b
     const limitMb = Math.round(limit / 1024 / 1024);
     throw new Error(
       animated
-        ? `Animated images are limited to ${limitMb} MB to keep things smooth. This one is ${formatBytes(file.size)}.`
-        : `Images are limited to ${limitMb} MB. This one is ${formatBytes(file.size)}.`,
+        ? backgroundMessage(
+            "animatedTooLarge",
+            "Animated images are limited to {{limit}} MB to keep things smooth. This one is {{size}}.",
+            { limit: limitMb, size: formatBytes(file.size) },
+          )
+        : backgroundMessage(
+            "imageTooLarge",
+            "Images are limited to {{limit}} MB. This one is {{size}}.",
+            { limit: limitMb, size: formatBytes(file.size) },
+          ),
     );
   }
   if (animated) {
@@ -124,7 +168,12 @@ export async function importBgImageFromFile(file: File): Promise<{ id: string; b
   try {
     bitmap = await createImageBitmap(file);
   } catch {
-    throw new Error("This image couldn't be decoded. Try a different file.");
+    throw new Error(
+      backgroundMessage(
+        "decodeFailed",
+        "This image couldn't be decoded. Try a different file.",
+      ),
+    );
   }
   const { width, height } = bitmap;
   const scale = Math.min(1, MAX_DIM / Math.max(width, height));
@@ -147,7 +196,14 @@ async function encodeJpeg(
   if (typeof OffscreenCanvas !== "undefined") {
     const off = new OffscreenCanvas(w, h);
     const ctx = off.getContext("2d");
-    if (!ctx) throw new Error("offscreen 2D context unavailable");
+    if (!ctx) {
+      throw new Error(
+        backgroundMessage(
+          "encodeUnavailable",
+          "Image encoding is unavailable in this environment.",
+        ),
+      );
+    }
     ctx.drawImage(bitmap, 0, 0, w, h);
     return off.convertToBlob({ type: "image/jpeg", quality: JPEG_QUALITY });
   }
@@ -155,12 +211,29 @@ async function encodeJpeg(
   canvas.width = w;
   canvas.height = h;
   const ctx = canvas.getContext("2d");
-  if (!ctx) throw new Error("canvas 2D context unavailable");
+  if (!ctx) {
+    throw new Error(
+      backgroundMessage(
+        "encodeUnavailable",
+        "Image encoding is unavailable in this environment.",
+      ),
+    );
+  }
   ctx.drawImage(bitmap, 0, 0, w, h);
   try {
     return await new Promise<Blob>((resolve, reject) => {
       canvas.toBlob(
-        (b) => (b ? resolve(b) : reject(new Error("failed to encode image"))),
+        (b) =>
+          b
+            ? resolve(b)
+            : reject(
+                new Error(
+                  backgroundMessage(
+                    "encodeFailed",
+                    "Failed to encode the image.",
+                  ),
+                ),
+              ),
         "image/jpeg",
         JPEG_QUALITY,
       );

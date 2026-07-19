@@ -123,7 +123,7 @@ fn ensure_started(state: &FsWatchState, app: &AppHandle) -> Result<(), String> {
 
     let app = app.clone();
     std::thread::Builder::new()
-        .name("terax-fs-watch".into())
+        .name("lithe-fs-watch".into())
         .spawn(move || drain_loop(rx, app))
         .map_err(|e| e.to_string())?;
 
@@ -218,7 +218,8 @@ fn prepare_add(
         .filter_map(|raw| {
             let resolved = resolve_path(&raw, workspace);
             let canonical = std::fs::canonicalize(&resolved).ok()?;
-            if !canonical.is_dir() || is_skipped(&canonical) || !registry.is_authorized(&canonical) {
+            if !canonical.is_dir() || is_skipped(&canonical) || !registry.is_authorized(&canonical)
+            {
                 return None;
             }
             Some(canonical)

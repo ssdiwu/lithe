@@ -1,3 +1,4 @@
+import { useTranslation } from "@/i18n";
 import { resolveFontFamily } from "@/lib/fonts";
 import { fmtShortcut, MOD_KEY } from "@/lib/platform";
 import { cn } from "@/lib/utils";
@@ -10,6 +11,7 @@ import {
   setLeafDraft,
   setLeafInputActivity,
   setLeafInputFocus,
+  setLeafInputInsert,
 } from "../lib/useTerminalSession";
 import {
   historyCommands,
@@ -41,6 +43,7 @@ export default function ShellInput({
   onInterrupt,
   getCwd,
 }: Props) {
+  const { t } = useTranslation("terminal");
   const hostRef = useRef<HTMLDivElement>(null);
   const handleRef = useRef<ShellEditorHandle | null>(null);
   const commandsRef = useRef<string[]>([]);
@@ -75,7 +78,9 @@ export default function ShellInput({
       parent: host,
       fontFamily: fontRef.current.fontFamily,
       fontSize: fontRef.current.fontSize,
-      placeholderText: `Run a command  -  ↑ history  ${fmtShortcut(MOD_KEY, "U")} switch to AI`,
+      placeholderText: t("inputPlaceholder", {
+        shortcut: fmtShortcut(MOD_KEY, "U"),
+      }),
       commandNames: () => commandsRef.current,
       getCwd: () => cbRef.current.getCwd(),
       onChange: (text) =>
@@ -99,13 +104,14 @@ export default function ShellInput({
       handle.destroy();
       handleRef.current = null;
     };
-  }, []);
+  }, [t]);
 
   // Retarget the single editor to the active leaf: register its focus callback
   // and swap drafts so each leaf keeps its own unsent command. New or switched
   // tabs land with the cursor already in the input.
   useEffect(() => {
     setLeafInputFocus(leafId, () => handleRef.current?.focus());
+    setLeafInputInsert(leafId, (text) => handleRef.current?.insertText(text));
     handleRef.current?.setValue(getLeafDraft(leafId));
     requestAnimationFrame(() => {
       if (focusableRef.current && leafIdRef.current === leafId) {
@@ -117,6 +123,7 @@ export default function ShellInput({
       setLeafDraft(leafId, value);
       setLeafInputActivity(leafId, value.length > 0);
       setLeafInputFocus(leafId, null);
+      setLeafInputInsert(leafId, null);
     };
   }, [leafId]);
 

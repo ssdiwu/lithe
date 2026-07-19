@@ -1,3 +1,4 @@
+import i18n from "@/i18n";
 import { invoke } from "@tauri-apps/api/core";
 import {
   getProvider,
@@ -21,6 +22,7 @@ export const EMPTY_PROVIDER_KEYS: ProviderKeys = {
   deepseek: null,
   mistral: null,
   openrouter: null,
+  "ollama-cloud": null,
   "openai-compatible": null,
   lmstudio: null,
   mlx: null,
@@ -42,10 +44,21 @@ export async function getKey(provider: ProviderId): Promise<string | null> {
 
 export async function setKey(provider: ProviderId, key: string): Promise<void> {
   if (!providerSupportsKey(provider)) {
-    throw new Error(`${provider} does not use an API key`);
+    throw new Error(
+      i18n.t("settings:models.card.providerDoesNotUseKey", {
+        defaultValue: "{{provider}} does not use an API key",
+        provider,
+      }),
+    );
   }
   const trimmed = key.trim();
-  if (!trimmed) throw new Error("API key is empty");
+  if (!trimmed) {
+    throw new Error(
+      i18n.t("settings:models.card.keyRequired", {
+        defaultValue: "API key is empty",
+      }),
+    );
+  }
   await invoke("secrets_set", {
     service: KEYRING_SERVICE,
     account: getProvider(provider).keyringAccount,
@@ -114,7 +127,13 @@ export async function setCustomEndpointKey(
   key: string,
 ): Promise<void> {
   const trimmed = key.trim();
-  if (!trimmed) throw new Error("API key is empty");
+  if (!trimmed) {
+    throw new Error(
+      i18n.t("settings:models.card.keyRequired", {
+        defaultValue: "API key is empty",
+      }),
+    );
+  }
   await invoke("secrets_set", {
     service: KEYRING_SERVICE,
     account: compatKeyringAccount(endpointId),

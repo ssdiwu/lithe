@@ -1,3 +1,4 @@
+import { useTranslation } from "@/i18n";
 import { cn } from "@/lib/utils";
 import { AiInputBarConnect } from "@/modules/ai";
 import { Chip } from "@/modules/ai/components/Chip";
@@ -26,7 +27,7 @@ const AiComposerInput = lazy(() =>
   })),
 );
 
-export const TOGGLE_BLOCK_INPUT_EVENT = "terax:toggle-block-input";
+export const TOGGLE_BLOCK_INPUT_EVENT = "lithe:toggle-block-input";
 
 type Props = {
   isBlockTab: boolean;
@@ -51,6 +52,7 @@ export function WorkspaceInputBar({
   keysLoaded,
   onConnect,
 }: Props) {
+  const { t } = useTranslation("common");
   const c = useComposer();
   const { resolvedMode, themeId, customThemes } = useTheme();
   const themeKey = `${resolvedMode}:${themeId}:${customThemes.length}`;
@@ -114,7 +116,11 @@ export function WorkspaceInputBar({
         </Chip>
       )}
       {branch && (
-        <Chip tone="violet" icon={GitBranchIcon} title={`Branch: ${branch}`}>
+        <Chip
+          tone="violet"
+          icon={GitBranchIcon}
+          title={t("branch", { name: branch })}
+        >
           {branch}
         </Chip>
       )}
@@ -187,7 +193,7 @@ export function WorkspaceInputBar({
     <div
       data-ai-input-bar
       data-state={open ? "open" : "closed"}
-      className="terax-reveal"
+      className="lithe-reveal"
       aria-hidden={!open}
     >
       <div>{content}</div>
@@ -202,6 +208,8 @@ function ModeToggle({
   mode: "shell" | "ai";
   onChange: (next: "shell" | "ai") => void;
 }) {
+  const { t } = useTranslation("terminal");
+
   return (
     <div className="relative grid shrink-0 grid-cols-2 rounded-md p-0.5 text-[10.5px] ring-1 ring-inset ring-border/35">
       <span
@@ -214,13 +222,13 @@ function ModeToggle({
       <SegButton
         active={mode === "shell"}
         icon={TerminalIcon}
-        label="Shell"
+        label={t("modeShell")}
         onClick={() => onChange("shell")}
       />
       <SegButton
         active={mode === "ai"}
         icon={AiContentGenerator02Icon}
-        label="AI"
+        label={t("modeAi")}
         onClick={() => onChange("ai")}
       />
     </div>

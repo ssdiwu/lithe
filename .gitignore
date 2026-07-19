@@ -11,7 +11,16 @@ node_modules
 dist
 dist-ssr
 *.local
+.env
+.env.*
+!.env.example
 stats.html
+
+# Signing and notarization credentials
+*.p8
+*.p12
+*.cer
+*.mobileprovision
 
 # Editor directories and files
 .vscode/*

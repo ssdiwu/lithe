@@ -119,11 +119,12 @@ reviews:
     - path: ".github/workflows/**"
       instructions: >-
         Release pipeline is high blast radius. Flag anything that could break the
-        auto-updater signature flow, latest.json, code signing, or cross-platform
-        artifact production. A broken release affects every user's auto-update.
+        draft-release boundary, code signing, notarization, or cross-platform
+        artifact production. Lithe has no automatic updater; flag any change that
+        silently reintroduces one or consumes Terax release artifacts.
     - path: "**/*.{md,mdx}"
       instructions: >-
-        Only flag substance, not style. Terax is positioned terminal-first; flag
+        Only flag substance, not style. Lithe is positioned terminal-first; flag
         README or marketing rewrites that reframe it as an IDE or generic developer
         environment.
 

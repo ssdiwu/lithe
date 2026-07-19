@@ -57,8 +57,10 @@ pub async fn pty_open(
     let cwd = user_spawn_cwd_or_home(&registry, cwd.as_deref(), &workspace);
     let id = state.next_id.fetch_add(1, Ordering::Relaxed);
     let session = tauri::async_runtime::spawn_blocking(move || {
-        session::spawn(id, app, cols, rows, cwd, workspace, blocks, shell, on_data, on_exit)
-            .map(|(s, _)| s)
+        session::spawn(
+            id, app, cols, rows, cwd, workspace, blocks, shell, on_data, on_exit,
+        )
+        .map(|(s, _)| s)
     })
     .await
     .map_err(|e| {
@@ -83,7 +85,7 @@ pub async fn pty_open(
     if exited {
         if let Some(s) = state.take(id) {
             thread::Builder::new()
-                .name(format!("terax-pty-drop-{id}"))
+                .name(format!("lithe-pty-drop-{id}"))
                 .spawn(move || session::drop_session(s))
                 .expect("spawn pty drop thread");
         }
@@ -180,7 +182,7 @@ pub fn pty_close(state: tauri::State<PtyState>, id: u32) -> Result<(), String> {
         // Detached: on Windows `ClosePseudoConsole` can block until conhost
         // drains, which would freeze this Tauri worker thread and stall IPC.
         thread::Builder::new()
-            .name(format!("terax-pty-drop-{id}"))
+            .name(format!("lithe-pty-drop-{id}"))
             .spawn(move || {
                 let t0 = std::time::Instant::now();
                 session::drop_session(s);
@@ -250,8 +252,7 @@ fn shell_has_children(shell_pid: u32) -> bool {
     use std::mem::{size_of, zeroed};
     use windows_sys::Win32::Foundation::{CloseHandle, INVALID_HANDLE_VALUE};
     use windows_sys::Win32::System::Diagnostics::ToolHelp::{
-        CreateToolhelp32Snapshot, Process32First, Process32Next, PROCESSENTRY32,
-        TH32CS_SNAPPROCESS,
+        CreateToolhelp32Snapshot, Process32First, Process32Next, PROCESSENTRY32, TH32CS_SNAPPROCESS,
     };
     unsafe {
         let snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
@@ -291,7 +292,7 @@ pub fn pty_close_all(state: tauri::State<PtyState>) -> Result<usize, String> {
             log::debug!("pty_close_all: kill id={id} returned {e}");
         }
         thread::Builder::new()
-            .name(format!("terax-pty-drop-{id}"))
+            .name(format!("lithe-pty-drop-{id}"))
             .spawn(move || session::drop_session(s))
             .expect("spawn pty drop thread");
     }

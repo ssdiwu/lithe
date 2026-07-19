@@ -13,6 +13,7 @@ import {
   type ViewUpdate,
 } from "@codemirror/view";
 import { openUrl } from "@tauri-apps/plugin-opener";
+import i18n from "@/i18n";
 import { LANGUAGES } from "./languageDefinitions";
 
 // Fence-info strings (```ts, ```python) resolve against the same lazy
@@ -22,7 +23,7 @@ let mdCodeLanguages: LanguageDescription[] | null = null;
 export function markdownCodeLanguages(): LanguageDescription[] {
   if (mdCodeLanguages) return mdCodeLanguages;
   mdCodeLanguages = LANGUAGES.filter(
-    (l) => l.name !== "Markdown" && l.name !== "Terax Theme",
+    (l) => l.name !== "Markdown" && l.name !== "Lithe Theme",
   ).map((l) =>
     LanguageDescription.of({
       name: l.name,
@@ -45,7 +46,7 @@ const urlMatcher = new MatchDecorator({
   regexp: URL_RE,
   decoration: Decoration.mark({
     class: "cm-md-url",
-    attributes: { title: "Cmd/Ctrl+Click to open" },
+    attributes: { title: i18n.t("editor:openLinkHint") },
   }),
 });
 

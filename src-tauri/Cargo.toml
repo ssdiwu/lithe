@@ -1,9 +1,11 @@
 [package]
-name = "terax"
-version = "0.8.5"
-description = "Terax — an open-source AI-native terminal emulator"
-authors = ["crynta"]
+name = "lithe"
+version = "0.1.0"
+description = "Lithe, an open-source terminal-first AI-native developer workspace"
+authors = ["Crynta", "Lithe contributors"]
 license = "Apache-2.0"
+repository = "https://github.com/ssdiwu/lithe"
+homepage = "https://github.com/ssdiwu/lithe"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -12,7 +14,7 @@ edition = "2021"
 # The `_lib` suffix may seem redundant but it is necessary
 # to make the lib name unique and wouldn't conflict with the bin name.
 # This seems to be only an issue on Windows, see https://github.com/rust-lang/cargo/issues/8519
-name = "terax_lib"
+name = "lithe_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
@@ -36,7 +38,6 @@ shared_child = "1"
 tauri-plugin-log = "2"
 tauri-plugin-os = "2"
 tauri-plugin-store = "2"
-tauri-plugin-process = "2"
 tauri-plugin-notification = "2"
 reqwest = { version = "0.12", default-features = false, features = [
 	"rustls-tls",
@@ -83,7 +84,6 @@ windows-sys = { version = "0.61", features = [
 
 [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
 tauri-plugin-autostart = "2"
-tauri-plugin-updater = "2"
 tauri-plugin-window-state = "2"
 
 [profile.dev]

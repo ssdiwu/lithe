@@ -1,10 +1,11 @@
 import { usePreferencesStore } from "@/modules/settings/preferences";
+import i18n from "@/i18n";
 import { currentWorkspaceEnv } from "@/modules/workspace";
 import type { Extension } from "@codemirror/state";
 import type { EditorView } from "@codemirror/view";
 import { invoke } from "@tauri-apps/api/core";
 import { toast } from "sonner";
-import type { TeraxLspClient } from "./client";
+import type { LitheLspClient } from "./client";
 import { detectBinary } from "./detect";
 import { getLspNavigator } from "./navigator";
 import { type LspPreset, serverForLanguage } from "./presets";
@@ -24,7 +25,7 @@ type Managed = {
   key: string;
   preset: LspPreset;
   root: string;
-  client: TeraxLspClient;
+  client: LitheLspClient;
   transport: TauriLspTransport;
   refs: Map<string, number>;
   idleTimer: ReturnType<typeof setTimeout> | null;
@@ -181,13 +182,13 @@ async function createSession(
   const store = useLspRuntimeStore.getState();
   store.upsertSession({ key, presetId: preset.id, root, status: "starting" });
 
-  const [{ TauriLspTransport }, { TeraxLspClient }] = await Promise.all([
+  const [{ TauriLspTransport }, { LitheLspClient }] = await Promise.all([
     import("./transport"),
     import("./client"),
   ]);
 
-  if (TeraxLspClient.hostPid === null) {
-    TeraxLspClient.hostPid = await invoke<number>("lsp_host_pid").catch(
+  if (LitheLspClient.hostPid === null) {
+    LitheLspClient.hostPid = await invoke<number>("lsp_host_pid").catch(
       () => null,
     );
   }
@@ -204,14 +205,14 @@ async function createSession(
   } catch (e) {
     recordCrash(key);
     store.removeSession(key, preset.id);
-    toast.error(`${preset.name} language server failed to start`, {
+    toast.error(i18n.t("lsp:failedToStart", { name: preset.name }), {
       description: String(e),
     });
     return null;
   }
 
   const rootUri = pathToFileUri(root);
-  const client = new TeraxLspClient({
+  const client = new LitheLspClient({
     transport,
     rootUri,
     workspaceFolders: [{ uri: rootUri, name: basename(root) }],
@@ -275,7 +276,7 @@ function handleServerExit(key: string): void {
       Array.from({ length: MAX_CRASHES }, () => Date.now()),
     );
     useLspRuntimeStore.getState().setFailed(managed.preset.id, info.reason);
-    toast.error(`${managed.preset.name} language server stopped`, {
+    toast.error(i18n.t("lsp:stopped", { name: managed.preset.name }), {
       description: info.reason,
     });
     return;
@@ -286,15 +287,15 @@ function handleServerExit(key: string): void {
       .getState()
       .setFailed(
         managed.preset.id,
-        tail ? tail.slice(-300) : "The server kept crashing.",
+        tail ? tail.slice(-300) : i18n.t("lsp:serverKeptCrashing"),
       );
-    toast.error(`${managed.preset.name} language server keeps crashing`, {
-      description: tail ? tail.slice(-300) : "Giving up for this workspace.",
+    toast.error(i18n.t("lsp:keepsCrashing", { name: managed.preset.name }), {
+      description: tail ? tail.slice(-300) : i18n.t("lsp:givingUp"),
     });
     return;
   }
   if (tail) {
-    toast.error(`${managed.preset.name} language server exited`, {
+    toast.error(i18n.t("lsp:exited", { name: managed.preset.name }), {
       description: tail.slice(-300),
     });
   }

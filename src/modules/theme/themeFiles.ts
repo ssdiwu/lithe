@@ -1,3 +1,4 @@
+import i18n from "@/i18n";
 import { currentWorkspaceEnv } from "@/modules/workspace";
 import { invoke } from "@tauri-apps/api/core";
 import { emit, listen, type UnlistenFn } from "@tauri-apps/api/event";
@@ -5,15 +6,19 @@ import { appConfigDir, join } from "@tauri-apps/api/path";
 import type { Theme } from "./types";
 import { validateTheme, type ValidationResult } from "./validateTheme";
 
-const THEME_FILE_EXT = ".terax-theme";
-const THEME_EDIT_EVENT = "terax://theme-edit";
+const THEME_FILE_EXT = ".lithe-theme";
+const LEGACY_THEME_FILE_EXT = ".terax-theme";
+const THEME_EDIT_EVENT = "lithe://theme-edit";
 
 export type ThemeEditRequest =
   | { action: "create" }
   | { action: "edit"; id: string };
 
 export function isThemeFilePath(path: string): boolean {
-  return path.toLowerCase().endsWith(THEME_FILE_EXT);
+  const lower = path.toLowerCase();
+  return (
+    lower.endsWith(THEME_FILE_EXT) || lower.endsWith(LEGACY_THEME_FILE_EXT)
+  );
 }
 
 async function themesDir(): Promise<string> {
@@ -56,10 +61,12 @@ export function parseThemeFile(text: string): ValidationResult {
   let parsed: unknown;
   try {
     parsed = JSON.parse(text);
-  } catch (e) {
+  } catch {
     return {
       ok: false,
-      error: e instanceof Error ? e.message : "invalid JSON",
+      error: i18n.t("settings:themes.validation.invalidJson", {
+        defaultValue: "Invalid JSON",
+      }),
     };
   }
   return validateTheme(parsed);
@@ -69,8 +76,12 @@ export function starterTheme(): Theme {
   const id = `my-theme-${crypto.randomUUID().slice(0, 8)}`;
   return {
     id,
-    name: "My Theme",
-    description: "Custom theme.",
+    name: i18n.t("settings:themes.validation.starterName", {
+      defaultValue: "My Theme",
+    }),
+    description: i18n.t("settings:themes.validation.starterDescription", {
+      defaultValue: "Custom theme.",
+    }),
     variants: {
       dark: {
         colors: {

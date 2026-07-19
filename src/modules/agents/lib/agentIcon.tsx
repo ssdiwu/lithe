@@ -47,10 +47,13 @@ export function AgentIcon({
   if (agent.toLowerCase() === "pi") {
     return <PiIcon size={size} className={className} />;
   }
-  if (agent.toLowerCase().includes("terax")) {
+  if (
+    agent.toLowerCase().includes("lithe") ||
+    agent.toLowerCase().includes("terax")
+  ) {
     return (
       <img
-        src="/logo.png"
+        src="/lithe-icon.svg"
         alt=""
         width={size}
         height={size}

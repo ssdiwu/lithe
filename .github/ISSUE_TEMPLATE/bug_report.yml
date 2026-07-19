@@ -5,15 +5,15 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to report a bug. Please fill in the fields below — it makes triage much faster.
+        Thanks for taking the time to report a bug. Please fill in the fields below; it makes triage much faster.
 
-        For **security issues**, do NOT open an issue. See [SECURITY.md](https://github.com/crynta/Terax-AI/blob/main/SECURITY.md).
+        For **security issues**, do NOT open a public issue. Follow the repository's SECURITY.md policy.
 
   - type: input
     id: version
     attributes:
-      label: Terax version
-      description: From Settings → About, or the title bar.
+      label: Lithe version
+      description: From Settings > About, or the title bar.
       placeholder: "0.5.9"
     validations:
       required: true
@@ -59,7 +59,7 @@ body:
       label: Steps to reproduce
       description: Numbered list of exact steps. The more specific, the faster we can help.
       placeholder: |
-        1. Open Terax
+        1. Open Lithe
         2. Click ...
         3. ...
     validations:

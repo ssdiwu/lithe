@@ -3,9 +3,10 @@ import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
 import { usePresence } from "@/lib/usePresence";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "@/i18n";
 import { useWorkspaceFiles } from "../hooks/useWorkspaceFiles";
 import { useComposer } from "../lib/composer";
-import { SLASH_COMMANDS } from "../lib/slashCommands";
+import { slashCommandLabel, SLASH_COMMANDS } from "../lib/slashCommands";
 import { useChatStore } from "../store/chatStore";
 import { useSnippetsStore } from "../store/snippetsStore";
 import { AgentSwitcher } from "./AgentSwitcher";
@@ -59,6 +60,7 @@ function detectFileTrigger(value: string, caret: number): FileTrigger | null {
 }
 
 export function AiComposerInput() {
+  const { t } = useTranslation("ai");
   const c = useComposer();
   const snippets = useSnippetsStore((s) => s.snippets);
   const workspaceRoot = useChatStore((s) => s.live.getWorkspaceRoot());
@@ -102,7 +104,10 @@ export function AiComposerInput() {
     const q = trigger.query;
     const cmdItems: PickerItem[] = Object.values(SLASH_COMMANDS)
       .filter(
-        (c) => !q || c.name.includes(q) || c.label.toLowerCase().includes(q),
+        (c) =>
+          !q ||
+          c.name.includes(q) ||
+          slashCommandLabel(c).toLowerCase().includes(q),
       )
       .map((command) => ({ kind: "command", command }));
     if (trigger.char === "/") return cmdItems;
@@ -116,7 +121,7 @@ export function AiComposerInput() {
       )
       .map((snippet) => ({ kind: "snippet", snippet }));
     return [...cmdItems, ...snipItems];
-  }, [trigger, snippets]);
+  }, [trigger, snippets, t]);
 
   const FILE_PICKER_CAP = 30;
   const filteredFiles = useMemo<string[]>(() => {
@@ -197,9 +202,9 @@ export function AiComposerInput() {
   };
 
   const voiceLabel = c.voice.recording
-    ? "Listening…"
+    ? t("composer.listening")
     : c.voice.transcribing
-      ? "Transcribing…"
+      ? t("composer.transcribing")
       : null;
   const voiceRow = usePresence(Boolean(voiceLabel), 180);
   const lastVoiceLabel = useRef("");
@@ -257,7 +262,7 @@ export function AiComposerInput() {
                   c.submit();
                 }
               }}
-              placeholder="Ask Terax anything   -   # for snippets and commands, @ for files"
+              placeholder={t("composer.placeholder")}
               rows={1}
               className={cn(
                 "max-h-40 flex-1 resize-none bg-transparent text-[13px] leading-relaxed outline-none",
@@ -288,7 +293,7 @@ export function AiComposerInput() {
       </Popover>
 
       {voiceRow.mounted && (
-        <div data-state={voiceRow.state} className="terax-reveal">
+        <div data-state={voiceRow.state} className="lithe-reveal">
           <div className="flex items-center gap-1.5 px-1 text-[11px] text-muted-foreground">
             {c.voice.recording ? (
               <span className="size-1.5 animate-pulse rounded-full bg-destructive" />

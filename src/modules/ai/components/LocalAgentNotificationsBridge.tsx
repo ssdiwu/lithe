@@ -1,3 +1,4 @@
+import i18n from "@/i18n";
 import { routeAgentNotification } from "@/modules/agents/lib/route";
 import { useWindowFocus } from "@/modules/agents/lib/useWindowFocus";
 import { useAgentStore } from "@/modules/agents/store/agentStore";
@@ -5,7 +6,7 @@ import type { AgentStatus } from "@/modules/agents/lib/types";
 import { useEffect, useRef } from "react";
 import { useChatStore } from "../store/chatStore";
 
-const AGENT = "Terax";
+const AGENT = "Lithe";
 
 type RunStatus =
   | "idle"
@@ -37,9 +38,13 @@ export function LocalAgentNotificationsBridge() {
   const prev = useRef<RunStatus>(status);
 
   useEffect(() => {
-    useAgentStore.getState().setLocalAgent(
-      liveStatus(status) ? { agent: AGENT, status: liveStatus(status)! } : null,
-    );
+    useAgentStore
+      .getState()
+      .setLocalAgent(
+        liveStatus(status)
+          ? { agent: AGENT, status: liveStatus(status)! }
+          : null,
+      );
 
     const was = prev.current;
     prev.current = status;
@@ -63,11 +68,19 @@ export function LocalAgentNotificationsBridge() {
       });
 
     if (status === "awaiting-approval") {
-      fire("attention", "Terax needs your approval", "Approve a tool to continue");
+      fire(
+        "attention",
+        i18n.t("agents:local.needsApproval"),
+        i18n.t("agents:local.approveToContinue"),
+      );
     } else if (status === "error") {
-      fire("error", "Terax run failed", error ?? undefined);
+      fire("error", i18n.t("agents:local.runFailed"), error ?? undefined);
     } else if (status === "idle" && isBusy(was)) {
-      fire("finished", "Terax finished", "Your task is ready");
+      fire(
+        "finished",
+        i18n.t("agents:local.finished"),
+        i18n.t("agents:local.taskReady"),
+      );
     }
   }, [status, error]);
 

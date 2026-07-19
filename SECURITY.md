@@ -1,46 +1,40 @@
 # Security
 
-Terax runs shells, reads/writes files, and talks to AI providers, so security bugs matter. If you find one, please tell us before posting it publicly.
+Lithe runs shells, reads and writes files, and talks to AI providers, so
+security reports need careful handling.
 
 ## Reporting
 
-Email **security@terax.app**. Include:
+Do not open a public issue for a suspected vulnerability. Use GitHub's
+[private vulnerability-reporting form](https://github.com/ssdiwu/lithe/security/advisories/new).
+Keep the report private and include:
 
 - What the issue is and what it lets an attacker do
-- Steps to reproduce (a small PoC is great)
-- Version, OS, arch
-
-We'll get back to you within a few days. Once it's fixed, we'll credit you in the release notes - unless you'd rather stay anonymous.
-
-Please **don't** open a public GitHub issue for security reports.
+- Reproduction steps and a minimal proof of concept when possible
+- The Lithe version, operating system, and architecture
 
 ## Supported versions
 
-Until `1.0.0`, only the latest minor gets security fixes. See the current version in `package.json` or on the [Releases page](https://github.com/crynta/terax-ai/releases). 
+Before `1.0.0`, only the latest Lithe minor version receives security fixes.
+Lithe does not currently publish official installers or automatic updates.
 
-## What's in scope
+## In scope
 
-- The Rust backend in `src-tauri/` (PTY, FS, IPC, plugins)
-- The frontend in `src/` - anywhere untrusted input lands (terminal output, file content, AI tool results, credentials)
-- Release artifacts on GitHub and `terax.app`
-- The auto-updater
+- The Rust backend in `src-tauri/`
+- The frontend in `src/`, especially surfaces that consume untrusted input
+- Lithe-owned build and release configuration
 
-## What's not
+Report upstream dependency vulnerabilities to the relevant upstream project.
+Report Terax-specific behavior to Terax unless it is reproducible in Lithe.
 
-- Bugs in upstream deps (Tauri, xterm.js, CodeMirror, AI SDKs…) - report those upstream. We'll ship the fix once it's released.
-- Anything that needs an already-compromised machine or a local attacker with shell access
-- Older versions (`< 0.5`)
+## Security properties
 
-## What we do to keep things safe
+- API keys use the operating-system keychain where supported and the
+  `lithe-ai` service namespace.
+- Lithe has no telemetry and no automatic update channel.
+- Agent file writes and shell commands require approval.
+- The renderer has no Node.js access and can call only allow-listed Tauri
+  commands.
 
-- **API keys** live in the OS keychain via `keyring` - not on disk, not in `localStorage`, not in logs.
-- **No telemetry.** Terax only talks to the network when you ask it to (AI requests, update checks, web preview).
-- **AI tool approval.** File writes and shell commands from the agent need your OK before they run.
-- **No Node in the renderer.** The frontend only reaches the host through the allow-listed Tauri commands.
-- **Signed releases.** Updates are verified before they're applied.
-
-## What we can't promise
-
-- Terax runs whatever you (or the agent) tell it to run, with your permissions. That's kind of the point of a terminal.
-- AI providers see whatever you send them. Read their retention policies.
-- Local LLM endpoints (LM Studio, OpenAI-compatible) are trusted at the network level - only point Terax at servers you control.
+Lithe runs commands with the current user's permissions, and AI providers can
+see the content explicitly sent to them. Only configure endpoints you trust.

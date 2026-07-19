@@ -11,19 +11,24 @@ import {
   endpointIdFromCompatModel,
   getModelContextLimit,
   isCompatModelId,
+  isOllamaCloudModelId,
   LMSTUDIO_DEFAULT_BASE_URL,
   MAX_AGENT_STEPS,
   MLX_DEFAULT_BASE_URL,
   modelKeepsReasoning,
+  ollamaCloudModelNameFromId,
+  OLLAMA_CLOUD_BASE_URL,
   OLLAMA_DEFAULT_BASE_URL,
   providerNeedsKey,
   resolveModel,
   selectSystemPrompt,
   type CustomEndpoint,
+  type OllamaCloudModel,
   type ProviderId,
 } from "../config";
 import { buildTools, type ToolContext } from "../tools/tools";
 import { compactModelMessagesDetailed } from "./compact";
+import i18n from "@/i18n";
 import type { ProviderKeys, CustomEndpointKeys } from "./keyring";
 import { prepareAgentPrompt } from "./prompt";
 import { createProxyFetch } from "./proxyFetch";
@@ -32,25 +37,48 @@ const localProxyFetch = createProxyFetch({ allowPrivateNetwork: true });
 
 const TOOL_LABELS: Record<string, (input: Record<string, unknown>) => string> =
   {
-    read_file: (i) => `Reading ${shortPath(i.path)}`,
-    list_directory: (i) => `Listing ${shortPath(i.path)}`,
-    grep: (i) => `Grepping ${ellipsize(String(i.pattern ?? ""), 40)}`,
-    glob: (i) => `Globbing ${ellipsize(String(i.pattern ?? ""), 40)}`,
-    edit: (i) => `Editing ${shortPath(i.path)}`,
-    multi_edit: (i) => `Editing ${shortPath(i.path)}`,
-    write_file: (i) => `Writing ${shortPath(i.path)}`,
-    create_directory: (i) => `Creating ${shortPath(i.path)}`,
-    bash_run: (i) => `Running ${ellipsize(String(i.command ?? ""), 60)}`,
+    read_file: (i) =>
+      i18n.t("ai:agentSteps.reading", { target: shortPath(i.path) }),
+    list_directory: (i) =>
+      i18n.t("ai:agentSteps.listing", { target: shortPath(i.path) }),
+    grep: (i) =>
+      i18n.t("ai:agentSteps.grepping", {
+        target: ellipsize(String(i.pattern ?? ""), 40),
+      }),
+    glob: (i) =>
+      i18n.t("ai:agentSteps.globbing", {
+        target: ellipsize(String(i.pattern ?? ""), 40),
+      }),
+    edit: (i) => i18n.t("ai:agentSteps.editing", { target: shortPath(i.path) }),
+    multi_edit: (i) =>
+      i18n.t("ai:agentSteps.editing", { target: shortPath(i.path) }),
+    write_file: (i) =>
+      i18n.t("ai:agentSteps.writingFile", { target: shortPath(i.path) }),
+    create_directory: (i) =>
+      i18n.t("ai:agentSteps.creating", { target: shortPath(i.path) }),
+    bash_run: (i) =>
+      i18n.t("ai:agentSteps.running", {
+        target: ellipsize(String(i.command ?? ""), 60),
+      }),
     bash_background: (i) =>
-      `Spawning ${ellipsize(String(i.command ?? ""), 60)}`,
-    bash_logs: () => `Reading logs`,
-    bash_list: () => `Listing background processes`,
-    bash_kill: () => `Stopping background process`,
+      i18n.t("ai:agentSteps.spawning", {
+        target: ellipsize(String(i.command ?? ""), 60),
+      }),
+    bash_logs: () => i18n.t("ai:agentSteps.readingLogs"),
+    bash_list: () => i18n.t("ai:agentSteps.listingBackground"),
+    bash_kill: () => i18n.t("ai:agentSteps.stoppingBackground"),
     suggest_command: (i) =>
-      `Suggesting ${ellipsize(String(i.command ?? ""), 60)}`,
+      i18n.t("ai:agentSteps.suggesting", {
+        target: ellipsize(String(i.command ?? ""), 60),
+      }),
     todo_write: (i) =>
-      `Updating plan (${Array.isArray(i.todos) ? i.todos.length : 0} items)`,
-    run_subagent: (i) => `Spawning ${String(i.type ?? "subagent")} subagent`,
+      i18n.t("ai:agentSteps.updatingPlan", {
+        count: Array.isArray(i.todos) ? i.todos.length : 0,
+      }),
+    run_subagent: (i) =>
+      i18n.t("ai:agentSteps.spawningSubagent", {
+        type: String(i.type ?? "subagent"),
+      }),
   };
 
 function shortPath(p: unknown): string {
@@ -81,9 +109,7 @@ export async function buildLanguageModel(
   customEndpointKey?: string | null,
 ): Promise<LanguageModel> {
   if (providerNeedsKey(provider) && !keys[provider]) {
-    throw new Error(
-      `No API key configured for ${provider}. Open Settings → AI to add one.`,
-    );
+    throw new Error(i18n.t("ai:errors.noApiKey", { provider }));
   }
   const key = keys[provider] ?? "";
   const lmstudioURL = options.lmstudioBaseURL ?? LMSTUDIO_DEFAULT_BASE_URL;
@@ -123,8 +149,9 @@ export async function buildLanguageModel(
       break;
     }
     case "deepseek": {
-      const { createOpenAICompatible } =
-        await import("@ai-sdk/openai-compatible");
+      const { createOpenAICompatible } = await import(
+        "@ai-sdk/openai-compatible"
+      );
       built = createOpenAICompatible({
         name: "deepseek",
         baseURL: "https://api.deepseek.com",
@@ -133,8 +160,9 @@ export async function buildLanguageModel(
       break;
     }
     case "mistral": {
-      const { createOpenAICompatible } =
-        await import("@ai-sdk/openai-compatible");
+      const { createOpenAICompatible } = await import(
+        "@ai-sdk/openai-compatible"
+      );
       built = createOpenAICompatible({
         name: "mistral",
         baseURL: "https://api.mistral.ai/v1",
@@ -148,27 +176,38 @@ export async function buildLanguageModel(
       break;
     }
     case "openrouter": {
-      const { createOpenAICompatible } =
-        await import("@ai-sdk/openai-compatible");
+      const { createOpenAICompatible } = await import(
+        "@ai-sdk/openai-compatible"
+      );
       built = createOpenAICompatible({
         name: "openrouter",
         baseURL: "https://openrouter.ai/api/v1",
         apiKey: key,
         headers: {
-          "HTTP-Referer": "https://terax.ai",
-          "X-Title": "Terax",
+          "X-Title": "Lithe",
         },
+      })(resolvedModelId);
+      break;
+    }
+    case "ollama-cloud": {
+      const { createOpenAICompatible } = await import(
+        "@ai-sdk/openai-compatible"
+      );
+      built = createOpenAICompatible({
+        name: "ollama-cloud",
+        baseURL: OLLAMA_CLOUD_BASE_URL,
+        apiKey: key,
+        fetch: localProxyFetch,
       })(resolvedModelId);
       break;
     }
     case "openai-compatible": {
       if (!compatURL) {
-        throw new Error(
-          "OpenAI-compatible provider has no base URL. Set it in Settings → Models.",
-        );
+        throw new Error(i18n.t("ai:errors.compatibleBaseUrlMissing"));
       }
-      const { createOpenAICompatible } =
-        await import("@ai-sdk/openai-compatible");
+      const { createOpenAICompatible } = await import(
+        "@ai-sdk/openai-compatible"
+      );
       built = createOpenAICompatible({
         name: "openai-compatible",
         baseURL: compatURL,
@@ -178,8 +217,9 @@ export async function buildLanguageModel(
       break;
     }
     case "lmstudio": {
-      const { createOpenAICompatible } =
-        await import("@ai-sdk/openai-compatible");
+      const { createOpenAICompatible } = await import(
+        "@ai-sdk/openai-compatible"
+      );
       built = createOpenAICompatible({
         name: "lmstudio",
         baseURL: lmstudioURL,
@@ -188,8 +228,9 @@ export async function buildLanguageModel(
       break;
     }
     case "mlx": {
-      const { createOpenAICompatible } =
-        await import("@ai-sdk/openai-compatible");
+      const { createOpenAICompatible } = await import(
+        "@ai-sdk/openai-compatible"
+      );
       built = createOpenAICompatible({
         name: "mlx",
         baseURL: mlxURL,
@@ -198,8 +239,9 @@ export async function buildLanguageModel(
       break;
     }
     case "ollama": {
-      const { createOpenAICompatible } =
-        await import("@ai-sdk/openai-compatible");
+      const { createOpenAICompatible } = await import(
+        "@ai-sdk/openai-compatible"
+      );
       built = createOpenAICompatible({
         name: "ollama",
         baseURL: ollamaURL,
@@ -209,7 +251,11 @@ export async function buildLanguageModel(
     }
     default: {
       const _exhaustive: never = provider;
-      throw new Error(`Unsupported provider: ${_exhaustive as ProviderId}`);
+      throw new Error(
+        i18n.t("ai:errors.unsupportedProvider", {
+          provider: _exhaustive as ProviderId,
+        }),
+      );
     }
   }
   modelCache.set(cacheKey, built);
@@ -235,13 +281,22 @@ export function buildConfiguredLanguageModel(
   keys: ProviderKeys,
   local: LocalProviderConfig = {},
 ): Promise<LanguageModel> {
+  if (isOllamaCloudModelId(modelId)) {
+    return buildLanguageModel(
+      "ollama-cloud",
+      keys,
+      ollamaCloudModelNameFromId(modelId),
+    );
+  }
   if (isCompatModelId(modelId)) {
     const eid = endpointIdFromCompatModel(modelId);
     const ep = local.customEndpoints?.find((e) => e.id === eid);
-    if (!ep) throw new Error(`Custom endpoint not found: ${eid}`);
+    if (!ep) {
+      throw new Error(i18n.t("ai:errors.customEndpointMissing", { id: eid }));
+    }
     if (!ep.modelId.trim()) {
       throw new Error(
-        `${ep.name}: no model id set. Open Settings → Models.`,
+        i18n.t("ai:errors.endpointModelMissing", { name: ep.name }),
       );
     }
     return buildLanguageModel(
@@ -256,37 +311,27 @@ export function buildConfiguredLanguageModel(
   let resolvedId: string = m.id;
   if (m.id === "lmstudio-local") {
     if (!local.lmstudioModelId?.trim()) {
-      throw new Error(
-        "LM Studio: no model id set. Open Settings → Models and enter the model id loaded in LM Studio.",
-      );
+      throw new Error(i18n.t("ai:errors.lmstudioModelMissing"));
     }
     resolvedId = local.lmstudioModelId.trim();
   } else if (m.id === "mlx-local") {
     if (!local.mlxModelId?.trim()) {
-      throw new Error(
-        "MLX: no model id set. Open Settings → Models and enter the model id served by mlx_lm.server.",
-      );
+      throw new Error(i18n.t("ai:errors.mlxModelMissing"));
     }
     resolvedId = local.mlxModelId.trim();
   } else if (m.id === "ollama-local") {
     if (!local.ollamaModelId?.trim()) {
-      throw new Error(
-        "Ollama: no model id set. Open Settings → Models and enter the model id (e.g. the name from `ollama list`).",
-      );
+      throw new Error(i18n.t("ai:errors.ollamaModelMissing"));
     }
     resolvedId = local.ollamaModelId.trim();
   } else if (m.id === "openai-compatible-custom") {
     if (!local.openaiCompatibleModelId?.trim()) {
-      throw new Error(
-        "OpenAI-compatible: no model id set. Open Settings → Models.",
-      );
+      throw new Error(i18n.t("ai:errors.compatibleModelMissing"));
     }
     resolvedId = local.openaiCompatibleModelId.trim();
   } else if (m.id === "openrouter-custom") {
     if (!local.openrouterModelId?.trim()) {
-      throw new Error(
-        "OpenRouter: no model id set. Open Settings → Models and enter an OpenRouter model id (e.g. anthropic/claude-sonnet-5).",
-      );
+      throw new Error(i18n.t("ai:errors.openrouterModelMissing"));
     }
     resolvedId = local.openrouterModelId.trim();
   }
@@ -316,7 +361,7 @@ function buildStableSystem(
     : "";
   const memoryBlock =
     projectMemory && projectMemory.trim().length > 0
-      ? `\n\n## PROJECT — TERAX.md\n${projectMemory.trim()}`
+      ? `\n\n## PROJECT — LITHE.md\n${projectMemory.trim()}`
       : "";
   return `${base}${memoryBlock}${personaBlock}${customBlock}`;
 }
@@ -359,6 +404,7 @@ export type RunAgentOptions = {
   openaiCompatibleContextLimit?: number;
   openrouterModelId?: string;
   customEndpoints?: readonly CustomEndpoint[];
+  ollamaCloudModels?: readonly OllamaCloudModel[];
   customEndpointKeys?: CustomEndpointKeys;
   planMode?: boolean;
   projectMemory?: string | null;
@@ -382,7 +428,8 @@ export async function runAgentStream(opts: RunAgentOptions) {
     customEndpointKeys: opts.customEndpointKeys,
   });
   const endpoints = opts.customEndpoints ?? [];
-  const info = resolveModel(modelId, endpoints);
+  const ollamaCloudModels = opts.ollamaCloudModels ?? [];
+  const info = resolveModel(modelId, endpoints, ollamaCloudModels);
   const provider = info.provider;
 
   const stableSystem = buildStableSystem(
@@ -399,13 +446,17 @@ export async function runAgentStream(opts: RunAgentOptions) {
     reasoning: keepsReasoning ? "none" : "before-last-message",
     emptyMessages: "remove",
   });
-  const compatCtxOverride = isCompatModelId(modelId)
+  const dynamicCtxOverride = isCompatModelId(modelId)
     ? endpoints.find((e) => e.id === endpointIdFromCompatModel(modelId))
         ?.contextLimit
-    : opts.openaiCompatibleContextLimit;
+    : isOllamaCloudModelId(modelId)
+      ? ollamaCloudModels.find(
+          (candidate) => candidate.name === ollamaCloudModelNameFromId(modelId),
+        )?.contextLimit
+      : opts.openaiCompatibleContextLimit;
   const compact = compactModelMessagesDetailed(
     prunedHistory,
-    getModelContextLimit(modelId, compatCtxOverride),
+    getModelContextLimit(modelId, dynamicCtxOverride),
   );
   const compactedHistory = compact.messages;
   if (compact.compacted) {
@@ -437,10 +488,10 @@ export async function runAgentStream(opts: RunAgentOptions) {
           opts.onStep(
             label
               ? label((last.input ?? {}) as Record<string, unknown>)
-              : `Calling ${last.toolName}`,
+              : i18n.t("ai:agentSteps.calling", { tool: last.toolName }),
           );
         } else if (step.text) {
-          opts.onStep("Writing");
+          opts.onStep(i18n.t("ai:agentSteps.writingResponse"));
         }
       }
       if (opts.onUsage && step.usage) {

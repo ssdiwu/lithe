@@ -4,13 +4,18 @@ import {
   endpointIdFromCompatModel,
   getModelContextLimit,
   isCompatModelId,
+  isOllamaCloudModelId,
+  isSelectableModelId,
   migrateLegacyCompatEndpoint,
   modelKeepsReasoning,
   modelSupportsTemperature,
   modelUsesReasoningTokens,
   MODEL_PRICING,
+  ollamaCloudModelId,
+  ollamaCloudModelNameFromId,
   resolveModel,
   type CustomEndpoint,
+  type OllamaCloudModel,
 } from "./config";
 
 const endpoint: CustomEndpoint = {
@@ -19,6 +24,13 @@ const endpoint: CustomEndpoint = {
   baseURL: "https://api.example.com/v1",
   modelId: "llama-3.3-70b",
   contextLimit: 64_000,
+};
+
+const ollamaCloudModel: OllamaCloudModel = {
+  name: "glm-5.2",
+  contextLimit: 1_000_000,
+  capabilities: ["thinking", "completion", "tools"],
+  parameterSize: "744.4B",
 };
 
 describe("compat model id helpers", () => {
@@ -31,6 +43,26 @@ describe("compat model id helpers", () => {
   it("treats static model ids as non-compat", () => {
     expect(isCompatModelId("gpt-5.4-mini")).toBe(false);
     expect(endpointIdFromCompatModel("gpt-5.4-mini")).toBe("");
+  });
+
+  it("accepts a configured endpoint model as a persisted selection", () => {
+    const mid = compatModelIdForEndpoint(endpoint.id);
+    expect(isSelectableModelId(mid, [endpoint])).toBe(true);
+  });
+
+  it("rejects a persisted endpoint model after its endpoint is removed", () => {
+    const mid = compatModelIdForEndpoint(endpoint.id);
+    expect(isSelectableModelId(mid, [])).toBe(false);
+  });
+
+  it("rejects an endpoint until its URL and model are configured", () => {
+    const mid = compatModelIdForEndpoint(endpoint.id);
+    expect(isSelectableModelId(mid, [{ ...endpoint, modelId: "" }])).toBe(
+      false,
+    );
+    expect(isSelectableModelId(mid, [{ ...endpoint, baseURL: "" }])).toBe(
+      false,
+    );
   });
 });
 
@@ -66,6 +98,19 @@ describe("resolveModel", () => {
   it("throws on an unknown static model id", () => {
     expect(() => resolveModel("nope-not-real")).toThrow();
   });
+
+  it("resolves an Ollama Cloud catalog model without a static registry entry", () => {
+    const id = ollamaCloudModelId(ollamaCloudModel.name);
+    expect(isOllamaCloudModelId(id)).toBe(true);
+    expect(ollamaCloudModelNameFromId(id)).toBe("glm-5.2");
+    expect(resolveModel(id, [], [ollamaCloudModel])).toMatchObject({
+      id,
+      provider: "ollama-cloud",
+      label: "glm-5.2",
+      tags: ["reasoning", "tools"],
+    });
+    expect(isSelectableModelId(id, [], [ollamaCloudModel])).toBe(true);
+  });
 });
 
 describe("getModelContextLimit", () => {
@@ -76,6 +121,15 @@ describe("getModelContextLimit", () => {
 
   it("reads the static table for known models", () => {
     expect(getModelContextLimit("claude-opus-4-7")).toBe(1_000_000);
+  });
+
+  it("uses the context window fetched from Ollama Cloud", () => {
+    expect(
+      getModelContextLimit(
+        ollamaCloudModelId(ollamaCloudModel.name),
+        ollamaCloudModel.contextLimit,
+      ),
+    ).toBe(1_000_000);
   });
 
   it.each([
@@ -105,7 +159,9 @@ describe("current model pricing", () => {
 
 describe("modelKeepsReasoning", () => {
   it("keeps reasoning for compat endpoints (freeform provider)", () => {
-    const info = resolveModel(compatModelIdForEndpoint(endpoint.id), [endpoint]);
+    const info = resolveModel(compatModelIdForEndpoint(endpoint.id), [
+      endpoint,
+    ]);
     expect(modelKeepsReasoning(info)).toBe(true);
   });
 

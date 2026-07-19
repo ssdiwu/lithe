@@ -1,15 +1,17 @@
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/i18n";
 import { Loading03Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 
 function Spinner({ className, ...props }: React.ComponentProps<"svg">) {
+  const { t } = useTranslation("common");
   return (
     <HugeiconsIcon
       icon={Loading03Icon}
       // @ts-ignore
       strokeWidth={2}
       role="status"
-      aria-label="Loading"
+      aria-label={t("loading")}
       className={cn("size-4 animate-spin", className)}
       {...props}
     />

@@ -1,5 +1,6 @@
 import { PopoverContent } from "@/components/ui/popover";
 import { Spinner } from "@/components/ui/spinner";
+import { useTranslation } from "@/i18n";
 import { cn } from "@/lib/utils";
 import { fileIconUrl } from "@/modules/explorer/lib/iconResolver";
 import { useEffect, useRef } from "react";
@@ -23,6 +24,7 @@ export function FilePickerContent({
   onPick,
   onHover,
 }: Props) {
+  const { t } = useTranslation("ai");
   const itemRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const listRef = useRef<HTMLDivElement | null>(null);
 
@@ -43,20 +45,20 @@ export function FilePickerContent({
       className="w-80 overflow-hidden rounded-lg border border-border/60 bg-popover/95 p-0 shadow-xl backdrop-blur-xl"
     >
       <div className="border-b border-border/60 px-2.5 py-1.5 text-[10px] font-medium uppercase tracking-wide text-muted-foreground/70">
-        Workspace files
+        {t("picker.workspaceFiles")}
       </div>
       {!hasWorkspace ? (
         <div className="px-3 py-3 text-[11px] text-muted-foreground">
-          No workspace open
+          {t("picker.noWorkspace")}
         </div>
       ) : indexing && files.length === 0 ? (
         <div className="flex items-center gap-2 px-3 py-3 text-[11px] text-muted-foreground">
           <Spinner className="size-3" />
-          <span>Indexing workspace…</span>
+          <span>{t("picker.indexingWorkspace")}</span>
         </div>
       ) : files.length === 0 ? (
         <div className="px-3 py-3 text-[11px] text-muted-foreground">
-          No matching files
+          {t("picker.noMatchingFiles")}
         </div>
       ) : (
         <>
@@ -98,7 +100,7 @@ export function FilePickerContent({
           </div>
           {truncated && (
             <div className="border-t border-border/60 px-2.5 py-1.5 text-[10px] text-muted-foreground">
-              Workspace is large - refine your query to narrow results.
+              {t("picker.largeWorkspace")}
             </div>
           )}
         </>

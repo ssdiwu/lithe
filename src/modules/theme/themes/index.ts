@@ -7,16 +7,16 @@ import { everforest } from "./everforest";
 import { gruvbox } from "./gruvbox";
 import { kanagawa } from "./kanagawa";
 import { kanagawaDragon } from "./kanagawa-dragon";
+import { litheDefault } from "./lithe-default";
 import { nord } from "./nord";
 import { rosePine } from "./rose-pine";
 import { sage } from "./sage";
 import { solarized } from "./solarized";
-import { teraxDefault } from "./terax-default";
 import { tide } from "./tide";
 import { tokyoNight } from "./tokyo-night";
 
 const BUILTIN: Theme[] = [
-  teraxDefault,
+  litheDefault,
   claude,
   kanagawa,
   kanagawaDragon,

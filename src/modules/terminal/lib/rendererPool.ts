@@ -14,10 +14,15 @@ import {
   writeTerminalClipboard,
 } from "./terminalClipboard";
 import {
+  isTerminalImeEvent,
   terminalDeleteSequence,
   terminalLineNavigationSequence,
   terminalWordNavigationSequence,
 } from "./keymap";
+import {
+  bindTerminalImeFallback,
+  type TerminalImeBinding,
+} from "./terminalImeFallback";
 
 export const POOL_MAX_SIZE = 5;
 const FIT_DEBOUNCE_MS = 8;
@@ -51,6 +56,7 @@ export type Slot = {
   readonly searchAddon: SearchAddon;
   readonly serializeAddon: SerializeAddon;
   readonly host: HTMLDivElement;
+  readonly imeFallback: TerminalImeBinding;
   webglAddon: WebglAddon | null;
   webglCanvases: HTMLCanvasElement[];
   currentLeafId: number | null;
@@ -153,7 +159,7 @@ export function pasteIntoLeaf(leafId: number, text: string): boolean {
 function getRecycler(): HTMLDivElement {
   if (recyclerEl?.isConnected) return recyclerEl;
   const el = document.createElement("div");
-  el.setAttribute("data-terax-recycler", "");
+  el.setAttribute("data-lithe-recycler", "");
   el.style.cssText =
     "position:fixed;left:-99999px;top:-99999px;width:1024px;height:768px;overflow:hidden;pointer-events:none;contain:strict;";
   document.body.appendChild(el);
@@ -209,17 +215,30 @@ function createSlot(): Slot {
 
   const host = document.createElement("div");
   host.style.cssText = "width:100%;height:100%;";
-  host.setAttribute("data-terax-slot", String(slots.length));
+  host.setAttribute("data-lithe-slot", String(slots.length));
   getRecycler().appendChild(host);
   term.open(host);
 
-  const slot: Slot = {
+  const textarea = host.querySelector<HTMLTextAreaElement>(
+    ".xterm-helper-textarea",
+  );
+  if (!textarea) throw new Error("xterm helper textarea was not created");
+
+  let slot: Slot;
+  const imeFallback = bindTerminalImeFallback(textarea, (data) => {
+    const leafId = slot.currentLeafId;
+    if (leafId === null) return;
+    adapter?.resolveLeaf(leafId)?.writeToPty(data);
+  });
+
+  slot = {
     id: slots.length,
     term,
     fitAddon,
     searchAddon,
     serializeAddon,
     host,
+    imeFallback,
     webglAddon: null,
     webglCanvases: [],
     currentLeafId: null,
@@ -240,14 +259,10 @@ function createSlot(): Slot {
   };
 
   term.attachCustomKeyEventHandler((event) => {
-    // During IME composition the browser is assembling a multi-keystroke
-    // character (Chinese pinyin → hanzi, Korean jamo → syllable, etc.).
-    // Raw keydown events — including the Enter that commits a candidate —
-    // must NOT be forwarded to the PTY; xterm will receive the final
-    // composed string through its own compositionend handler instead.
-    // keyCode 229 ("Process") is what Chromium reports for every key
-    // pressed inside an active IME session when isComposing is not yet set.
-    if (event.isComposing || event.keyCode === 229) return false;
+    // xterm's CompositionHelper must see IME events itself. In particular,
+    // keyCode 229 is how Chromium reports punctuation entered while an IME is
+    // active; intercepting it here delays the character until a later event.
+    if (isTerminalImeEvent(event)) return true;
 
     const leafId = slot.currentLeafId;
     if (leafId === null) return false;
@@ -290,7 +305,8 @@ function createSlot(): Slot {
       if (event.type === "keydown") {
         const targetLeafId = slot.currentLeafId;
         void readTerminalClipboard().then((text) => {
-          if (text && slot.currentLeafId === targetLeafId) slot.term.paste(text);
+          if (text && slot.currentLeafId === targetLeafId)
+            slot.term.paste(text);
         });
       }
       event.preventDefault();
@@ -300,6 +316,7 @@ function createSlot(): Slot {
   });
 
   term.onData((data) => {
+    if (!imeFallback.handleNativeData(data)) return;
     const leafId = slot.currentLeafId;
     if (leafId === null) return;
     adapter?.resolveLeaf(leafId)?.writeToPty(data);
@@ -432,6 +449,7 @@ function bindSlot(slot: Slot, p: AcquireParams): void {
     slot.parked ||
     performance.now() - slot.lastUsedAt > SLOT_STALE_MS;
   const hadWebgl = !!slot.webglAddon;
+  slot.imeFallback.reset();
   slot.retainedLeafId = null;
   slot.currentLeafId = p.leafId;
   slot.lastUsedAt = performance.now();
@@ -467,7 +485,7 @@ function bindSlot(slot: Slot, p: AcquireParams): void {
       try {
         slot.term.write(p.snapshot);
       } catch (e) {
-        console.warn("[terax] snapshot replay failed:", e);
+        console.warn("[lithe] snapshot replay failed:", e);
       }
     }
     if (p.altScreen) {
@@ -636,7 +654,7 @@ function serializeSlot(slot: Slot): SerializeOutput {
     );
     snapshot = slot.serializeAddon.serialize({ scrollback: cap });
   } catch (e) {
-    console.warn("[terax] serialize failed:", e);
+    console.warn("[lithe] serialize failed:", e);
   }
   return {
     snapshot,
@@ -647,6 +665,7 @@ function serializeSlot(slot: Slot): SerializeOutput {
 }
 
 function detachSlotFromLeaf(slot: Slot, retain: boolean): void {
+  slot.imeFallback.reset();
   if (retain && slot.currentLeafId !== null) {
     slot.retainedLeafId = slot.currentLeafId;
     parkSlotHost(slot);
@@ -749,10 +768,11 @@ function disposeSlot(slot: Slot): void {
   }
   slot.oscDisposers = [];
   disposeSlotWebgl(slot);
+  slot.imeFallback.dispose();
   try {
     slot.term.dispose();
   } catch (e) {
-    console.warn("[terax] slot dispose failed:", e);
+    console.warn("[lithe] slot dispose failed:", e);
   }
   slot.host.remove();
   const i = slots.indexOf(slot);
@@ -807,7 +827,7 @@ function attachWebgl(slot: Slot): void {
     slot.webglAddon = webgl;
     slot.webglCanvases = added;
   } catch (e) {
-    console.warn("[terax-webgl] unavailable:", e);
+    console.warn("[lithe-webgl] unavailable:", e);
   }
 }
 
@@ -819,7 +839,7 @@ function disposeSlotWebgl(slot: Slot): void {
   try {
     addon.dispose();
   } catch (e) {
-    console.warn("[terax-webgl] dispose failed:", e);
+    console.warn("[lithe-webgl] dispose failed:", e);
   }
   try {
     const r = (

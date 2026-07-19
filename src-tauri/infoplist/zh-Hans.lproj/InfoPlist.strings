@@ -1,0 +1,2 @@
+NSCameraUsageDescription = "Lithe 中运行的程序想要使用摄像头。";
+NSMicrophoneUsageDescription = "Lithe 中运行的程序想要使用麦克风。";

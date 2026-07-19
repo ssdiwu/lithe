@@ -1,4 +1,5 @@
 import type { UIMessage } from "@ai-sdk/react";
+import i18n from "@/i18n";
 import { LazyStore } from "@tauri-apps/plugin-store";
 
 export type SessionMeta = {
@@ -8,7 +9,7 @@ export type SessionMeta = {
   updatedAt: number;
 };
 
-const STORE_PATH = "terax-ai-sessions.json";
+const STORE_PATH = "lithe-ai-sessions.json";
 const KEY_SESSIONS = "sessions";
 const KEY_ACTIVE = "activeId";
 const messagesKey = (id: string) => `messages:${id}`;
@@ -76,5 +77,5 @@ export function deriveTitle(messages: UIMessage[]): string {
       return first.length > 40 ? `${first.slice(0, 40)}…` : first;
     }
   }
-  return "New chat";
+  return i18n.t("ai:miniWindow.newChat");
 }

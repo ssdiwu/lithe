@@ -1,17 +1,22 @@
+import i18n from "@/i18n";
+
 type ErrorDetails = {
   code: string | null;
   message: string;
 };
 
 const MAX_ERROR_LENGTH = 800;
-const FALLBACK_ERROR =
-  "The AI provider rejected the request. Check the selected model and provider settings, then try again.";
+const fallbackError = () =>
+  i18n.t("ai:errors.fallback", {
+    defaultValue:
+      "The AI provider rejected the request. Check the selected model and provider settings, then try again.",
+  });
 
 export function formatAiError(error: unknown): string {
   const details = extractErrorDetails(error);
-  if (!details) return FALLBACK_ERROR;
+  if (!details) return fallbackError();
   const message = sanitizeErrorMessage(details.message);
-  if (!message) return FALLBACK_ERROR;
+  if (!message) return fallbackError();
   const prefix = errorPrefix(details.code, message);
   return prefix ? `${prefix}: ${message}` : message;
 }
@@ -73,19 +78,29 @@ function errorPrefix(code: string | null, message: string): string | null {
   switch (code?.toLowerCase()) {
     case "model_not_found":
     case "not_found_error":
-      return "Model unavailable";
+      return i18n.t("ai:errors.modelUnavailable", {
+        defaultValue: "Model unavailable",
+      });
     case "invalid_api_key":
     case "authentication_error":
-      return "Authentication failed";
+      return i18n.t("ai:errors.authenticationFailed", {
+        defaultValue: "Authentication failed",
+      });
     case "insufficient_quota":
-      return "Quota exceeded";
+      return i18n.t("ai:errors.quotaExceeded", {
+        defaultValue: "Quota exceeded",
+      });
     case "rate_limit_exceeded":
     case "rate_limit_error":
-      return "Rate limit reached";
+      return i18n.t("ai:errors.rateLimitReached", {
+        defaultValue: "Rate limit reached",
+      });
   }
   return /\bmodel\b.*\b(?:limited preview|not available|not found)\b/i.test(
     message,
   )
-    ? "Model unavailable"
+    ? i18n.t("ai:errors.modelUnavailable", {
+        defaultValue: "Model unavailable",
+      })
     : null;
 }

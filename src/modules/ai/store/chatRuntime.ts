@@ -3,7 +3,6 @@ import {
   type ChatTransport,
   lastAssistantMessageIsCompleteWithApprovalResponses,
 } from "ai";
-import { getModel, providerNeedsKey, type ModelId } from "../config";
 import { usePreferencesStore } from "@/modules/settings/preferences";
 import { BUILTIN_AGENTS } from "../lib/agents";
 import { useAgentsStore } from "./agentsStore";
@@ -12,7 +11,7 @@ import { createContextAwareTransport } from "../lib/transport";
 import type { ToolContext } from "../tools/tools";
 import {
   chats,
-  getActiveProviderKey,
+  hasKeyForModel,
   seedMessages,
   touchChat,
   useChatStore,
@@ -74,6 +73,8 @@ function makeChat(sessionId: string): Chat<UIMessage> {
     getOpenrouterModelId: () =>
       usePreferencesStore.getState().openrouterModelId,
     getCustomEndpoints: () => usePreferencesStore.getState().customEndpoints,
+    getOllamaCloudModels: () =>
+      usePreferencesStore.getState().ollamaCloudModels,
     getCustomEndpointKeys: () => useChatStore.getState().customEndpointKeys,
     onStep: (step) => {
       useChatStore.getState().patchAgentMeta({ step });
@@ -132,11 +133,7 @@ export async function sendMessage(text: string): Promise<boolean> {
   const state = useChatStore.getState();
   const sessionId = state.activeSessionId;
   if (!sessionId) return false;
-  if (
-    providerNeedsKey(getModel(state.selectedModelId as ModelId).provider) &&
-    !getActiveProviderKey()
-  )
-    return false;
+  if (!hasKeyForModel(state.selectedModelId)) return false;
   const c = getOrCreateChat(sessionId);
   await c.sendMessage({ text });
   return true;

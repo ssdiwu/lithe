@@ -5,13 +5,18 @@ import {
   endpointIdFromCompatModel,
   getModel,
   isCompatModelId,
+  isOllamaCloudModelId,
   providerNeedsKey,
   type ModelId,
   type ProviderId,
 } from "../config";
 import { useTodosStore } from "./todoStore";
 import type { AgentUsage } from "../lib/agent";
-import { EMPTY_PROVIDER_KEYS, type ProviderKeys, type CustomEndpointKeys } from "../lib/keyring";
+import {
+  EMPTY_PROVIDER_KEYS,
+  type ProviderKeys,
+  type CustomEndpointKeys,
+} from "../lib/keyring";
 import {
   deleteSessionData,
   deriveTitle,
@@ -87,10 +92,7 @@ export type PendingSelection = {
   source: "terminal" | "editor";
 };
 
-export type ApprovalResponder = (
-  approvalId: string,
-  approved: boolean,
-) => void;
+export type ApprovalResponder = (approvalId: string, approved: boolean) => void;
 
 type StoreState = {
   live: Live;
@@ -266,7 +268,10 @@ export const useChatStore = create<StoreState>((set, get) => ({
     set((s) => ({
       panelOpen: true,
       focusSignal: s.focusSignal + 1,
-      pendingSelections: [...s.pendingSelections, { id, text: trimmed, source }],
+      pendingSelections: [
+        ...s.pendingSelections,
+        { id, text: trimmed, source },
+      ],
     }));
   },
   consumeSelections: () => {
@@ -428,10 +433,14 @@ export function getAgentMeta(): AgentMeta {
 }
 
 export function getActiveProviderKey(): string | null {
-  const { selectedModelId, apiKeys, customEndpointKeys } = useChatStore.getState();
+  const { selectedModelId, apiKeys, customEndpointKeys } =
+    useChatStore.getState();
   if (isCompatModelId(selectedModelId)) {
     const eid = endpointIdFromCompatModel(selectedModelId);
     return customEndpointKeys[eid] ?? null;
+  }
+  if (isOllamaCloudModelId(selectedModelId)) {
+    return apiKeys["ollama-cloud"] ?? null;
   }
   return apiKeys[getModel(selectedModelId as ModelId).provider] ?? null;
 }
@@ -440,6 +449,9 @@ export function hasKeyForModel(modelId: string): boolean {
   const { apiKeys } = useChatStore.getState();
   if (isCompatModelId(modelId)) {
     return true;
+  }
+  if (isOllamaCloudModelId(modelId)) {
+    return !!apiKeys["ollama-cloud"];
   }
   const provider = getModel(modelId as ModelId).provider;
   return providerNeedsKey(provider) ? !!apiKeys[provider] : true;

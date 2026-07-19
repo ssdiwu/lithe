@@ -457,8 +457,8 @@ export const LANGUAGES: LanguageDefinition[] = [
       ),
   },
   {
-    name: "Terax Theme",
-    extensions: ["terax-theme"],
+    name: "Lithe Theme",
+    extensions: ["lithe-theme", "terax-theme"],
     loader: async () => {
       const [{ json }, { colorSwatches }] = await Promise.all([
         import("@codemirror/lang-json"),

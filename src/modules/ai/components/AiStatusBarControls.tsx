@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Kbd } from "@/components/ui/kbd";
 import { Spinner } from "@/components/ui/spinner";
+import { useTranslation } from "@/i18n";
 import { fmtShortcut, MOD_KEY } from "@/lib/platform";
 import { cn } from "@/lib/utils";
 import { openSettingsWindow } from "@/modules/settings/openSettingsWindow";
@@ -41,18 +42,19 @@ import {
   Tick01Icon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import {
   compatModelIdForEndpoint,
   getCompatModelInfo,
-  getModel,
+  getOllamaCloudModelInfo,
   isCompatModelId,
   MODELS,
+  ollamaCloudModelId,
   providerNeedsKey,
   PROVIDERS,
+  resolveModel,
   STT_PROVIDER_LABELS,
   type ModelCapabilities,
-  type ModelId,
   type ModelInfo,
   type ProviderId,
 } from "../config";
@@ -71,6 +73,7 @@ const PROVIDER_ICON = {
   deepseek: DeepseekIcon,
   mistral: MistralIcon,
   openrouter: GlobeIcon,
+  "ollama-cloud": ServerStack01Icon,
   "openai-compatible": PlugIcon,
   lmstudio: ComputerIcon,
   mlx: AppleIcon,
@@ -78,6 +81,7 @@ const PROVIDER_ICON = {
 } as const satisfies Record<ProviderId, typeof ChatGptIcon>;
 
 export function AiOpenButton({ onOpen }: { onOpen: () => void }) {
+  const { t } = useTranslation("ai");
   return (
     <button
       type="button"
@@ -87,15 +91,16 @@ export function AiOpenButton({ onOpen }: { onOpen: () => void }) {
         "text-muted-foreground transition-colors hover:border-border hover:bg-accent hover:text-foreground",
         "animate-in slide-in-from-top-2 duration-200 ease-out",
       )}
-      title="Open AI agent"
+      title={t("statusBar.openAiAgentTitle")}
     >
-      <span>Open AI agent</span>
+      <span>{t("statusBar.openAiAgent")}</span>
       <Kbd className="h-4 min-w-4 px-1">{fmtShortcut(MOD_KEY, "I")}</Kbd>
     </button>
   );
 }
 
 export function AiStatusBarControls() {
+  const { t } = useTranslation("ai");
   const c = useComposer();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const toggleMini = useChatStore((s) => s.toggleMini);
@@ -117,7 +122,7 @@ export function AiStatusBarControls() {
       />
 
       <IconBtn
-        title="Attach file or image"
+        title={t("statusBar.attachFileOrImage")}
         onClick={() => fileInputRef.current?.click()}
         disabled={c.isBusy}
       >
@@ -128,12 +133,14 @@ export function AiStatusBarControls() {
         <IconBtn
           title={
             !c.voice.hasKey
-              ? `Voice needs a ${STT_PROVIDER_LABELS[c.voice.sttProvider]} key`
+              ? t("statusBar.voiceNeedsKey", {
+                  provider: STT_PROVIDER_LABELS[c.voice.sttProvider],
+                })
               : c.voice.recording
-                ? "Stop & transcribe"
+                ? t("statusBar.stopAndTranscribe")
                 : c.voice.transcribing
-                  ? "Transcribing…"
-                  : "Voice input"
+                  ? t("statusBar.transcribing")
+                  : t("statusBar.voiceInput")
           }
           onClick={() =>
             c.voice.recording ? c.voice.stop() : void c.voice.start()
@@ -141,7 +148,7 @@ export function AiStatusBarControls() {
           disabled={c.isBusy || c.voice.transcribing || !c.voice.hasKey}
           className={cn(
             c.voice.recording &&
-            "bg-destructive/10 text-destructive hover:bg-destructive/15",
+              "bg-destructive/10 text-destructive hover:bg-destructive/15",
           )}
         >
           {c.voice.recording ? (
@@ -159,10 +166,10 @@ export function AiStatusBarControls() {
       <span className="mx-1 h-8 w-px bg-border" aria-hidden />
       <Button
         onClick={closePanel}
-        title="Close AI panel"
+        title={t("statusBar.closeAiPanel")}
         size="xs"
         variant="ghost"
-        aria-label="Close AI panel"
+        aria-label={t("statusBar.closeAiPanel")}
         className="text-[11px] text-foreground/85 px-1"
       >
         <Kbd className="h-4 gap-px px-2 font-mono text-[11px]">
@@ -170,7 +177,10 @@ export function AiStatusBarControls() {
         </Kbd>
       </Button>
       <IconBtn
-        title={`${miniOpen ? "Close" : "Open"} AI chat window (${fmtShortcut("⇧", MOD_KEY, "I")})`}
+        title={t(
+          miniOpen ? "statusBar.closeChatWindow" : "statusBar.openChatWindow",
+          { shortcut: fmtShortcut("⇧", MOD_KEY, "I") },
+        )}
         onClick={toggleMini}
       >
         <HugeiconsIcon icon={Message01Icon} size={13} strokeWidth={1.75} />
@@ -183,8 +193,8 @@ export function AiStatusBarControls() {
           variant="ghost"
           onClick={c.stop}
           className="size-6"
-          aria-label="Stop"
-          title="Stop"
+          aria-label={t("statusBar.stop")}
+          title={t("statusBar.stop")}
         >
           <HugeiconsIcon icon={StopCircleIcon} size={13} strokeWidth={1.75} />
         </Button>
@@ -195,8 +205,8 @@ export function AiStatusBarControls() {
           onClick={c.submit}
           disabled={!c.canSend}
           className="h-5.5 w-7.5 ml-1"
-          aria-label="Send"
-          title="Send (Enter)"
+          aria-label={t("statusBar.send")}
+          title={t("statusBar.send")}
         >
           <HugeiconsIcon icon={ArrowUpIcon} size={13} strokeWidth={1.75} />
         </Button>
@@ -208,15 +218,15 @@ export function AiStatusBarControls() {
 type Tab = "all" | "favorites" | "recent";
 
 function ModelDropdown() {
+  const { t } = useTranslation("ai");
   const selected = useChatStore((s) => s.selectedModelId);
   const apiKeys = useChatStore((s) => s.apiKeys);
   const setSelected = useChatStore((s) => s.setSelectedModelId);
   const favoriteIds = usePreferencesStore((s) => s.favoriteModelIds);
   const recentIds = usePreferencesStore((s) => s.recentModelIds);
   const customEndpoints = usePreferencesStore((s) => s.customEndpoints);
-  const current = isCompatModelId(selected)
-    ? getCompatModelInfo(selected, customEndpoints)
-    : getModel(selected as ModelId);
+  const ollamaCloudModels = usePreferencesStore((s) => s.ollamaCloudModels);
+  const current = resolveModel(selected, customEndpoints, ollamaCloudModels);
   const [search, setSearch] = useState("");
   const [activeProvider, setActiveProvider] = useState<string | null>(null);
   const [tab, setTab] = useState<Tab>("all");
@@ -227,14 +237,29 @@ function ModelDropdown() {
       ? !!apiKeys[current.provider]
       : true;
 
-  const hasKeyFor = (id: ProviderId) =>
-    providerNeedsKey(id) ? !!apiKeys[id] : true;
+  const hasKeyFor = useCallback(
+    (id: ProviderId) => (providerNeedsKey(id) ? !!apiKeys[id] : true),
+    [apiKeys],
+  );
 
   const epModelInfos = useMemo(() => {
-    return customEndpoints.map((ep) =>
-      getCompatModelInfo(compatModelIdForEndpoint(ep.id), customEndpoints),
-    );
+    return customEndpoints
+      .filter((ep) => ep.baseURL.trim() && ep.modelId.trim())
+      .map((ep) =>
+        getCompatModelInfo(compatModelIdForEndpoint(ep.id), customEndpoints),
+      );
   }, [customEndpoints]);
+
+  const ollamaCloudModelInfos = useMemo(
+    () =>
+      ollamaCloudModels.map((model) =>
+        getOllamaCloudModelInfo(
+          ollamaCloudModelId(model.name),
+          ollamaCloudModels,
+        ),
+      ),
+    [ollamaCloudModels],
+  );
 
   const sortedProviders = useMemo(() => {
     const configured: (typeof PROVIDERS)[number][] = [];
@@ -244,12 +269,11 @@ function ModelDropdown() {
       (hasKeyFor(p.id) ? configured : unconfigured).push(p);
     }
     return { configured, unconfigured };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiKeys]);
+  }, [hasKeyFor]);
 
   const allModels = useMemo(
-    () => [...MODELS, ...epModelInfos],
-    [epModelInfos],
+    () => [...MODELS, ...ollamaCloudModelInfos, ...epModelInfos],
+    [epModelInfos, ollamaCloudModelInfos],
   );
 
   const COMPAT_PROVIDER_ID = "__compat__";
@@ -299,8 +323,8 @@ function ModelDropdown() {
           )}
           title={
             currentProviderHasKey
-              ? `Model: ${current.label}`
-              : `${current.label} — no key configured`
+              ? t("statusBar.modelTitle", { label: current.label })
+              : t("statusBar.modelNoKey", { label: current.label })
           }
         >
           {current.label}
@@ -333,7 +357,7 @@ function ModelDropdown() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             onKeyDown={(e) => e.stopPropagation()}
-            placeholder="Search models, providers, capabilities…"
+            placeholder={t("statusBar.searchPlaceholder")}
             className="w-full bg-transparent text-xs outline-none placeholder:text-muted-foreground/60"
           />
         </div>
@@ -341,20 +365,20 @@ function ModelDropdown() {
         {/* Tabs */}
         <div className="flex items-center gap-0.5 border-b border-border/70 px-2 py-1.5">
           <TabButton
-            label="All"
+            label={t("statusBar.tabAll")}
             icon={AiBookIcon}
             active={tab === "all"}
             onClick={() => setTab("all")}
           />
           <TabButton
-            label="Favorites"
+            label={t("statusBar.tabFavorites")}
             icon={FavouriteIcon}
             active={tab === "favorites"}
             onClick={() => setTab("favorites")}
             count={favoriteIds.length || undefined}
           />
           <TabButton
-            label="Recent"
+            label={t("statusBar.tabRecent")}
             icon={Clock01Icon}
             active={tab === "recent"}
             onClick={() => setTab("recent")}
@@ -367,30 +391,31 @@ function ModelDropdown() {
           <div className="flex w-11 shrink-0 flex-col gap-0.5 overflow-y-auto border-r border-border/70 bg-muted/20 py-1.5">
             <ProviderPill
               icon={AiBookIcon}
-              title="All providers"
+              title={t("statusBar.allProviders")}
               active={activeProvider === null}
               onClick={() => setActiveProvider(null)}
             />
-            {[...sortedProviders.configured, ...sortedProviders.unconfigured].map(
-              (p) => (
-                <ProviderPill
-                  key={p.id}
-                  icon={PROVIDER_ICON[p.id]}
-                  title={
-                    hasKeyFor(p.id)
-                      ? p.label
-                      : `${p.label} — not configured`
-                  }
-                  active={activeProvider === p.id}
-                  muted={!hasKeyFor(p.id)}
-                  onClick={() => setActiveProvider(p.id)}
-                />
-              ),
-            )}
-            {customEndpoints.length > 0 && (
+            {[
+              ...sortedProviders.configured,
+              ...sortedProviders.unconfigured,
+            ].map((p) => (
+              <ProviderPill
+                key={p.id}
+                icon={PROVIDER_ICON[p.id]}
+                title={
+                  hasKeyFor(p.id)
+                    ? p.label
+                    : t("statusBar.notConfigured", { label: p.label })
+                }
+                active={activeProvider === p.id}
+                muted={!hasKeyFor(p.id)}
+                onClick={() => setActiveProvider(p.id)}
+              />
+            ))}
+            {epModelInfos.length > 0 && (
               <ProviderPill
                 icon={PlugIcon}
-                title="OpenAI Compatible"
+                title={t("statusBar.openaiCompatible")}
                 active={activeProvider === COMPAT_PROVIDER_ID}
                 onClick={() => setActiveProvider(COMPAT_PROVIDER_ID)}
               />
@@ -402,7 +427,7 @@ function ModelDropdown() {
             {activeProvider === COMPAT_PROVIDER_ID && (
               <div className="flex items-center gap-1.5 px-3 pt-1 pb-1.5 text-[11px] font-medium tracking-tight text-muted-foreground/90">
                 <HugeiconsIcon icon={PlugIcon} size={13} strokeWidth={1.75} />
-                <span>OpenAI Compatible</span>
+                <span>{t("statusBar.openaiCompatible")}</span>
               </div>
             )}
             {activeProvider !== null &&
@@ -417,10 +442,10 @@ function ModelDropdown() {
             {filtered.length === 0 ? (
               <div className="flex items-center justify-center px-4 py-10 text-xs text-muted-foreground/70">
                 {tab === "favorites"
-                  ? "No favorites yet — star a model to pin it here."
+                  ? t("statusBar.noFavorites")
                   : tab === "recent"
-                    ? "No recently-used models."
-                    : "No models match."}
+                    ? t("statusBar.noRecent")
+                    : t("statusBar.noMatch")}
               </div>
             ) : (
               filtered.map((m) => (
@@ -428,10 +453,7 @@ function ModelDropdown() {
                   key={m.id}
                   model={m}
                   selected={m.id === selected}
-                  hasKey={
-                    isCompatModelId(m.id) ||
-                    hasKeyFor(m.provider)
-                  }
+                  hasKey={isCompatModelId(m.id) || hasKeyFor(m.provider)}
                   favorite={favoriteIds.includes(m.id)}
                   showProviderIcon={activeProvider === null}
                   onPick={() => {
@@ -524,17 +546,14 @@ function ProviderHeader({ providerId }: { providerId: ProviderId }) {
   if (!p) return null;
   return (
     <div className="flex items-center gap-1.5 px-3 pt-1 pb-1.5 text-[11px] font-medium tracking-tight text-muted-foreground/90">
-      <HugeiconsIcon
-        icon={PROVIDER_ICON[p.id]}
-        size={13}
-        strokeWidth={1.75}
-      />
+      <HugeiconsIcon icon={PROVIDER_ICON[p.id]} size={13} strokeWidth={1.75} />
       <span>{p.label}</span>
     </div>
   );
 }
 
 function ProviderConfigureCTA({ providerId }: { providerId: ProviderId }) {
+  const { t } = useTranslation("ai");
   const p = PROVIDERS.find((x) => x.id === providerId);
   if (!p) return null;
   return (
@@ -545,10 +564,10 @@ function ProviderConfigureCTA({ providerId }: { providerId: ProviderId }) {
     >
       <HugeiconsIcon icon={Settings01Icon} size={13} strokeWidth={1.75} />
       <span className="flex-1 truncate">
-        Configure {p.label} to use these models.
+        {t("statusBar.configureCta", { label: p.label })}
       </span>
       <span className="shrink-0 text-[10px] underline-offset-2 group-hover:underline">
-        Open
+        {t("statusBar.open")}
       </span>
     </button>
   );
@@ -571,6 +590,7 @@ function ModelRow({
   onPick: () => void;
   onToggleFavorite: () => void;
 }) {
+  const { t } = useTranslation("ai");
   return (
     <DropdownMenuItem
       onSelect={(e) => {
@@ -590,7 +610,7 @@ function ModelRow({
           e.stopPropagation();
           onToggleFavorite();
         }}
-        title={favorite ? "Unfavorite" : "Favorite"}
+        title={favorite ? t("statusBar.unfavorite") : t("statusBar.favorite")}
         className={cn(
           "shrink-0 rounded p-0.5 transition-colors",
           favorite
@@ -639,14 +659,23 @@ function ModelRow({
 }
 
 function CapabilityBars({ caps }: { caps: ModelCapabilities }) {
+  const { t } = useTranslation("ai");
   return (
     <div className="ml-auto flex items-center gap-1.5">
-      <CapBar icon={BrainIcon} value={caps.intelligence} label="Intelligence" />
-      <CapBar icon={FlashIcon} value={caps.speed} label="Speed" />
+      <CapBar
+        icon={BrainIcon}
+        value={caps.intelligence}
+        label={t("statusBar.intelligence")}
+      />
+      <CapBar
+        icon={FlashIcon}
+        value={caps.speed}
+        label={t("statusBar.speed")}
+      />
       <CapBar
         icon={CoinsDollarIcon}
         value={caps.cost}
-        label="Affordability"
+        label={t("statusBar.affordability")}
       />
     </div>
   );
@@ -661,10 +690,11 @@ function CapBar({
   value: number;
   label: string;
 }) {
+  const { t } = useTranslation("ai");
   return (
     <span
       className="flex items-center gap-0.5"
-      title={`${label}: ${value}/5`}
+      title={t("statusBar.capBarTitle", { label, value })}
     >
       <HugeiconsIcon
         icon={icon}

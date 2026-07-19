@@ -1,4 +1,8 @@
-import { endpointIdFromCompatModel } from "@/modules/ai/config";
+import i18n, { useTranslation } from "@/i18n";
+import {
+  endpointIdFromCompatModel,
+  ollamaCloudModelNameFromId,
+} from "@/modules/ai/config";
 import { getCustomEndpointKey, getKey } from "@/modules/ai/lib/keyring";
 import { lspFormatDocument, useLspExtension } from "@/modules/lsp";
 import { usePreferencesStore } from "@/modules/settings/preferences";
@@ -105,6 +109,7 @@ function formatBytes(n: number): string {
 export const EditorPane = memo(
   forwardRef<EditorPaneHandle, Props>(function EditorPane(props, ref) {
     const { path, overrideLanguage, onDirtyChange, onSaved, onClose } = props;
+    const { t } = useTranslation("editor");
 
     const { doc, onChange, save, reload, adoptDiskText, openAnyway } =
       useDocument({
@@ -189,22 +194,20 @@ export const EditorPane = memo(
           try {
             res = await lspFormatDocument(view);
           } catch (e) {
-            toast.error("Language server format failed", {
+            toast.error(i18n.t("editor:languageServerFormatFailed"), {
               description: String(e),
             });
           }
           if (res === "unsupported" && !warnedNoFormatRef.current) {
             warnedNoFormatRef.current = true;
-            toast.warning("Format on save skipped", {
-              description:
-                "The active language server has no formatter. Pick an external one in Settings (Ruff for Python, Prettier, rustfmt, ...).",
+            toast.warning(i18n.t("editor:formatOnSaveSkipped"), {
+              description: i18n.t("editor:languageServerNoFormatter"),
             });
           }
         } else if (!warnedNoLspRef.current) {
           warnedNoLspRef.current = true;
-          toast.warning("Format on save skipped", {
-            description:
-              "No active language server for this file. Enable one in the statusbar, or pick an external formatter in Settings.",
+          toast.warning(i18n.t("editor:formatOnSaveSkipped"), {
+            description: i18n.t("editor:formatOnSaveSkippedDescription"),
           });
         }
       }
@@ -220,7 +223,9 @@ export const EditorPane = memo(
           prefs.editorCustomFormatCommand,
         );
         if (error) {
-          toast.error(`${formatter} format failed`, { description: error });
+          toast.error(i18n.t("editor:formatFailed", { formatter }), {
+            description: error,
+          });
         } else {
           const readBack = await readFileText(pathRef.current);
           if (readBack !== null && view && view.state.doc === docAtSave) {
@@ -305,11 +310,13 @@ export const EditorPane = memo(
                   ? s.mlxModelId
                   : p === "ollama"
                     ? s.ollamaModelId
-                    : p === "openai-compatible"
-                      ? (compatEp?.modelId ?? "")
-                      : p === "openrouter"
-                        ? s.openrouterModelId
-                        : s.autocompleteModelId;
+                    : p === "ollama-cloud"
+                      ? ollamaCloudModelNameFromId(s.autocompleteModelId)
+                      : p === "openai-compatible"
+                        ? (compatEp?.modelId ?? "")
+                        : p === "openrouter"
+                          ? s.openrouterModelId
+                          : s.autocompleteModelId;
             return {
               enabled: s.autocompleteEnabled,
               trigger: s.autocompleteTrigger,
@@ -500,7 +507,7 @@ export const EditorPane = memo(
     if (doc.status === "loading") {
       return (
         <div className="flex h-full items-center justify-center text-xs text-muted-foreground">
-          Loading…
+          {t("common:loading")}
         </div>
       );
     }
@@ -573,15 +580,16 @@ export const EditorPane = memo(
         );
       }
 
-      const canForce = doc.status === "toolarge" && doc.size <= FORCE_READ_LIMIT;
+      const canForce =
+        doc.status === "toolarge" && doc.size <= FORCE_READ_LIMIT;
       return (
         <div className="flex h-full flex-col items-center justify-center gap-1 px-6 text-center">
           <div className="text-sm text-foreground">
-            {doc.status === "binary" ? "Binary file" : "File too large"}
+            {doc.status === "binary" ? t("binaryFile") : t("fileTooLarge")}
           </div>
           <div className="text-xs text-muted-foreground">
             {formatBytes(doc.size)} ·{" "}
-            {canForce ? "syntax features disabled" : "preview not supported"}
+            {canForce ? t("syntaxFeaturesDisabled") : t("previewNotSupported")}
           </div>
           {canForce && (
             <button
