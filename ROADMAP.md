@@ -1,8 +1,11 @@
 # Roadmap
 
-Lithe direction, what's shipped, what's coming, and what's deliberately out of scope.
+> [!IMPORTANT]
+> Lithe was archived on July 20, 2026. This file records the product direction
+> at the time of archival. Unchecked items are historical ideas, not planned or
+> promised work.
 
-This file is updated as direction evolves. For day-to-day work, use the Lithe repository's issue tracker.
+The shipped sections remain a map of the archived `v0.1.0` codebase.
 
 ## What Lithe is
 

@@ -1,10 +1,14 @@
 # Lithe technical documentation
 
-This directory contains current architecture and contributor guides. The
-inherited `docs/` path is intentionally retained to reduce noise when selected
-Terax source changes are synchronized. Project governance, terminology,
-decisions, and experience notes live under the canonical
-[`doc/`](../doc/README.md) entry instead.
+> [!IMPORTANT]
+> Lithe was archived on July 20, 2026. These documents describe the codebase at
+> archival time and are no longer actively maintained.
+
+This directory contains the architecture and contributor guides as they stood
+at archival time. The inherited `docs/` path was intentionally retained to
+reduce noise when selected Terax source changes were synchronized. Project
+governance, terminology, decisions, and experience notes live under the
+canonical [`doc/`](../doc/README.md) entry instead.
 
 `LITHE.md` defines Lithe-specific identity, localization, and compatibility
 boundaries. `TERAX.md` is an inherited architecture reference. If they conflict,

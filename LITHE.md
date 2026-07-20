@@ -3,6 +3,13 @@
 Lithe loads `LITHE.md` from a workspace root as project memory. For compatibility,
 it falls back to `TERAX.md` when no `LITHE.md` exists.
 
+## Maintenance status
+
+Lithe was archived on July 20, 2026. The source and notarized `v0.1.0` release
+remain available as historical references, but the project no longer receives
+dependency updates, security fixes, or new releases. Existing installations
+remain independent and do not update from either Lithe or Terax.
+
 ## Project identity
 
 Lithe is a terminal-first AI-native developer workspace derived from Terax. The

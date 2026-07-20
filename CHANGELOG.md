@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+
+- Archived the repository as a read-only historical reference; active
+  maintenance, dependency updates, security fixes, and future releases have
+  ended.
+- Corrected the public documentation to record that the published `v0.1.0`
+  Apple Silicon packages are Developer ID-signed and Apple-notarized.
+
 ## [0.1.0] - 2026-07-20
 
 ### Added

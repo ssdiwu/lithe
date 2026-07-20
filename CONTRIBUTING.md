@@ -1,10 +1,17 @@
 # Contributing to Lithe
 
-Lithe is independently maintained from Terax and has a focused product direction. Contributions are welcome, but **alignment matters more than volume**.
+> [!IMPORTANT]
+> Lithe was archived on July 20, 2026. The repository no longer accepts issues,
+> discussions, pull requests, or security reports. The guidance below is kept
+> only as a historical record for people studying or forking the codebase.
 
-This document helps you decide *whether* and *how* to contribute in a way that's likely to get merged, so neither of us wastes time.
+During active maintenance, Lithe was maintained independently from Terax with a
+focused product direction. Contributions were evaluated for alignment as well
+as technical quality.
 
-## How this project is run
+This document records how contributions were evaluated before archival.
+
+## How this project was run
 
 - Review bandwidth is limited.
 - Not every contribution can be accepted, even if it's technically correct. Alignment with project direction matters as much as code quality.

@@ -3,22 +3,24 @@
 Lithe runs shells, reads and writes files, and talks to AI providers, so
 security reports need careful handling.
 
+> [!IMPORTANT]
+> Lithe was archived on July 20, 2026. No version now receives security fixes,
+> and the repository no longer accepts vulnerability reports. Do not rely on
+> Lithe for security-sensitive or actively maintained environments.
+
 ## Reporting
 
-Do not open a public issue for a suspected vulnerability. Use GitHub's
-[private vulnerability-reporting form](https://github.com/ssdiwu/lithe/security/advisories/new).
-Keep the report private and include:
-
-- What the issue is and what it lets an attacker do
-- Reproduction steps and a minimal proof of concept when possible
-- The Lithe version, operating system, and architecture
+The archived project does not promise triage or a response. Report a
+vulnerability to Terax or the relevant dependency when the same issue exists
+there. Maintainers of Lithe forks should publish their own reporting channel
+and supported-version policy.
 
 ## Supported versions
 
-Before `1.0.0`, only the latest Lithe minor version receives security fixes.
-Lithe does not currently publish official installers or automatic updates.
+None. The notarized `v0.1.0` installer remains available only as a historical
+artifact and does not receive automatic updates.
 
-## In scope
+## Historical security scope
 
 - The Rust backend in `src-tauri/`
 - The frontend in `src/`, especially surfaces that consume untrusted input

@@ -7,25 +7,31 @@
     <a href="README.zh-CN.md">简体中文</a>
   </p>
   <p>
-    <a href="https://github.com/ssdiwu/lithe/actions/workflows/ci.yml"><img src="https://github.com/ssdiwu/lithe/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
+    <img src="https://img.shields.io/badge/status-%E5%B7%B2%E5%BD%92%E6%A1%A3-lightgrey.svg" alt="已归档" />
     <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue.svg" alt="Apache-2.0" /></a>
   </p>
 </div>
+
+> [!IMPORTANT]
+> **本仓库已于 2026 年 7 月 20 日归档。** Lithe 不再维护，也不会继续提供
+> 缺陷修复、安全更新、依赖更新或新发行版。源码和已经 Apple 公证的
+> `v0.1.0` 会作为历史成果继续保留。维护者现在使用
+> [Orca](https://www.onorca.dev/) 完成当初促成此分支的智能体优先、终端与
+> worktree 工作流。由于 Lithe 没有自动更新器，现有安装仍会独立运行。
 
 Lithe 把原生终端、文件浏览、代码编辑、Git、网页预览和可控的 AI 工具放在
 同一个工作台里。它面向希望给终端补足项目上下文、但不想迁入臃肿封闭 AI
 IDE 的开发者。
 
 > [!NOTE]
-> Lithe 目前是早期公开预览版。0.1.0 在
-> [Releases](https://github.com/ssdiwu/lithe/releases/latest) 提供经
-> Developer ID 正式签名的 Apple Silicon macOS 安装包，但尚未完成
-> Apple 公证。Linux 与 Windows 仍是支持目标，并由 CI 持续检查。
-> Lithe 没有自动更新通道。
+> 0.1.0 在 [v0.1.0 发行页](https://github.com/ssdiwu/lithe/releases/tag/v0.1.0)
+> 提供经 Developer ID 正式签名并完成 Apple 公证的 Apple Silicon macOS
+> 安装包。Linux 与 Windows 仍保留为历史代码中的源码构建目标，但所有平台
+> 现在都不再获得主动支持。
 
 Lithe 基于 [Terax](https://github.com/crynta/terax-ai) 演进，保留原始 Git
-历史和 Apache-2.0 归属说明，但由独立项目维护，使用单独的应用标识、数据、
-凭据、品牌和发布边界，也不会从 Terax 的 release 自动更新。
+历史和 Apache-2.0 归属说明。归档前，它使用单独的应用标识、数据、凭据、
+品牌和发布边界，也不会从 Terax 的 release 自动更新。
 
 ## 主要能力
 
@@ -65,9 +71,9 @@ pnpm tauri build
 ```
 
 [v0.1.0 发行版](https://github.com/ssdiwu/lithe/releases/tag/v0.1.0)
-包含经 Developer ID 正式签名的 Apple Silicon macOS 安装包和校验和。
-由于尚未完成 Apple 公证，Gatekeeper 可能要求使用“Control 点按 → 打开”。
-只应安装来自你信任的源码和签名身份的包。
+包含经 Developer ID 正式签名并完成 Apple 公证的 Apple Silicon macOS
+安装包和校验和。归档前的最终复验确认远端 DMG、app ZIP 校验值一致，且
+Gatekeeper 验证通过。只应安装来自你信任的源码和签名身份的包。
 
 ## 配置 AI
 
@@ -106,20 +112,20 @@ cargo nextest run --locked
 | `LITHE.md` | Lithe 身份、国际化和兼容性边界 |
 | `TERAX.md` | 继承架构参考；不能覆盖 `LITHE.md` |
 
-建议先读[项目文档地图](doc/README.md)。贡献翻译时再阅读
+建议先读[项目文档地图](doc/README.md)。独立分支继续维护翻译时再阅读
 [`src/i18n/README.md`](src/i18n/README.md)。
 
-## 贡献与安全
+## 历史源码与安全
 
-欢迎提交问题和聚焦的 pull request。较大改动请先阅读
-[`CONTRIBUTING.md`](CONTRIBUTING.md)。安全问题不要公开提交，请按
-[`SECURITY.md`](SECURITY.md) 使用仓库的私密漏洞报告入口。
+归档仓库不再接受 issue、pull request 或安全报告。你仍可按照 Apache-2.0
+许可证派生源码，但需要自行承担分支的维护和安全责任。归档边界详见
+[`CONTRIBUTING.md`](CONTRIBUTING.md) 和 [`SECURITY.md`](SECURITY.md)。
 
 ## 发布与更新
 
-Lithe 有意禁用自动更新。当前 release workflow 只能针对已存在的
-版本 tag 由维护者手动触发，并要求使用 Lithe 自己的签名凭据。详见
-[维护者发布指南](docs/contributing/releasing.md)。
+Lithe 不再计划新的发行版。已归档的 `v0.1.0` 会继续保留，且 Lithe 始终
+没有自动更新器。原发行流程仅作为历史资料保留在
+[维护者发布指南](docs/contributing/releasing.md)中。
 
 ## 许可证与归属
 

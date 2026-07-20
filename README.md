@@ -7,25 +7,35 @@
     <a href="README.zh-CN.md">简体中文</a>
   </p>
   <p>
-    <a href="https://github.com/ssdiwu/lithe/actions/workflows/ci.yml"><img src="https://github.com/ssdiwu/lithe/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
+    <img src="https://img.shields.io/badge/status-archived-lightgrey.svg" alt="Archived" />
     <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue.svg" alt="Apache-2.0" /></a>
   </p>
 </div>
+
+> [!IMPORTANT]
+> **This repository was archived on July 20, 2026.** Lithe is no longer
+> maintained and will not receive bug fixes, security updates, dependency
+> updates, or new releases. The source and notarized `v0.1.0` release remain
+> available as a historical reference. The maintainer now uses
+> [Orca](https://www.onorca.dev/) for the agent-first terminal and worktree
+> workflow that motivated this fork. Existing Lithe installations remain
+> standalone because Lithe has no automatic updater.
 
 Lithe puts a native terminal, file explorer, code editor, Git, web preview, and
 controllable AI tools in one workspace. It is intended for developers who want
 more context around their shell without adopting a heavyweight, closed AI IDE.
 
 > [!NOTE]
-> Lithe is an early public preview. Version 0.1.0 provides a Developer ID-signed
-> Apple Silicon macOS package on the [Releases page](https://github.com/ssdiwu/lithe/releases/latest),
-> but it is not yet Apple-notarized. Linux and Windows remain supported targets
-> and are covered by CI. Lithe has no automatic update channel.
+> Version 0.1.0 provides a Developer ID-signed and Apple-notarized Apple Silicon
+> macOS package on the
+> [v0.1.0 release page](https://github.com/ssdiwu/lithe/releases/tag/v0.1.0). Linux and
+> Windows remain build-from-source targets in the historical codebase, but no
+> platform is now actively supported.
 
 Lithe is derived from [Terax](https://github.com/crynta/terax-ai) and preserves
-its Git history and Apache-2.0 attribution. It is independently maintained with
-a separate application identifier, data, credentials, branding, and release
-boundary. It never updates from Terax releases.
+its Git history and Apache-2.0 attribution. It was maintained with a separate
+application identifier, data, credentials, branding, and release boundary. It
+never updates from Terax releases.
 
 ## Highlights
 
@@ -64,9 +74,10 @@ pnpm tauri build
 ```
 
 The [v0.1.0 release](https://github.com/ssdiwu/lithe/releases/tag/v0.1.0)
-includes a Developer ID-signed Apple Silicon macOS package and checksums. It is
-not yet Apple-notarized, so Gatekeeper may require **Control-click → Open**.
-Only install packages from a source and signing identity you trust.
+includes a Developer ID-signed and Apple-notarized Apple Silicon macOS package
+and checksums. Its published DMG and app ZIP passed checksum and Gatekeeper
+verification during the final archival audit. Only install packages from a
+source and signing identity you trust.
 
 ## Configure AI
 
@@ -106,20 +117,23 @@ Use `cargo test --locked` when `cargo-nextest` is unavailable.
 | `TERAX.md` | Inherited architecture reference; never overrides `LITHE.md` |
 
 Start with the [project documentation map](doc/README.md). Localization
-contributors should also read [`src/i18n/README.md`](src/i18n/README.md).
+maintainers of independent forks should also read
+[`src/i18n/README.md`](src/i18n/README.md).
 
-## Contributing and security
+## Historical source and security
 
-Issues and focused pull requests are welcome. Read
-[`CONTRIBUTING.md`](CONTRIBUTING.md) before proposing a substantial change and
-use the repository's private vulnerability-reporting flow for security issues;
-see [`SECURITY.md`](SECURITY.md).
+The archived repository no longer accepts issues, pull requests, or security
+reports. You may fork the source under the Apache-2.0 license, but you assume
+maintenance and security responsibility for that fork. See
+[`CONTRIBUTING.md`](CONTRIBUTING.md) and [`SECURITY.md`](SECURITY.md) for the
+archival boundary.
 
 ## Releases and updates
 
-Lithe deliberately has no automatic updater. The current release workflow
-is manually dispatched for an existing version tag and requires Lithe-owned
-signing credentials. See the [maintainer release guide](docs/contributing/releasing.md).
+No further Lithe releases are planned. The archived `v0.1.0` release remains
+available for historical use, and Lithe deliberately has no automatic updater.
+The former release process is retained only as historical documentation in the
+[maintainer release guide](docs/contributing/releasing.md).
 
 ## License and attribution
 

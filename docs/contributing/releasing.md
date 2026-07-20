@@ -1,5 +1,10 @@
 # Maintainer release guide
 
+> [!IMPORTANT]
+> Lithe was archived on July 20, 2026. No further releases are planned. This
+> guide is retained only to document how the notarized `v0.1.0` release was
+> produced and to help maintainers of independent forks.
+
 Lithe keeps source publication separate from binary distribution. Pushing the
 repository does not create an installer release and does not enable automatic
 updates.
